@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Studio Sorelle Companion App — mix colours, find inspiration, spark your painting session.">
+  <title>alice — Studio Sorelle</title>
+  <link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+
+<nav class="nav">
+  <a href="#" class="nav-logo" data-view="home">alice <em>by Studio Sorelle</em></a>
+  <div class="nav-right">
+    <button class="back-btn" id="backBtn">← Home</button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#" data-view="mix">Mix colour</a></li>
+      <li><a href="#" data-view="inspire">Get inspired</a></li>
+      <li><a href="#" data-view="spark">Spark it</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main>
+
+  <!-- ── HOME ── -->
+  <section id="view-home" class="view active">
+    <div class="hero">
+      <div class="hero-swatches">
+        <div class="swatch" style="background:#f4e9dd"></div>
+        <div class="swatch" style="background:#c48a6a"></div>
+        <div class="swatch" style="background:#6a1f2a"></div>
+        <div class="swatch" style="background:#ffe7c2"></div>
+        <div class="swatch" style="background:#d8c2a7"></div>
+        <div class="swatch" style="background:#b8a89a"></div>
+        <div class="swatch" style="background:#2b1a17"></div>
+        <div class="brand-card">
+          <span class="bc-logo">a</span>
+          <span class="bc-name">Studio Sorelle</span>
+        </div>
+      </div>
+      <div class="hero-panel">
+        <p class="eyebrow">Your kit is open. Now what?</p>
+        <h1 class="hero-title">create<br>moments.</h1>
+        <p class="hero-body">Six colours, three ways to make something together. Mix, find your theme, or let chance decide.</p>
+        <button class="cta-btn" id="scrollToTiles">Begin your session</button>
+      </div>
+    </div>
+
+    <div id="tiles" class="tiles-wrap">
+      <p class="eyebrow">Choose where to start</p>
+      <div class="tiles-grid">
+
+        <button class="tile" data-view="mix">
+          <p class="tile-num">01</p>
+          <div class="tile-visual">
+            <div class="tile-vis-wheel"></div>
+          </div>
+          <h2 class="tile-title">Mix a colour</h2>
+          <p class="tile-desc">Pick any colour from the full spectrum and get exact mixing proportions using your six kit paints.</p>
+        </button>
+
+        <button class="tile" data-view="inspire">
+          <p class="tile-num">02</p>
+          <div class="tile-visual">
+            <span class="tile-vis-q">?</span>
+          </div>
+          <h2 class="tile-title">Find your moment</h2>
+          <p class="tile-desc">Answer three questions and receive a painting idea shaped for your group and mood right now.</p>
+          <span class="coming-soon">Coming soon</span>
+        </button>
+
+        <button class="tile" data-view="spark">
+          <p class="tile-num">03</p>
+          <div class="tile-visual">
+            <div class="tile-vis-spark"></div>
+          </div>
+          <h2 class="tile-title">Spark the session</h2>
+          <p class="tile-desc">Spin the wheel and let it assign each painter a challenge. Rules, constraints, happy accidents.</p>
+          <span class="coming-soon">Coming soon</span>
+        </button>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── MIX ── -->
+  <section id="view-mix" class="view">
+    <div class="view-header">
+      <p class="eyebrow">Tool 01</p>
+      <h2 class="view-title">Mix a colour</h2>
+      <p class="view-sub">Drag or tap anywhere on the colour field. Your recipe uses only your six kit paints.</p>
+    </div>
+    <div class="mixer-layout">
+      <div class="picker-col">
+        <p class="picker-label">Colour field</p>
+        <canvas id="sqCanvas" width="260" height="190"></canvas>
+        <canvas id="hueCanvas" width="260" height="18"></canvas>
+
+        <div class="color-compare">
+          <div class="color-swatch" id="selColor"></div>
+          <div class="color-swatch" id="achColor"></div>
+          <div class="color-meta">
+            <strong id="selHex">#——</strong>
+            <span>you picked</span>
+            <strong id="achHex">#——</strong>
+            <span>achievable</span>
+          </div>
+        </div>
+        <div id="matchChip" class="match-chip" style="display:none"></div>
+
+        <div class="kit-legend">
+          <p class="legend-label">Your six kit paints</p>
+          <div class="legend-dots">
+            <span class="dot-item"><span class="dot" style="background:#fff;border-color:#ccc"></span>White</span>
+            <span class="dot-item"><span class="dot" style="background:#d42030"></span>Red</span>
+            <span class="dot-item"><span class="dot" style="background:#12121a"></span>Black</span>
+            <span class="dot-item"><span class="dot" style="background:#006432"></span>D. Green</span>
+            <span class="dot-item"><span class="dot" style="background:#003296"></span>D. Blue</span>
+            <span class="dot-item"><span class="dot" style="background:#ffd200;border-color:#c8a800"></span>Yellow</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="recipe-col">
+        <h3 class="recipe-title">Your mixing recipe</h3>
+        <p class="recipe-text" id="recipeText">Click or drag anywhere on the colour field to see your recipe.</p>
+        <div class="recipe-bars" id="recipeBars"></div>
+        <p class="recipe-note" id="recipeNote" style="display:none"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── INSPIRE ── -->
+  <section id="view-inspire" class="view">
+    <div class="placeholder">
+      <div class="ph-icon">?</div>
+      <h2 class="ph-title">Find your moment</h2>
+      <p class="ph-sub">Three questions, one AI-generated painting idea shaped for your group, your mood, and your four canvases that combine into one large piece.</p>
+      <span class="ph-tag">Feature in development</span>
+    </div>
+  </section>
+
+  <!-- ── SPARK ── -->
+  <section id="view-spark" class="view">
+    <div class="placeholder">
+      <div class="ph-icon" style="font-family:var(--ff-b)">⟳</div>
+      <h2 class="ph-title">Spark the session</h2>
+      <p class="ph-sub">Spin the wheel and receive a painting challenge — a constraint, a rule, a provocation. Keeps every session a little unpredictable.</p>
+      <span class="ph-tag">Feature in development</span>
+    </div>
+  </section>
+
+</main>
+
+<script src="/js/app.js"></script>
+<script src="/js/mixer.js"></script>
+</body>
+</html>
