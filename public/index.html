@@ -9,7 +9,22 @@
 </head>
 <body>
 
-<nav class="nav">
+<!-- ── AUTH GATE (fixed overlay, shown when not authenticated) ── -->
+<div id="view-auth" class="auth-gate">
+  <div class="auth-card">
+    <img src="/assets/logo.png" alt="Studio Sorelle" class="auth-logo" onerror="this.style.display='none'">
+    <h2 class="auth-title">Welcome to alice</h2>
+    <p class="auth-sub" id="auth-msg-normal">Enter the code from your Studio Sorelle box to begin.</p>
+    <p class="auth-sub auth-sub-expired" id="auth-msg-expired" style="display:none">Your access has expired. Buy a new Studio Sorelle box to continue.</p>
+    <div id="auth-form-wrap">
+      <input type="text" id="auth-code-input" class="auth-input" placeholder="Enter your code" maxlength="6" autocomplete="off" autocapitalize="characters" spellcheck="false">
+      <button class="cta-btn auth-submit-btn" id="auth-submit">Unlock</button>
+      <p class="auth-error" id="auth-error" style="display:none">Invalid code. Check the card inside your box and try again.</p>
+    </div>
+  </div>
+</div>
+
+<nav class="nav" id="mainNav">
   <a href="#" class="nav-logo" data-view="home">alice <em>by Studio Sorelle</em></a>
   <div class="nav-right">
     <button class="back-btn" id="backBtn">← Home</button>
@@ -47,6 +62,13 @@
       </div>
     </div>
 
+    <!-- ── Spotify section ── -->
+    <a href="https://open.spotify.com/user/31mgcv55qjxjlsvw3stg7me2ujkq" target="_blank" rel="noopener" class="spotify-band">
+      <img src="/assets/logo.png" alt="Studio Sorelle" class="spotify-logo" onerror="this.style.display='none'">
+      <span class="spotify-text">spark up your moment</span>
+      <span class="spotify-note">Open in Spotify ↗</span>
+    </a>
+
     <div id="tiles" class="tiles-wrap">
       <p class="eyebrow">Choose where to start</p>
       <div class="tiles-grid">
@@ -66,8 +88,7 @@
             <span class="tile-vis-q">?</span>
           </div>
           <h2 class="tile-title">Find your moment</h2>
-          <p class="tile-desc">Answer three questions and receive a painting idea shaped for your group and mood right now.</p>
-          <span class="coming-soon">Coming soon</span>
+          <p class="tile-desc">Answer four questions and receive a painting idea shaped for your group and mood right now.</p>
         </button>
 
         <button class="tile" data-view="spark">
@@ -76,8 +97,7 @@
             <div class="tile-vis-spark"></div>
           </div>
           <h2 class="tile-title">Spark the session</h2>
-          <p class="tile-desc">Spin the wheel and let it assign each painter a challenge. Rules, constraints, happy accidents.</p>
-          <span class="coming-soon">Coming soon</span>
+          <p class="tile-desc">Answer four questions and get seven playful challenges to keep everyone painting and laughing.</p>
         </button>
 
       </div>
@@ -133,27 +153,29 @@
 
   <!-- ── INSPIRE ── -->
   <section id="view-inspire" class="view">
-    <div class="placeholder">
-      <div class="ph-icon">?</div>
-      <h2 class="ph-title">Find your moment</h2>
-      <p class="ph-sub">Three questions, one AI-generated painting idea shaped for your group, your mood, and your four canvases that combine into one large piece.</p>
-      <span class="ph-tag">Feature in development</span>
+    <div class="view-header">
+      <p class="eyebrow">Tool 02</p>
+      <h2 class="view-title">Find your moment</h2>
+      <p class="view-sub">Four questions, one painting idea made for your group and your four canvases.</p>
     </div>
+    <div id="inspire-flow" class="flow-container"></div>
   </section>
 
   <!-- ── SPARK ── -->
   <section id="view-spark" class="view">
-    <div class="placeholder">
-      <div class="ph-icon" style="font-family:var(--ff-b)">⟳</div>
-      <h2 class="ph-title">Spark the session</h2>
-      <p class="ph-sub">Spin the wheel and receive a painting challenge — a constraint, a rule, a provocation. Keeps every session a little unpredictable.</p>
-      <span class="ph-tag">Feature in development</span>
+    <div class="view-header">
+      <p class="eyebrow">Tool 03</p>
+      <h2 class="view-title">Spark the session</h2>
+      <p class="view-sub">Four questions, seven challenges to keep everyone laughing and painting.</p>
     </div>
+    <div id="spark-flow" class="flow-container"></div>
   </section>
 
 </main>
 
 <script src="/js/app.js"></script>
 <script src="/js/mixer.js"></script>
+<script src="/js/inspire.js"></script>
+<script src="/js/spark.js"></script>
 </body>
 </html>

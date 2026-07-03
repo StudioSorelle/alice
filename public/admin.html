@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>alice — Admin</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ground: #f4e9dd; --accent: #6a1f2a; --terra: #c48a6a;
+      --beige: #d8c2a7; --mid: #b8a89a; --dark: #2b1a17; --warm: #ffe7c2;
+      --ff-d: 'Palatino Linotype', Palatino, Georgia, serif;
+      --ff-b: system-ui, -apple-system, sans-serif;
+      --ff-m: 'Courier New', Courier, monospace;
+    }
+    body { background: var(--ground); color: var(--dark); font-family: var(--ff-b); min-height: 100vh; }
+
+    /* Login */
+    #login-screen {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    }
+    .login-card {
+      background: #fff; border: 1px solid var(--beige); border-radius: .75rem;
+      padding: 3rem 2.5rem; width: 360px; text-align: center;
+    }
+    .login-title { font-family: var(--ff-d); font-size: 1.8rem; font-style: italic; margin-bottom: .5rem; }
+    .login-sub { font-size: .85rem; color: var(--mid); margin-bottom: 2rem; }
+    .admin-input {
+      width: 100%; padding: .75rem 1rem; border: 1px solid var(--beige); border-radius: .5rem;
+      font-family: var(--ff-m); font-size: .9rem; background: var(--ground);
+      outline: none; transition: border-color .2s;
+    }
+    .admin-input:focus { border-color: var(--terra); }
+    .admin-btn {
+      display: inline-block; background: var(--accent); color: #fff; border: none;
+      font-family: var(--ff-m); font-size: .8rem; letter-spacing: .06em; text-transform: uppercase;
+      padding: .75rem 2rem; border-radius: 2rem; cursor: pointer; transition: background .2s;
+      margin-top: 1rem; width: 100%;
+    }
+    .admin-btn:hover { background: #8a2535; }
+    .admin-btn.danger { background: #b91c1c; }
+    .admin-btn.danger:hover { background: #991b1b; }
+    .admin-btn.secondary { background: transparent; color: var(--dark); border: 1px solid var(--beige); }
+    .admin-btn.secondary:hover { background: var(--beige); }
+    .login-error { color: #b91c1c; font-size: .82rem; margin-top: .75rem; display: none; }
+
+    /* Admin layout */
+    #admin-content { display: none; max-width: 1000px; margin: 0 auto; padding: 2rem; }
+    .admin-header {
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid var(--beige); padding-bottom: 1.25rem; margin-bottom: 2.5rem;
+    }
+    .admin-title { font-family: var(--ff-d); font-size: 1.6rem; font-style: italic; }
+    .admin-logout { font-family: var(--ff-m); font-size: .72rem; color: var(--mid); background: none; border: none; cursor: pointer; }
+    .admin-logout:hover { color: var(--accent); }
+
+    /* Sections */
+    .admin-section {
+      background: #fff; border: 1px solid var(--beige); border-radius: .75rem;
+      padding: 1.75rem; margin-bottom: 2rem;
+    }
+    .section-title {
+      font-family: var(--ff-d); font-size: 1.15rem; font-style: italic;
+      margin-bottom: 1.25rem; color: var(--dark);
+    }
+    .add-row {
+      display: flex; gap: .75rem; margin-bottom: 1.25rem;
+    }
+    .add-row .admin-input { margin: 0; }
+    .add-row .admin-btn { width: auto; margin: 0; flex-shrink: 0; padding: .65rem 1.25rem; }
+
+    /* Item lists */
+    .item-list { list-style: none; }
+    .item-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: .6rem 0; border-bottom: 1px solid rgba(0,0,0,.05);
+      font-size: .88rem;
+    }
+    .item-row:last-child { border-bottom: none; }
+    .item-del {
+      background: none; border: none; color: var(--mid); cursor: pointer;
+      font-size: .75rem; font-family: var(--ff-m); letter-spacing: .04em; padding: .25rem .5rem;
+      border-radius: .25rem; transition: color .2s, background .2s;
+    }
+    .item-del:hover { color: #b91c1c; background: #fee2e2; }
+    .empty-msg { font-size: .83rem; color: var(--mid); font-style: italic; padding: .5rem 0; }
+
+    /* Codes section */
+    .codes-controls { display: flex; align-items: center; gap: .75rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
+    .codes-count-input {
+      width: 90px; padding: .65rem .85rem; border: 1px solid var(--beige); border-radius: .5rem;
+      font-family: var(--ff-m); font-size: .88rem; background: var(--ground);
+      outline: none; transition: border-color .2s;
+    }
+    .codes-count-input:focus { border-color: var(--terra); }
+    .generated-box {
+      background: var(--warm); border: 1px solid var(--beige); border-radius: .5rem;
+      padding: 1.25rem; margin-bottom: 1.25rem; font-family: var(--ff-m); font-size: .85rem;
+      display: none; white-space: pre-wrap; line-height: 1.8; word-break: break-all;
+    }
+    .codes-table { width: 100%; border-collapse: collapse; font-size: .83rem; }
+    .codes-table th {
+      font-family: var(--ff-m); font-size: .68rem; letter-spacing: .08em; text-transform: uppercase;
+      color: var(--mid); padding: .5rem .75rem; text-align: left; border-bottom: 1px solid var(--beige);
+    }
+    .codes-table td { padding: .55rem .75rem; border-bottom: 1px solid rgba(0,0,0,.05); }
+    .codes-table tr:last-child td { border-bottom: none; }
+    .code-val { font-family: var(--ff-m); font-weight: bold; letter-spacing: .08em; }
+    .badge {
+      display: inline-block; font-family: var(--ff-m); font-size: .62rem; letter-spacing: .06em;
+      text-transform: uppercase; padding: .2rem .55rem; border-radius: 1rem;
+    }
+    .badge.unused  { background: var(--warm); color: var(--terra); }
+    .badge.active  { background: #e8f5e9; color: #2e7d32; }
+    .badge.expired { background: #fee2e2; color: #b91c1c; }
+    .revoke-btn {
+      background: none; border: none; color: var(--mid); font-family: var(--ff-m);
+      font-size: .7rem; cursor: pointer; padding: .2rem .45rem; border-radius: .25rem;
+      transition: color .2s, background .2s;
+    }
+    .revoke-btn:hover { color: #b91c1c; background: #fee2e2; }
+
+    /* Spinner */
+    .spinner {
+      display: inline-block; width: 18px; height: 18px; border: 2px solid rgba(255,255,255,.3);
+      border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; margin-right: .5rem;
+      vertical-align: middle;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 600px) {
+      #admin-content { padding: 1rem; }
+      .add-row { flex-direction: column; }
+      .codes-controls { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="login-screen">
+  <div class="login-card">
+    <h1 class="login-title">alice admin</h1>
+    <p class="login-sub">Studio Sorelle back office</p>
+    <form id="login-form">
+      <input type="password" id="pw-input" class="admin-input" placeholder="Password" autocomplete="current-password">
+      <button type="submit" class="admin-btn">Enter</button>
+      <p class="login-error" id="login-error">Wrong password. Try again.</p>
+    </form>
+  </div>
+</div>
+
+<div id="admin-content">
+  <div class="admin-header">
+    <h1 class="admin-title">alice admin</h1>
+    <button class="admin-logout" id="logout-btn">Log out</button>
+  </div>
+
+  <!-- Products -->
+  <div class="admin-section">
+    <h2 class="section-title">Products</h2>
+    <div class="add-row">
+      <input type="text" id="product-input" class="admin-input" placeholder="New product name…" maxlength="80">
+      <button class="admin-btn" id="product-add-btn" style="width:auto">Add</button>
+    </div>
+    <ul class="item-list" id="product-list"><li class="empty-msg">Loading…</li></ul>
+  </div>
+
+  <!-- Occasions -->
+  <div class="admin-section">
+    <h2 class="section-title">Occasions</h2>
+    <div class="add-row">
+      <input type="text" id="occasion-input" class="admin-input" placeholder="New occasion name…" maxlength="80">
+      <button class="admin-btn" id="occasion-add-btn" style="width:auto">Add</button>
+    </div>
+    <ul class="item-list" id="occasion-list"><li class="empty-msg">Loading…</li></ul>
+  </div>
+
+  <!-- Codes -->
+  <div class="admin-section">
+    <h2 class="section-title">Access Codes</h2>
+    <div class="codes-controls">
+      <input type="number" id="codes-count" class="codes-count-input" value="10" min="1" max="200" placeholder="Count">
+      <button class="admin-btn" id="codes-generate-btn" style="width:auto">Generate codes</button>
+    </div>
+    <div class="generated-box" id="generated-box"></div>
+    <table class="codes-table" id="codes-table">
+      <thead><tr><th>Code</th><th>Status</th><th>First used</th><th>Expires</th><th></th></tr></thead>
+      <tbody id="codes-body"><tr><td colspan="5" class="empty-msg" style="padding:.75rem">Loading…</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+(function () {
+  var password = '';
+
+  function authHeader() { return { 'Content-Type': 'application/json', 'X-Admin-Password': password }; }
+
+  function fmtDate(iso) {
+    if (!iso) return '—';
+    var d = new Date(iso);
+    return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+  }
+
+  // ── Login ──
+  document.getElementById('login-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var pw = document.getElementById('pw-input').value;
+    fetch('/api/admin/codes', { headers: { 'X-Admin-Password': pw } })
+      .then(function (r) {
+        if (r.ok) {
+          password = pw;
+          localStorage.setItem('alice_admin_pw', pw);
+          document.getElementById('login-screen').style.display = 'none';
+          document.getElementById('admin-content').style.display = '';
+          loadAll();
+        } else {
+          document.getElementById('login-error').style.display = '';
+        }
+      })
+      .catch(function () { document.getElementById('login-error').style.display = ''; });
+  });
+
+  document.getElementById('logout-btn').addEventListener('click', function () {
+    password = '';
+    localStorage.removeItem('alice_admin_pw');
+    document.getElementById('admin-content').style.display = 'none';
+    document.getElementById('login-screen').style.display = '';
+    document.getElementById('pw-input').value = '';
+  });
+
+  // Auto-login if saved
+  var saved = localStorage.getItem('alice_admin_pw');
+  if (saved) {
+    fetch('/api/admin/codes', { headers: { 'X-Admin-Password': saved } })
+      .then(function (r) {
+        if (r.ok) {
+          password = saved;
+          document.getElementById('login-screen').style.display = 'none';
+          document.getElementById('admin-content').style.display = '';
+          loadAll();
+        }
+      });
+  }
+
+  // ── Products ──
+  function loadProducts() {
+    fetch('/api/products').then(function (r) { return r.json(); }).then(function (items) {
+      var ul = document.getElementById('product-list');
+      if (!items.length) { ul.innerHTML = '<li class="empty-msg">No products yet.</li>'; return; }
+      ul.innerHTML = items.map(function (p) {
+        return '<li class="item-row"><span>' + esc(p.name) + '</span>' +
+          '<button class="item-del" data-id="' + p.id + '" data-type="products">Remove</button></li>';
+      }).join('');
+      ul.querySelectorAll('.item-del').forEach(attachDel);
+    });
+  }
+
+  document.getElementById('product-add-btn').addEventListener('click', function () {
+    var name = document.getElementById('product-input').value.trim();
+    if (!name) return;
+    fetch('/api/admin/products', { method: 'POST', headers: authHeader(), body: JSON.stringify({ name }) })
+      .then(function () { document.getElementById('product-input').value = ''; loadProducts(); });
+  });
+
+  // ── Occasions ──
+  function loadOccasions() {
+    fetch('/api/occasions').then(function (r) { return r.json(); }).then(function (items) {
+      var ul = document.getElementById('occasion-list');
+      if (!items.length) { ul.innerHTML = '<li class="empty-msg">No occasions yet.</li>'; return; }
+      ul.innerHTML = items.map(function (o) {
+        return '<li class="item-row"><span>' + esc(o.name) + '</span>' +
+          '<button class="item-del" data-id="' + o.id + '" data-type="occasions">Remove</button></li>';
+      }).join('');
+      ul.querySelectorAll('.item-del').forEach(attachDel);
+    });
+  }
+
+  document.getElementById('occasion-add-btn').addEventListener('click', function () {
+    var name = document.getElementById('occasion-input').value.trim();
+    if (!name) return;
+    fetch('/api/admin/occasions', { method: 'POST', headers: authHeader(), body: JSON.stringify({ name }) })
+      .then(function () { document.getElementById('occasion-input').value = ''; loadOccasions(); });
+  });
+
+  function attachDel(btn) {
+    btn.addEventListener('click', function () {
+      var id = btn.dataset.id, type = btn.dataset.type;
+      fetch('/api/admin/' + type + '/' + id, { method: 'DELETE', headers: authHeader() })
+        .then(function () { type === 'products' ? loadProducts() : loadOccasions(); });
+    });
+  }
+
+  // ── Codes ──
+  function loadCodes() {
+    fetch('/api/admin/codes', { headers: authHeader() })
+      .then(function (r) { return r.json(); })
+      .then(function (codes) {
+        var tbody = document.getElementById('codes-body');
+        if (!codes.length) { tbody.innerHTML = '<tr><td colspan="5" class="empty-msg" style="padding:.75rem">No codes yet. Generate some above.</td></tr>'; return; }
+        tbody.innerHTML = codes.map(function (c) {
+          return '<tr>' +
+            '<td><span class="code-val">' + esc(c.code) + '</span></td>' +
+            '<td><span class="badge ' + c.status + '">' + c.status + '</span></td>' +
+            '<td>' + fmtDate(c.first_used_at) + '</td>' +
+            '<td>' + fmtDate(c.expires_at) + '</td>' +
+            '<td><button class="revoke-btn" data-id="' + c.id + '">Revoke</button></td>' +
+            '</tr>';
+        }).join('');
+        tbody.querySelectorAll('.revoke-btn').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            if (!confirm('Revoke code? This cannot be undone.')) return;
+            fetch('/api/admin/codes/' + btn.dataset.id, { method: 'DELETE', headers: authHeader() })
+              .then(loadCodes);
+          });
+        });
+      });
+  }
+
+  document.getElementById('codes-generate-btn').addEventListener('click', function () {
+    var count = parseInt(document.getElementById('codes-count').value) || 10;
+    var btn = document.getElementById('codes-generate-btn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>Generating…';
+    fetch('/api/admin/codes/generate', {
+      method: 'POST', headers: authHeader(), body: JSON.stringify({ count })
+    })
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        var box = document.getElementById('generated-box');
+        box.style.display = '';
+        box.textContent = 'Generated ' + data.codes.length + ' codes:\n\n' + data.codes.join('   ');
+        btn.disabled = false;
+        btn.textContent = 'Generate codes';
+        loadCodes();
+      })
+      .catch(function () { btn.disabled = false; btn.textContent = 'Generate codes'; });
+  });
+
+  function esc(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function loadAll() { loadProducts(); loadOccasions(); loadCodes(); }
+})();
+</script>
+</body>
+</html>
