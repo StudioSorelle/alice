@@ -286,7 +286,7 @@ body {
 
 /* ── Hero logo ── */
 .hero-logo {
-  width: 72px; height: 72px; object-fit: contain; border-radius: 50%;
+  width: 96px; height: 96px; object-fit: contain;
   margin-bottom: 1.25rem;
 }
 
