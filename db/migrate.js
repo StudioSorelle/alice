@@ -1,7 +1,15 @@
 const db = require('./index');
 
-var PRODUCTS_SEED = ['Starter Kit', 'Date Night Box', 'Family Box', 'Party Box'];
-var OCCASIONS_SEED = ["Date night", "Girls' night", 'Baby shower', 'Bachelorette party', 'Family gathering', 'Birthday party'];
+var PRODUCTS_SEED = [
+  'Our Signature Canvas Moment',
+  'Our Mini Signature Canvas Moment',
+  'Our Faithful Tote Moment'
+];
+
+var OCCASIONS_SEED = [
+  "Date night", "Girls' night", 'Baby shower',
+  'Bachelorette party', 'Family gathering', 'Birthday party'
+];
 
 async function migrate() {
   if (!db.isConfigured()) {

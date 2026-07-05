@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const Anthropic = require('@anthropic-ai/sdk');
+const Replicate = require('replicate');
 const db = require('./db');
 const migrate = require('./db/migrate');
 
@@ -15,6 +16,11 @@ migrate();
 let anthropic = null;
 if (process.env.ANTHROPIC_API_KEY) {
   anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+}
+
+let replicate = null;
+if (process.env.REPLICATE_API_TOKEN) {
+  replicate = new Replicate({ auth: process.env.REPLICATE_API_TOKEN });
 }
 
 // ── Admin auth ──
@@ -34,6 +40,31 @@ function generateCode() {
   return code;
 }
 
+// ── Seasonal context ──
+function getSeasonalContext() {
+  var now = new Date();
+  var month = now.getMonth() + 1;
+  var day = now.getDate();
+
+  var holidays = [
+    { month: 2,  day: 14, en: "Valentine's Day is coming up — consider romantic or heartfelt themes.",    nl: 'Valentijnsdag komt eraan — overweeg romantische of hartelijke thema\'s.' },
+    { month: 10, day: 31, en: 'Halloween is just around the corner — consider spooky, mysterious, or festive autumn themes.', nl: 'Halloween is vlakbij — overweeg spookachtige, mysterieuze of herfstfeestthema\'s.' },
+    { month: 12, day: 25, en: 'Christmas is approaching — consider cosy, wintery, or festive themes.',   nl: 'Kerstmis nadert — overweeg gezellige, winterse of feestelijke thema\'s.' },
+  ];
+
+  for (var h = 0; h < holidays.length; h++) {
+    var hol = holidays[h];
+    var holDate = new Date(now.getFullYear(), hol.month - 1, hol.day);
+    var diff = (holDate - now) / (1000 * 60 * 60 * 24);
+    if (diff >= 0 && diff <= 7) return { en: hol.en, nl: hol.nl };
+  }
+
+  if (month >= 3 && month <= 5) return { en: 'It is spring.', nl: 'Het is lente.' };
+  if (month >= 6 && month <= 8) return { en: 'It is summer.', nl: 'Het is zomer.' };
+  if (month >= 9 && month <= 11) return { en: 'It is autumn.', nl: 'Het is herfst.' };
+  return { en: 'It is winter.', nl: 'Het is winter.' };
+}
+
 // ── Auth ──
 var MASTER_CODE = 'AK14050303';
 
@@ -46,6 +77,7 @@ app.post('/api/auth/verify', async (req, res) => {
     if (upper === MASTER_CODE) {
       return res.json({ valid: true, expiresAt: new Date(Date.now() + 100 * 365 * 24 * 60 * 60 * 1000).toISOString() });
     }
+
     const result = await db.query('SELECT * FROM codes WHERE code = ?', [upper]);
     if (result.rows.length === 0) return res.json({ valid: false, reason: 'invalid' });
     const row = result.rows[0];
@@ -82,14 +114,14 @@ app.get('/api/occasions', async (req, res) => {
 // ── Inspire ──
 app.post('/api/inspire', async (req, res) => {
   if (!anthropic) return res.status(503).json({ error: 'AI features not yet configured on this server.' });
-  const { answers } = req.body;
+  const { answers, lang } = req.body;
   if (!answers || !Array.isArray(answers) || !answers.length)
     return res.status(400).json({ error: 'Please answer the questions first.' });
   try {
     const message = await anthropic.messages.create({
       model: 'claude-haiku-4-5-20251001',
       max_tokens: 400,
-      messages: [{ role: 'user', content: buildInspirePrompt(answers) }]
+      messages: [{ role: 'user', content: buildInspirePrompt(answers, lang) }]
     });
     res.json({ idea: message.content[0].text });
   } catch (err) {
@@ -101,19 +133,40 @@ app.post('/api/inspire', async (req, res) => {
 // ── Spark ──
 app.post('/api/spark', async (req, res) => {
   if (!anthropic) return res.status(503).json({ error: 'AI features not yet configured on this server.' });
-  const { answers } = req.body;
+  const { answers, lang } = req.body;
   if (!answers || !Array.isArray(answers) || !answers.length)
     return res.status(400).json({ error: 'Please answer the questions first.' });
   try {
     const message = await anthropic.messages.create({
       model: 'claude-haiku-4-5-20251001',
       max_tokens: 700,
-      messages: [{ role: 'user', content: buildSparkPrompt(answers) }]
+      messages: [{ role: 'user', content: buildSparkPrompt(answers, lang) }]
     });
     res.json({ text: message.content[0].text });
   } catch (err) {
     console.error('Claude API error:', err.message);
     res.status(500).json({ error: 'Could not generate activities right now. Please try again.' });
+  }
+});
+
+// ── Generate image ──
+app.post('/api/generate-image', async (req, res) => {
+  if (!replicate) return res.status(503).json({ error: 'Image generation not configured. Set REPLICATE_API_TOKEN.' });
+  const { idea } = req.body;
+  if (!idea) return res.status(400).json({ error: 'No idea provided.' });
+  try {
+    const imagePrompt = 'Oil painting on canvas, impressionist style, ' +
+      String(idea).slice(0, 220) +
+      ', warm earth tones, soft brushstrokes, four canvas panels, beautiful composition, studio art';
+    const output = await replicate.run('black-forest-labs/flux-schnell', {
+      input: { prompt: imagePrompt, num_outputs: 1, output_format: 'webp', output_quality: 80 }
+    });
+    const raw = output[0];
+    const imageUrl = (raw && typeof raw.url === 'function') ? raw.url().href : String(raw);
+    res.json({ imageUrl });
+  } catch (err) {
+    console.error('Replicate error:', err.message);
+    res.status(500).json({ error: 'Could not generate an image right now. Please try again.' });
   }
 });
 
@@ -184,13 +237,16 @@ app.delete('/api/admin/codes/:id', adminAuth, async (req, res) => {
 });
 
 // ── Prompt builders ──
-function buildInspirePrompt(answers) {
+function buildInspirePrompt(answers, lang) {
+  const seasonal = getSeasonalContext();
+  const seasonHint = lang === 'nl' ? seasonal.nl : seasonal.en;
   const lines = answers.map(function (a) {
     return (a.question ? a.question + '\n→ ' : '') + a.answer;
   }).join('\n\n');
-  return [
+  const parts = [
     'You are a warm, creative painting guide for Studio Sorelle, a painting kit company.',
     '', 'A group just opened their painting kit and answered a few questions:', '', lines, '',
+    'Seasonal context: ' + seasonHint, '',
     'Generate a short, specific painting idea for them.',
     'They have 4 small canvases — one per person — that physically combine into one large unified piece.',
     'Include:',
@@ -198,23 +254,27 @@ function buildInspirePrompt(answers) {
     '- One sentence for each of the 4 canvases (what that person paints, positioned top-left / top-right / bottom-left / bottom-right)',
     '- One sentence on how the four pieces connect into the full image', '',
     'Under 180 words. Warm, specific, encouraging. Flowing prose — no bullet points or headers.'
-  ].join('\n');
+  ];
+  if (lang === 'nl') parts.push('Respond entirely in Dutch.');
+  return parts.join('\n');
 }
 
-function buildSparkPrompt(answers) {
+function buildSparkPrompt(answers, lang) {
   const lines = answers.map(function (a) {
     return (a.question ? a.question + '\n→ ' : '') + a.answer;
   }).join('\n\n');
-  return [
+  const parts = [
     'You are a fun, energetic activity host for Studio Sorelle, a painting kit company.',
     '', 'A group is about to start a painting session and answered these questions:', '', lines, '',
     'Generate exactly 7 short painting session activities or mini-games.',
-    'Each activity should be playful, creative, and fit the group\'s context (box type, group size, occasion, activity preference).',
-    'Activities can include painting challenges, games with the materials, creative constraints, or team exercises.',
+    'Tailor the complexity and duration of activities to match the available time.',
+    'Each activity should be playful, creative, and fit the group\'s context.',
     'Format: number each activity (1. 2. 3. etc.), one line each, max 2 sentences per activity.',
     'Make them diverse — not all the same type. Be warm, energetic, and fun.',
     'Under 300 words total.'
-  ].join('\n');
+  ];
+  if (lang === 'nl') parts.push('Respond entirely in Dutch.');
+  return parts.join('\n');
 }
 
 // ── SPA fallback ──

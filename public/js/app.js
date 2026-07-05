@@ -54,12 +54,12 @@
             showView('home');
           } else {
             if (errorEl) errorEl.style.display = '';
-            if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Unlock'; }
+            if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = window.t ? window.t('auth.submit') : 'Unlock'; }
           }
         })
         .catch(function () {
           if (errorEl) errorEl.style.display = '';
-          if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Unlock'; }
+          if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = window.t ? window.t('auth.submit') : 'Unlock'; }
         });
     }
 
@@ -91,14 +91,24 @@
   }
 
   function init() {
-    // Hide nav/main by default until auth check passes
     var nav = document.getElementById('mainNav');
     var main = document.querySelector('main');
     if (nav) nav.style.display = 'none';
     if (main) main.style.display = 'none';
 
+    if (window.setLang) {
+      window.setLang(localStorage.getItem('alice_lang') || 'en');
+    }
+
     initAuthForm();
     checkAuth();
+
+    var langBtn = document.getElementById('langToggle');
+    if (langBtn) {
+      langBtn.addEventListener('click', function () {
+        window.setLang(window.currentLang === 'en' ? 'nl' : 'en');
+      });
+    }
 
     var scrollBtn = document.getElementById('scrollToTiles');
     if (scrollBtn) {

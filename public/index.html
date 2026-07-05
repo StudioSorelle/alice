@@ -4,35 +4,36 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Studio Sorelle Companion App — mix colours, find inspiration, spark your painting session.">
-  <title>alice — Studio Sorelle</title>
+  <title>Studio Sorelle</title>
   <link rel="stylesheet" href="/css/app.css">
 </head>
 <body>
 
-<!-- ── AUTH GATE (fixed overlay, shown when not authenticated) ── -->
+<!-- ── AUTH GATE ── -->
 <div id="view-auth" class="auth-gate">
   <div class="auth-card">
     <img src="/assets/logo.png" alt="Studio Sorelle" class="auth-logo" onerror="this.style.display='none'">
-    <h2 class="auth-title">Welcome to alice</h2>
-    <p class="auth-sub" id="auth-msg-normal">Enter the code from your Studio Sorelle box to begin.</p>
-    <p class="auth-sub auth-sub-expired" id="auth-msg-expired" style="display:none">Your access has expired. Buy a new Studio Sorelle box to continue.</p>
+    <h2 class="auth-title" data-i18n="auth.title">Welcome to alice</h2>
+    <p class="auth-sub" id="auth-msg-normal" data-i18n="auth.sub">Enter the code from your Studio Sorelle box to begin.</p>
+    <p class="auth-sub auth-sub-expired" id="auth-msg-expired" data-i18n="auth.expired" style="display:none">Your access has expired. Buy a new Studio Sorelle box to continue.</p>
     <div id="auth-form-wrap">
       <input type="text" id="auth-code-input" class="auth-input" placeholder="Enter your code" maxlength="10" autocomplete="off" autocapitalize="characters" spellcheck="false">
-      <button class="cta-btn auth-submit-btn" id="auth-submit">Unlock</button>
-      <p class="auth-error" id="auth-error" style="display:none">Invalid code. Check the card inside your box and try again.</p>
+      <button class="cta-btn auth-submit-btn" id="auth-submit" data-i18n="auth.submit">Unlock</button>
+      <p class="auth-error" id="auth-error" data-i18n="auth.error" style="display:none">Invalid code. Check the card inside your box and try again.</p>
     </div>
   </div>
 </div>
 
 <nav class="nav" id="mainNav">
-  <a href="#" class="nav-logo" data-view="home">alice <em>by Studio Sorelle</em></a>
+  <a href="#" class="nav-logo" data-view="home" data-i18n="nav.brand">Studio Sorelle</a>
   <div class="nav-right">
-    <button class="back-btn" id="backBtn">← Home</button>
+    <button class="back-btn" id="backBtn" data-i18n="nav.back">← Home</button>
     <ul class="nav-links" id="navLinks">
-      <li><a href="#" data-view="mix">Mix colour</a></li>
-      <li><a href="#" data-view="inspire">Get inspired</a></li>
-      <li><a href="#" data-view="spark">Spark it</a></li>
+      <li><a href="#" data-view="mix" data-i18n="nav.mix">Mix your moment</a></li>
+      <li><a href="#" data-view="inspire" data-i18n="nav.inspire">Find your moment</a></li>
+      <li><a href="#" data-view="spark" data-i18n="nav.spark">Spark your moment</a></li>
     </ul>
+    <button class="lang-btn" id="langToggle">NL</button>
   </div>
 </nav>
 
@@ -47,7 +48,7 @@
         <div class="swatch" style="background:#6a1f2a"></div>
         <div class="swatch" style="background:#ffe7c2"></div>
         <div class="swatch" style="background:#d8c2a7"></div>
-        <div class="swatch" style="background:#b8a89a"></div>
+        <div class="swatch" style="background:#2b1a17"></div>
         <div class="swatch" style="background:#2b1a17"></div>
         <div class="brand-card">
           <span class="bc-logo">a</span>
@@ -55,22 +56,23 @@
         </div>
       </div>
       <div class="hero-panel">
-        <p class="eyebrow">Your kit is open. Now what?</p>
+        <img src="/assets/logo.png" alt="Studio Sorelle" class="hero-logo" onerror="this.style.display='none'">
+        <p class="eyebrow" data-i18n="hero.eyebrow">Your kit is open. Now what?</p>
         <h1 class="hero-title">create<br>moments.</h1>
-        <p class="hero-body">Six colours, three ways to make something together. Mix, find your theme, or let chance decide.</p>
-        <button class="cta-btn" id="scrollToTiles">Begin your session</button>
+        <p class="hero-body" data-i18n="hero.body">Six colours, three ways to make something together. Mix, find your theme, or let chance decide.</p>
+        <button class="cta-btn" id="scrollToTiles" data-i18n="hero.cta">Begin your session</button>
       </div>
     </div>
 
     <!-- ── Spotify section ── -->
     <a href="https://open.spotify.com/user/31mgcv55qjxjlsvw3stg7me2ujkq" target="_blank" rel="noopener" class="spotify-band">
       <img src="/assets/logo.png" alt="Studio Sorelle" class="spotify-logo" onerror="this.style.display='none'">
-      <span class="spotify-text">spark up your moment</span>
-      <span class="spotify-note">Open in Spotify ↗</span>
+      <span class="spotify-text" data-i18n="spotify.text">set the mood with your Sorelle sound</span>
+      <span class="spotify-note" data-i18n="spotify.note">Listen now ↗</span>
     </a>
 
     <div id="tiles" class="tiles-wrap">
-      <p class="eyebrow">Choose where to start</p>
+      <p class="eyebrow" data-i18n="tiles.eyebrow">Choose where to start</p>
       <div class="tiles-grid">
 
         <button class="tile" data-view="mix">
@@ -78,8 +80,8 @@
           <div class="tile-visual">
             <div class="tile-vis-wheel"></div>
           </div>
-          <h2 class="tile-title">Mix a colour</h2>
-          <p class="tile-desc">Pick any colour from the full spectrum and get exact mixing proportions using your six kit paints.</p>
+          <h2 class="tile-title" data-i18n="tile.mix.title">Mix your moment</h2>
+          <p class="tile-desc" data-i18n="tile.mix.desc">Struggling to find the right colour? Browse our full colour spectrum and discover the exact mixing ratio using your six kit paints.</p>
         </button>
 
         <button class="tile" data-view="inspire">
@@ -87,8 +89,8 @@
           <div class="tile-visual">
             <span class="tile-vis-q">?</span>
           </div>
-          <h2 class="tile-title">Find your moment</h2>
-          <p class="tile-desc">Answer four questions and receive a painting idea shaped for your group and mood right now.</p>
+          <h2 class="tile-title" data-i18n="tile.inspire.title">Find your moment</h2>
+          <p class="tile-desc" data-i18n="tile.inspire.desc">Let yourself be surprised: answer a couple of questions and receive a painting idea made just for your mood.</p>
         </button>
 
         <button class="tile" data-view="spark">
@@ -96,24 +98,28 @@
           <div class="tile-visual">
             <div class="tile-vis-spark"></div>
           </div>
-          <h2 class="tile-title">Spark the session</h2>
-          <p class="tile-desc">Answer four questions and get seven playful challenges to keep everyone painting and laughing.</p>
+          <h2 class="tile-title" data-i18n="tile.spark.title">Spark your moment</h2>
+          <p class="tile-desc" data-i18n="tile.spark.desc">Answer some questions, and you'll unlock seven playful challenges to keep the moment alive.</p>
         </button>
 
       </div>
     </div>
+
+    <footer class="site-footer">
+      <p class="footer-text" data-i18n="footer.text">Made with love by your Sorelle sisters Anouk &amp; Kristina &#9825; Belgium</p>
+    </footer>
   </section>
 
   <!-- ── MIX ── -->
   <section id="view-mix" class="view">
     <div class="view-header">
-      <p class="eyebrow">Tool 01</p>
-      <h2 class="view-title">Mix a colour</h2>
-      <p class="view-sub">Drag or tap anywhere on the colour field. Your recipe uses only your six kit paints.</p>
+      <p class="eyebrow" data-i18n="view.mix.eyebrow">Tool 01</p>
+      <h2 class="view-title" data-i18n="view.mix.title">Mix your moment</h2>
+      <p class="view-sub" data-i18n="view.mix.sub">Drag or tap anywhere on the colour field. Your recipe uses only your six kit paints.</p>
     </div>
     <div class="mixer-layout">
       <div class="picker-col">
-        <p class="picker-label">Colour field</p>
+        <p class="picker-label" data-i18n="mix.colorfield">Colour field</p>
         <canvas id="sqCanvas" width="260" height="190"></canvas>
         <canvas id="hueCanvas" width="260" height="18"></canvas>
 
@@ -122,15 +128,15 @@
           <div class="color-swatch" id="achColor"></div>
           <div class="color-meta">
             <strong id="selHex">#——</strong>
-            <span>you picked</span>
+            <span data-i18n="mix.youpicked">you picked</span>
             <strong id="achHex">#——</strong>
-            <span>achievable</span>
+            <span data-i18n="mix.achievable">achievable</span>
           </div>
         </div>
         <div id="matchChip" class="match-chip" style="display:none"></div>
 
         <div class="kit-legend">
-          <p class="legend-label">Your six kit paints</p>
+          <p class="legend-label" data-i18n="mix.kit.label">Your six kit paints</p>
           <div class="legend-dots">
             <span class="dot-item"><span class="dot" style="background:#fff;border-color:#ccc"></span>White</span>
             <span class="dot-item"><span class="dot" style="background:#d42030"></span>Red</span>
@@ -143,8 +149,8 @@
       </div>
 
       <div class="recipe-col">
-        <h3 class="recipe-title">Your mixing recipe</h3>
-        <p class="recipe-text" id="recipeText">Click or drag anywhere on the colour field to see your recipe.</p>
+        <h3 class="recipe-title" data-i18n="mix.recipe.title">Your mixing recipe</h3>
+        <p class="recipe-text" id="recipeText" data-i18n="mix.recipe.placeholder">Click or drag anywhere on the colour field to see your recipe.</p>
         <div class="recipe-bars" id="recipeBars"></div>
         <p class="recipe-note" id="recipeNote" style="display:none"></p>
       </div>
@@ -154,9 +160,9 @@
   <!-- ── INSPIRE ── -->
   <section id="view-inspire" class="view">
     <div class="view-header">
-      <p class="eyebrow">Tool 02</p>
-      <h2 class="view-title">Find your moment</h2>
-      <p class="view-sub">Four questions, one painting idea made for your group and your four canvases.</p>
+      <p class="eyebrow" data-i18n="view.inspire.eyebrow">Tool 02</p>
+      <h2 class="view-title" data-i18n="view.inspire.title">Find your moment</h2>
+      <p class="view-sub" data-i18n="view.inspire.sub">Five questions, one painting idea made for your group and your four canvases.</p>
     </div>
     <div id="inspire-flow" class="flow-container"></div>
   </section>
@@ -164,15 +170,16 @@
   <!-- ── SPARK ── -->
   <section id="view-spark" class="view">
     <div class="view-header">
-      <p class="eyebrow">Tool 03</p>
-      <h2 class="view-title">Spark the session</h2>
-      <p class="view-sub">Four questions, seven challenges to keep everyone laughing and painting.</p>
+      <p class="eyebrow" data-i18n="view.spark.eyebrow">Tool 03</p>
+      <h2 class="view-title" data-i18n="view.spark.title">Spark your moment</h2>
+      <p class="view-sub" data-i18n="view.spark.sub">Five questions, seven challenges to keep everyone laughing and painting.</p>
     </div>
     <div id="spark-flow" class="flow-container"></div>
   </section>
 
 </main>
 
+<script src="/js/i18n.js"></script>
 <script src="/js/app.js"></script>
 <script src="/js/mixer.js"></script>
 <script src="/js/inspire.js"></script>
