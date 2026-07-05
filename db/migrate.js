@@ -34,6 +34,15 @@ async function migrate() {
       first_used_at TEXT,
       expires_at TEXT
     )`);
+    await db.query(`CREATE TABLE IF NOT EXISTS moments (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      product TEXT NOT NULL,
+      occasion TEXT,
+      description TEXT,
+      name TEXT,
+      image_url TEXT NOT NULL,
+      created_at TEXT DEFAULT (datetime('now'))
+    )`);
 
     var prodCount = await db.query('SELECT COUNT(*) as c FROM products');
     if (Number(prodCount.rows[0].c) === 0) {

@@ -1,5 +1,5 @@
 (function () {
-  var VIEWS = ['home', 'mix', 'inspire', 'spark'];
+  var VIEWS = ['home', 'mix', 'inspire', 'spark', 'moment'];
 
   // ── Auth ──
   function getAuth() {
@@ -88,6 +88,7 @@
     if (name === 'mix' && typeof window.initMixer === 'function') setTimeout(window.initMixer, 60);
     if (name === 'inspire' && typeof window.initInspire === 'function') setTimeout(window.initInspire, 60);
     if (name === 'spark' && typeof window.initSpark === 'function') setTimeout(window.initSpark, 60);
+    if (name === 'moment' && typeof window.initMoment === 'function') setTimeout(window.initMoment, 60);
   }
 
   function init() {

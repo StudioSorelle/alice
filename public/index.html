@@ -32,6 +32,7 @@
       <li><a href="#" data-view="mix" data-i18n="nav.mix">Mix your moment</a></li>
       <li><a href="#" data-view="inspire" data-i18n="nav.inspire">Find your moment</a></li>
       <li><a href="#" data-view="spark" data-i18n="nav.spark">Spark your moment</a></li>
+      <li><a href="#" data-view="moment" data-i18n="nav.share">Share your moment</a></li>
     </ul>
     <button class="lang-btn" id="langToggle">NL</button>
   </div>
@@ -100,6 +101,15 @@
           </div>
           <h2 class="tile-title" data-i18n="tile.spark.title">Spark your moment</h2>
           <p class="tile-desc" data-i18n="tile.spark.desc">Answer some questions, and you'll unlock seven playful challenges to keep the moment alive.</p>
+        </button>
+
+        <button class="tile" data-view="moment">
+          <p class="tile-num">04</p>
+          <div class="tile-visual">
+            <span class="tile-vis-share">&#9829;</span>
+          </div>
+          <h2 class="tile-title" data-i18n="tile.share.title">Share your moment</h2>
+          <p class="tile-desc" data-i18n="tile.share.desc">Upload a photo of your painting and capture the moment forever.</p>
         </button>
 
       </div>
@@ -177,6 +187,16 @@
     <div id="spark-flow" class="flow-container"></div>
   </section>
 
+  <!-- ── SHARE (moment upload) ── -->
+  <section id="view-moment" class="view">
+    <div class="view-header">
+      <p class="eyebrow" data-i18n="view.share.eyebrow">Tool 04</p>
+      <h2 class="view-title" data-i18n="view.share.title">Share your moment</h2>
+      <p class="view-sub" data-i18n="view.share.sub">Three steps — your moment saved.</p>
+    </div>
+    <div id="moment-flow" class="flow-container"></div>
+  </section>
+
 </main>
 
 <script src="/js/i18n.js"></script>
@@ -184,5 +204,6 @@
 <script src="/js/mixer.js"></script>
 <script src="/js/inspire.js"></script>
 <script src="/js/spark.js"></script>
+<script src="/js/moment.js"></script>
 </body>
 </html>

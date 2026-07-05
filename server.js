@@ -3,6 +3,8 @@ const express = require('express');
 const path = require('path');
 const Anthropic = require('@anthropic-ai/sdk');
 const Replicate = require('replicate');
+const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
+const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
 const db = require('./db');
 const migrate = require('./db/migrate');
 
@@ -21,6 +23,18 @@ if (process.env.ANTHROPIC_API_KEY) {
 let replicate = null;
 if (process.env.REPLICATE_API_TOKEN) {
   replicate = new Replicate({ auth: process.env.REPLICATE_API_TOKEN });
+}
+
+let s3 = null;
+if (process.env.CLOUDFLARE_R2_ACCOUNT_ID && process.env.CLOUDFLARE_R2_ACCESS_KEY_ID) {
+  s3 = new S3Client({
+    region: 'auto',
+    endpoint: 'https://' + process.env.CLOUDFLARE_R2_ACCOUNT_ID + '.r2.cloudflarestorage.com',
+    credentials: {
+      accessKeyId: process.env.CLOUDFLARE_R2_ACCESS_KEY_ID,
+      secretAccessKey: process.env.CLOUDFLARE_R2_SECRET_ACCESS_KEY || ''
+    }
+  });
 }
 
 // ── Admin auth ──
@@ -187,6 +201,49 @@ app.post('/api/generate-image', async (req, res) => {
     console.error('Replicate error:', err.message);
     res.status(500).json({ error: 'Could not generate an image right now. Please try again.' });
   }
+});
+
+// ── Moments: presigned upload URL ──
+app.post('/api/moments/upload-url', async (req, res) => {
+  if (!s3) return res.status(503).json({ error: 'Image storage not configured. Add Cloudflare R2 env vars.' });
+  const { filename, contentType } = req.body;
+  if (!filename || !contentType) return res.status(400).json({ error: 'filename and contentType required' });
+  const ext = (filename.split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g, '');
+  const key = 'moments/' + Date.now() + '-' + Math.random().toString(36).slice(2) + '.' + (ext || 'jpg');
+  try {
+    const cmd = new PutObjectCommand({ Bucket: process.env.CLOUDFLARE_R2_BUCKET, Key: key, ContentType: contentType });
+    const url = await getSignedUrl(s3, cmd, { expiresIn: 300 });
+    res.json({ url, key });
+  } catch (err) {
+    console.error('R2 presign error:', err.message);
+    res.status(500).json({ error: 'Could not prepare upload. Please try again.' });
+  }
+});
+
+// ── Moments: save metadata ──
+app.post('/api/moments', async (req, res) => {
+  const { product, occasion, description, name, imageKey } = req.body;
+  if (!product || !imageKey) return res.status(400).json({ error: 'product and imageKey required' });
+  const base = (process.env.CLOUDFLARE_R2_PUBLIC_URL || '').replace(/\/$/, '');
+  const imageUrl = base + '/' + imageKey;
+  try {
+    await db.query(
+      "INSERT INTO moments (product, occasion, description, name, image_url) VALUES (?, ?, ?, ?, ?)",
+      [product, occasion || null, description || null, name || null, imageUrl]
+    );
+    res.json({ ok: true, imageUrl });
+  } catch (err) {
+    console.error('Save moment error:', err.message);
+    res.status(500).json({ error: 'Could not save your moment. Please try again.' });
+  }
+});
+
+// ── Admin: moments ──
+app.get('/api/admin/moments', adminAuth, async (req, res) => {
+  try {
+    const result = await db.query('SELECT * FROM moments ORDER BY created_at DESC');
+    res.json(result.rows);
+  } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
 // ── Admin: products ──
