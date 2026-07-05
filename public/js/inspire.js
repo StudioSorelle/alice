@@ -55,12 +55,7 @@
         var sel = state.answers[0] === p.name ? ' active' : '';
         html += '<button class="option-btn' + sel + '" data-val="' + escAttr(p.name) + '">' + escHtml(p.name) + '</button>';
       });
-      var otherSel = state.answers[0] === '__other__' ? ' active' : '';
-      html += '<button class="option-btn' + otherSel + '" data-val="__other__">' + t('inspire.other') + '</button>';
       html += '</div>';
-      if (state.answers[0] === '__other__') {
-        html += '<input class="flow-other-input" id="other-input" placeholder="' + t('inspire.other.ph') + '" value="' + escAttr(state.otherText) + '">';
-      }
     } else if (step === 1) {
       html += '<p class="flow-question">' + t('inspire.q2') + '</p>';
       html += '<div class="option-grid" id="opt-grid">';
