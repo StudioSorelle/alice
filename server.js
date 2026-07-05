@@ -125,23 +125,13 @@ app.get('/api/occasions', async (req, res) => {
   } catch (err) { res.json([]); }
 });
 
-// ── Inspire ──
-app.post('/api/inspire', async (req, res) => {
-  if (!anthropic) return res.status(503).json({ error: 'AI features not yet configured on this server.' });
-  const { answers, lang } = req.body;
+// ── Inspire (template-based, no AI) ──
+app.post('/api/inspire', function (req, res) {
+  var answers = req.body.answers;
+  var lang = req.body.lang;
   if (!answers || !Array.isArray(answers) || !answers.length)
     return res.status(400).json({ error: 'Please answer the questions first.' });
-  try {
-    const message = await anthropic.messages.create({
-      model: 'claude-haiku-4-5-20251001',
-      max_tokens: 400,
-      messages: [{ role: 'user', content: buildInspirePrompt(answers, lang) }]
-    });
-    res.json({ idea: message.content[0].text });
-  } catch (err) {
-    console.error('Claude API error:', err.message);
-    res.status(500).json({ error: 'Could not generate inspiration right now. Please try again.' });
-  }
+  res.json({ idea: buildInspireIdea(answers, lang) });
 });
 
 // ── Spark ──
@@ -312,27 +302,242 @@ app.delete('/api/admin/codes/:id', adminAuth, async (req, res) => {
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-// ── Prompt builders ──
-function buildInspirePrompt(answers, lang) {
-  const seasonal = getSeasonalContext();
-  const seasonHint = lang === 'nl' ? seasonal.nl : seasonal.en;
-  const lines = answers.map(function (a) {
-    return (a.question ? a.question + '\n→ ' : '') + a.answer;
-  }).join('\n\n');
-  const parts = [
-    'You are a warm, creative painting guide for Studio Sorelle, a painting kit company.',
-    '', 'A group just opened their painting kit and answered a few questions:', '', lines, '',
-    'Seasonal context: ' + seasonHint, '',
-    'Generate a short, specific painting idea for them.',
-    'They have 4 small canvases — one per person — that physically combine into one large unified piece.',
-    'Include:',
-    '- A theme or subject (2-4 evocative words)',
-    '- One sentence for each of the 4 canvases (what that person paints, positioned top-left / top-right / bottom-left / bottom-right)',
-    '- One sentence on how the four pieces connect into the full image', '',
-    'Under 180 words. Warm, specific, encouraging. Flowing prose — no bullet points or headers.'
-  ];
-  if (lang === 'nl') parts.push('Respond entirely in Dutch.');
-  return parts.join('\n');
+// ── Inspire: template-based idea builder (no AI) ──
+var STYLE_ADJECTIVES = {
+  en: {
+    'Abstract': 'abstract', 'Simplistic': 'simple and clean',
+    'Detailed': 'richly detailed', 'Playful': 'playful',
+    'Geometric': 'geometric', 'Bold & Expressive': 'bold and expressive'
+  },
+  nl: {
+    'Abstract': 'abstract', 'Simplistic': 'eenvoudig en helder',
+    'Detailed': 'rijk gedetailleerd', 'Playful': 'speels',
+    'Geometric': 'geometrisch', 'Bold & Expressive': 'gedurfd en expressief'
+  }
+};
+
+var SUBJECT_TEMPLATES = {
+  en: {
+    'Nature': {
+      theme: 'A {style} landscape',
+      canvases: [
+        'Top-left: a broad sky — clouds, light, and the mood of the day.',
+        'Top-right: rolling hills or treetops fading softly to the horizon.',
+        'Bottom-left: lush foreground — branches, roots, grass, or wildflowers.',
+        'Bottom-right: a close detail — a single leaf, stone, or drop of water.'
+      ],
+      connection: 'Together the four panels form one sweeping outdoor scene, from open sky down to rich earth.'
+    },
+    'Animals': {
+      theme: 'A {style} animal portrait',
+      canvases: [
+        'Top-left: the animal\'s face — expressive, close, and full of character.',
+        'Top-right: its body — fur, feathers, or scales caught in the light.',
+        'Bottom-left: its paws or feet — grounded, in motion, or at rest.',
+        'Bottom-right: a glimpse of its natural habitat — the world it belongs to.'
+      ],
+      connection: 'Step back and the full creature emerges, alive in its own world.'
+    },
+    'Food & Drink': {
+      theme: 'A {style} still life of food and drink',
+      canvases: [
+        'Top-left: a generous spread — fruits, bread, or ingredients in abundance.',
+        'Top-right: something to drink — a glass, a cup, steam rising, or foam settling.',
+        'Bottom-left: a close-up of texture — crumbs, drips, a cut surface, or a peel.',
+        'Bottom-right: the quiet aftermath — an empty plate or the very last sip.'
+      ],
+      connection: 'Together the four panels tell a small story, from first sight to the satisfied last bite.'
+    },
+    'Party': {
+      theme: 'A {style} celebration',
+      canvases: [
+        'Top-left: colour and movement — balloons, streamers, or confetti mid-air.',
+        'Top-right: faces and raised glasses — the people who make the moment.',
+        'Bottom-left: a table full of light and food, glowing with the occasion.',
+        'Bottom-right: a quiet detail — a gift, a handwritten note, or a single lit candle.'
+      ],
+      connection: 'Together the panels capture everything that makes a celebration worth remembering — the noise and the stillness.'
+    },
+    'City': {
+      theme: 'A {style} urban scene',
+      canvases: [
+        'Top-left: a skyline — silhouettes against a dusk or dawn sky.',
+        'Top-right: a busy street — movement, colour, and the hum of life.',
+        'Bottom-left: a storefront or doorway — an invitation or a glimpse inside.',
+        'Bottom-right: a quiet corner — an alley, a bench, or a plant growing through the pavement.'
+      ],
+      connection: 'The four panels form one city, from the grand view down to the small details that give it soul.'
+    },
+    'Fantasy': {
+      theme: 'A {style} fantasy world',
+      canvases: [
+        'Top-left: a dramatic sky — twin moons, aurora, or light from an unknown source.',
+        'Top-right: a creature or figure in motion — mythical, strange, and alive.',
+        'Bottom-left: an enchanted landscape — ancient forest, floating ruins, or glowing water.',
+        'Bottom-right: a magical object or portal — the detail that holds the whole world together.'
+      ],
+      connection: 'The four panels reveal a world beyond the ordinary — strange and beautiful, from sky to secret.'
+    },
+    'People': {
+      theme: 'A {style} portrait of people together',
+      canvases: [
+        'Top-left: a face — close, warm, and full of expression.',
+        'Top-right: hands — reaching, holding, creating, or simply resting.',
+        'Bottom-left: a shared moment — laughter mid-breath or quiet focus.',
+        'Bottom-right: the space between people — a shared object, a table, or something that belongs to everyone.'
+      ],
+      connection: 'Together the panels form a portrait of connection — the people and the world they make together.'
+    },
+    'default': {
+      theme: 'A {style} composition',
+      canvases: [
+        'Top-left: the big picture — your subject, the mood, the setting.',
+        'Top-right: a key element — the heart of what you want to paint.',
+        'Bottom-left: texture and detail — move in close and look deeper.',
+        'Bottom-right: a quiet counterpoint — a contrast, a pause, or a small surprise.'
+      ],
+      connection: 'The four panels work together as one — each unique, each part of something larger.'
+    }
+  },
+  nl: {
+    'Nature': {
+      theme: 'Een {style} landschapsscène',
+      canvases: [
+        'Linksboven: een uitgestrekte lucht — wolken, licht en de sfeer van de dag.',
+        'Rechtsboven: glooiende heuvels of boomtoppen die zacht vervagen naar de horizon.',
+        'Linksonder: weelderig voorplan — takken, wortels, gras of wilde bloemen.',
+        'Rechtsonder: een close-up detail — één blad, steen of waterdruppel.'
+      ],
+      connection: 'Samen vormen de vier panelen één weids buitenlandschap, van de open lucht bovenaan tot de rijke aarde onderaan.'
+    },
+    'Animals': {
+      theme: 'Een {style} dierenportret',
+      canvases: [
+        'Linksboven: het gezicht van het dier — expressief, dichtbij, vol karakter.',
+        'Rechtsboven: zijn lichaam — vacht, veren of schubben in het licht gevangen.',
+        'Linksonder: zijn poten of klauwen — gegrond, in beweging of in rust.',
+        'Rechtsonder: een glimp van zijn habitat — de wereld waartoe het behoort.'
+      ],
+      connection: 'Stap achteruit en het volledige dier verschijnt, levend in zijn eigen wereld.'
+    },
+    'Food & Drink': {
+      theme: 'Een {style} stilleven van eten en drinken',
+      canvases: [
+        'Linksboven: een overvloedige tafel — fruit, brood of ingrediënten in overvloed.',
+        'Rechtsboven: iets om van te drinken — een glas, een kopje, stoom of schuim.',
+        'Linksonder: een close-up van textuur — kruimels, druppels, een gesneden oppervlak.',
+        'Rechtsonder: de stille nasleep — een leeg bord of de laatste slok.'
+      ],
+      connection: 'Samen vertellen de vier panelen een klein verhaal van eerste blik tot tevreden laatste hap.'
+    },
+    'Party': {
+      theme: 'Een {style} feestscène',
+      canvases: [
+        'Linksboven: kleur en beweging — ballonnen, slingers of confetti in de lucht.',
+        'Rechtsboven: gezichten en geheven glazen — de mensen die het moment maken.',
+        'Linksonder: een tafel vol licht en eten, stralend van de gelegenheid.',
+        'Rechtsonder: een stil detail — een cadeau, een handgeschreven kaartje of één brandende kaars.'
+      ],
+      connection: 'Samen vangen de panelen alles wat een feest de moeite waard maakt — het lawaai én de stilte.'
+    },
+    'City': {
+      theme: 'Een {style} stadsscène',
+      canvases: [
+        'Linksboven: een skyline — silhouetten tegen een avond- of ochtendlucht.',
+        'Rechtsboven: een drukke straat — beweging, kleur en het ruisen van het leven.',
+        'Linksonder: een etalage of deuropening — een uitnodiging of een glimp naar binnen.',
+        'Rechtsonder: een rustig hoekje — een steeg, een bankje of een plant door het plaveisel.'
+      ],
+      connection: 'De vier panelen vormen samen één stad, van het grote overzicht tot de kleine details die haar ziel geven.'
+    },
+    'Fantasy': {
+      theme: 'Een {style} fantasiewereld',
+      canvases: [
+        'Linksboven: een dramatische lucht — twee manen, aurora of licht van een onbekende bron.',
+        'Rechtsboven: een wezen of figuur in beweging — mythisch, vreemd en levend.',
+        'Linksonder: een betoverd landschap — oud woud, zwevende ruïnes of gloeiend water.',
+        'Rechtsonder: een magisch voorwerp of portaal — het detail dat alles bij elkaar houdt.'
+      ],
+      connection: 'De vier panelen onthullen een wereld voorbij het gewone — vreemd en mooi, van lucht tot geheim.'
+    },
+    'People': {
+      theme: 'Een {style} portret van mensen samen',
+      canvases: [
+        'Linksboven: een gezicht — dichtbij, warm en vol uitdrukking.',
+        'Rechtsboven: handen — reikend, vasthoudend, creërend of rustend.',
+        'Linksonder: een gedeeld moment — lach gevangen in de vlucht of stille focus.',
+        'Rechtsonder: de ruimte ertussen — een gedeeld voorwerp, een tafel of iets van iedereen.'
+      ],
+      connection: 'Samen vormen de panelen een portret van verbinding — de mensen en de wereld die ze samen maken.'
+    },
+    'default': {
+      theme: 'Een {style} compositie',
+      canvases: [
+        'Linksboven: het grote geheel — je onderwerp, de sfeer, de setting.',
+        'Rechtsboven: een sleutelelement — het hart van wat je wilt schilderen.',
+        'Linksonder: textuur en detail — kom dichterbij en kijk dieper.',
+        'Rechtsonder: een rustig tegenwicht — contrast, kalmte of een kleine verrassing.'
+      ],
+      connection: 'De vier panelen werken samen als één geheel — elk uniek, elk deel van iets groters.'
+    }
+  }
+};
+
+var TIME_HINTS = {
+  en: {
+    '30 minutes': {
+      'Relaxed':  'Keep it loose — colour and energy matter more than precision. A few confident marks go a long way.',
+      'Balanced': 'Work quickly but intentionally. Pick one thing per canvas to finish properly.',
+      'Ambitious': 'Bold strokes, strong contrast. Commit to each mark and keep moving.'
+    },
+    '1 hour': {
+      'Relaxed':  'Let the painting breathe — not every area needs to be filled. Enjoy the process.',
+      'Balanced': 'Lay in the big shapes first, then add detail where it matters most.',
+      'Ambitious': 'Work in layers — build up gradually and don\'t be afraid to push further.'
+    },
+    '2+ hours': {
+      'Relaxed':  'Take your time. A slow, meditative session — let each panel develop at its own pace.',
+      'Balanced': 'Plenty of time to explore. Try a colour or technique you haven\'t used before.',
+      'Ambitious': 'Go for it — refine edges, build texture, and don\'t hesitate to paint over and start again.'
+    }
+  },
+  nl: {
+    '30 minutes': {
+      'Relaxed':  'Hou het los — kleur en energie tellen meer dan precisie. Enkele zekere streken doen wonderen.',
+      'Balanced': 'Werk snel maar doelgericht. Kies per paneel één ding dat je goed afwerkt.',
+      'Ambitious': 'Krachtige streken, sterk contrast. Zet je in voor elke streek en blijf bewegen.'
+    },
+    '1 hour': {
+      'Relaxed':  'Laat het schilderij ademen — niet elk deel hoeft gevuld te zijn. Geniet van het proces.',
+      'Balanced': 'Begin met de grote vormen en voeg dan detail toe waar het het meeste telt.',
+      'Ambitious': 'Werk in lagen — bouw geleidelijk op en wees niet bang om verder te gaan.'
+    },
+    '2+ hours': {
+      'Relaxed':  'Neem je tijd. Een trage, meditatieve sessie — laat elk paneel op zijn eigen tempo groeien.',
+      'Balanced': 'Genoeg tijd om te verkennen. Probeer een kleur of techniek die je nog niet eerder hebt gebruikt.',
+      'Ambitious': 'Ga er volledig voor — verfijn randen, bouw textuur op en aarzel niet om over te schilderen.'
+    }
+  }
+};
+
+function buildInspireIdea(answers, lang) {
+  var l = lang === 'nl' ? 'nl' : 'en';
+  var style = answers[1] ? answers[1].answer : '';
+  var subject = answers[2] ? answers[2].answer : 'Nature';
+  var time = answers[3] ? answers[3].answer : '1 hour';
+  var ambition = answers[4] ? answers[4].answer : 'Balanced';
+
+  var adj = (STYLE_ADJECTIVES[l] && STYLE_ADJECTIVES[l][style]) || style.toLowerCase() || 'beautiful';
+  var templates = SUBJECT_TEMPLATES[l] || SUBJECT_TEMPLATES['en'];
+  var tpl = templates[subject] || templates['default'];
+
+  var theme = tpl.theme.replace('{style}', adj);
+  var canvasLines = tpl.canvases.join('\n');
+
+  var timeHints = (TIME_HINTS[l] && TIME_HINTS[l][time]) || TIME_HINTS['en']['1 hour'];
+  var hint = timeHints[ambition] || timeHints['Balanced'];
+
+  return theme + '\n\n' + canvasLines + '\n\n' + tpl.connection + '\n\n' + hint;
 }
 
 function buildSparkPrompt(answers, lang) {
