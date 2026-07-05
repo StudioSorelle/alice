@@ -118,7 +118,8 @@
       'share.uploading': 'Sharing your moment…',
       'share.success.title': 'Your moment is saved!',
       'share.success.sub': 'Thank you for sharing.',
-      'share.restart': 'Share another moment'
+      'share.restart': 'Share another moment',
+      'share.consent': 'I give Studio Sorelle permission to use this photo on social media'
     },
     nl: {
       'nav.brand': 'Studio Sorelle',
@@ -238,7 +239,8 @@
       'share.uploading': 'Je moment wordt gedeeld…',
       'share.success.title': 'Je moment is opgeslagen!',
       'share.success.sub': 'Dank je wel voor het delen.',
-      'share.restart': 'Deel nog een moment'
+      'share.restart': 'Deel nog een moment',
+      'share.consent': 'Ik geef Studio Sorelle toestemming om deze foto te gebruiken op sociale media'
     }
   };
 

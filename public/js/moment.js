@@ -3,7 +3,7 @@
     step: 0,
     products: [], occasions: [],
     product: null, file: null, previewUrl: null,
-    occasion: null, description: '', authorName: ''
+    occasion: null, description: '', authorName: '', socialConsent: false
   };
 
   function t(key, vars) { return window.t ? window.t(key, vars) : key; }
@@ -108,6 +108,10 @@
     html += '<p class="share-field-label">' + t('share.name.label') + '</p>';
     html += '<input class="flow-other-input" id="share-name" placeholder="' + t('share.name.ph') + '" value="' + escAttr(state.authorName) + '">';
 
+    html += '<div class="consent-wrap">';
+    html += '<label class="consent-label"><input type="checkbox" id="share-consent"' + (state.socialConsent ? ' checked' : '') + '> ' + t('share.consent') + '</label>';
+    html += '</div>';
+
     html += '<div class="flow-nav">';
     html += '<button class="flow-next-btn" id="flow-submit">' + t('share.submit') + '</button>';
     html += '<button class="flow-ghost-btn" id="flow-back">' + t('common.back') + '</button>';
@@ -117,6 +121,7 @@
     var occGrid = document.getElementById('occ-grid');
     var descInput = document.getElementById('share-desc');
     var nameInput = document.getElementById('share-name');
+    var consentInput = document.getElementById('share-consent');
     var submitBtn = document.getElementById('flow-submit');
     var backBtn = document.getElementById('flow-back');
 
@@ -137,6 +142,7 @@
     }
     if (descInput) descInput.addEventListener('input', function () { state.description = descInput.value; });
     if (nameInput) nameInput.addEventListener('input', function () { state.authorName = nameInput.value; });
+    if (consentInput) consentInput.addEventListener('change', function () { state.socialConsent = consentInput.checked; });
     if (submitBtn) submitBtn.addEventListener('click', submitMoment);
     if (backBtn) backBtn.addEventListener('click', function () { state.step = 1; render(); });
   }
@@ -168,7 +174,8 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             product: state.product, occasion: state.occasion,
-            description: state.description, name: state.authorName, imageKey: key
+            description: state.description, name: state.authorName,
+            imageKey: key, socialConsent: state.socialConsent
           })
         }).then(function (r) { return r.json(); });
       })
@@ -200,7 +207,7 @@
   window.initMoment = function () {
     state.step = 0;
     state.product = null; state.file = null; state.previewUrl = null;
-    state.occasion = null; state.description = ''; state.authorName = '';
+    state.occasion = null; state.description = ''; state.authorName = ''; state.socialConsent = false;
 
     var el = document.getElementById('moment-flow');
     if (!el) return;

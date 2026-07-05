@@ -222,14 +222,14 @@ app.post('/api/moments/upload-url', async (req, res) => {
 
 // ── Moments: save metadata ──
 app.post('/api/moments', async (req, res) => {
-  const { product, occasion, description, name, imageKey } = req.body;
+  const { product, occasion, description, name, imageKey, socialConsent } = req.body;
   if (!product || !imageKey) return res.status(400).json({ error: 'product and imageKey required' });
   const base = (process.env.CLOUDFLARE_R2_PUBLIC_URL || '').replace(/\/$/, '');
   const imageUrl = base + '/' + imageKey;
   try {
     await db.query(
-      "INSERT INTO moments (product, occasion, description, name, image_url) VALUES (?, ?, ?, ?, ?)",
-      [product, occasion || null, description || null, name || null, imageUrl]
+      "INSERT INTO moments (product, occasion, description, name, image_url, social_consent) VALUES (?, ?, ?, ?, ?, ?)",
+      [product, occasion || null, description || null, name || null, imageUrl, socialConsent ? 1 : 0]
     );
     res.json({ ok: true, imageUrl });
   } catch (err) {

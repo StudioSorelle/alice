@@ -41,8 +41,12 @@ async function migrate() {
       description TEXT,
       name TEXT,
       image_url TEXT NOT NULL,
+      social_consent INTEGER DEFAULT 0,
       created_at TEXT DEFAULT (datetime('now'))
     )`);
+    try {
+      await db.query('ALTER TABLE moments ADD COLUMN social_consent INTEGER DEFAULT 0');
+    } catch (e) { /* column already exists */ }
 
     var prodCount = await db.query('SELECT COUNT(*) as c FROM products');
     if (Number(prodCount.rows[0].c) === 0) {
