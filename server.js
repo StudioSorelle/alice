@@ -150,14 +150,33 @@ app.post('/api/spark', async (req, res) => {
 });
 
 // ── Generate image ──
+var STYLE_HINTS = {
+  'Abstract':         'abstract expressionist canvas, fluid shapes and colour fields',
+  'Simplistic':       'minimalist canvas, clean simple forms, flat colour areas',
+  'Detailed':         'highly detailed oil painting, intricate fine brushwork',
+  'Playful':          'playful whimsical painting, bright warm palette, joyful energy',
+  'Geometric':        'geometric painting, angular structured forms, bold outlines',
+  'Bold & Expressive':'bold expressive impasto painting, thick visible brushstrokes'
+};
+
+function trimIdea(text, maxLen) {
+  if (text.length <= maxLen) return text;
+  var cut = text.slice(0, maxLen);
+  var lastSentence = Math.max(cut.lastIndexOf('. '), cut.lastIndexOf('! '), cut.lastIndexOf('? '));
+  if (lastSentence > maxLen * 0.5) return cut.slice(0, lastSentence + 1).trim();
+  var lastSpace = cut.lastIndexOf(' ');
+  return (lastSpace > 0 ? cut.slice(0, lastSpace) : cut).trim();
+}
+
 app.post('/api/generate-image', async (req, res) => {
   if (!replicate) return res.status(503).json({ error: 'Image generation not configured. Set REPLICATE_API_TOKEN.' });
-  const { idea } = req.body;
+  const { idea, style } = req.body;
   if (!idea) return res.status(400).json({ error: 'No idea provided.' });
   try {
-    const imagePrompt = 'Oil painting on canvas, impressionist style, ' +
-      String(idea).slice(0, 220) +
-      ', warm earth tones, soft brushstrokes, four canvas panels, beautiful composition, studio art';
+    const styleDesc = STYLE_HINTS[style] || 'impressionist oil painting';
+    const imagePrompt = styleDesc + ' on canvas, ' +
+      trimIdea(String(idea), 220) +
+      ', warm earth tones, four panel composition, beautiful studio art';
     const output = await replicate.run('black-forest-labs/flux-schnell', {
       input: { prompt: imagePrompt, num_outputs: 1, output_format: 'webp', output_quality: 80 }
     });

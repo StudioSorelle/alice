@@ -240,7 +240,7 @@
     fetch('/api/generate-image', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ idea: state.idea })
+      body: JSON.stringify({ idea: state.idea, style: state.answers[1] })
     })
       .then(function (r) { return r.json(); })
       .then(function (data) {
