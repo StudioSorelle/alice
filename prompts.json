@@ -1,0 +1,493 @@
+{
+  "box": {
+    "canvas": {
+      "en": "You're working with the Studio Sorelle Canvas Moment — four canvases, ready to come alive.",
+      "nl": "Je werkt met het Studio Sorelle Canvas Moment — vier canvassen, klaar om tot leven te komen."
+    },
+    "mini": {
+      "en": "You have the Studio Sorelle Mini Canvas Moment — a smaller set, perfect for a focused and intimate session.",
+      "nl": "Je hebt het Studio Sorelle Mini Canvas Moment — kleiner, perfect voor een gerichte en intieme sessie."
+    },
+    "tote": {
+      "en": "You have the Studio Sorelle Tote Moment — your creative kit in a beautiful tote bag, ready to go anywhere.",
+      "nl": "Je hebt het Studio Sorelle Tote Moment — je creatieve kit in een prachtige tas, klaar om mee te nemen."
+    }
+  },
+  "group": {
+    "Alone": {
+      "en": "You're painting solo — all four canvases are yours to shape however you like. Let instinct lead.",
+      "nl": "Je schildert alleen — alle vier de canvassen zijn van jou. Laat je intuïtie de leiding nemen."
+    },
+    "With 2": {
+      "en": "Two painters, four canvases. You might each take two, or collaborate on all four — your call.",
+      "nl": "Twee schilders, vier canvassen. Neem er elk twee, of werk samen aan alle vier — jullie kiezen."
+    },
+    "With 3-4": {
+      "en": "A small group of 3–4 people. Divide the canvases and paint your own piece of the bigger picture.",
+      "nl": "Een kleine groep van 3–4 mensen. Verdeel de canvassen en schilder je eigen deel van het grote geheel."
+    },
+    "Full group": {
+      "en": "A full group with four canvases — one per person. Each panel is unique, but together they tell one story.",
+      "nl": "Een volledige groep met vier canvassen — één per persoon. Elk paneel is uniek, maar samen vertellen ze één verhaal."
+    }
+  },
+  "styles": {
+    "Abstract": {
+      "en": {
+        "theme": "An abstract composition — colour, shape, and feeling without rules",
+        "canvases": [
+          "Top-left: choose one bold colour and let it fill the panel. No form, just pure feeling.",
+          "Top-right: texture and movement — thick strokes, drips, or sweeping marks that go where they want.",
+          "Bottom-left: contrast and tension — place two colours side by side that push against each other.",
+          "Bottom-right: rest and breath — a calmer area that lets the eye settle after the energy of the others."
+        ],
+        "connection": "Together the four panels form an abstract work that pulses with energy and quiet in equal measure."
+      },
+      "nl": {
+        "theme": "Een abstracte compositie — kleur, vorm en gevoel zonder regels",
+        "canvases": [
+          "Linksboven: kies één krachtige kleur en laat die het paneel vullen. Geen vorm, puur gevoel.",
+          "Rechtsboven: textuur en beweging — dikke streken, druppels of vegen die gaan waar ze willen.",
+          "Linksonder: contrast en spanning — zet twee kleuren naast elkaar die tegen elkaar inwerken.",
+          "Rechtsonder: rust en ruimte — een rustiger vlak waar het oog kan landen na de energie van de anderen."
+        ],
+        "connection": "Samen vormen de vier panelen een abstract werk dat pulseert van energie en rust."
+      }
+    },
+    "Simplistisch": {
+      "en": {
+        "theme": "A clean, minimal composition — less is more",
+        "canvases": [
+          "Top-left: one simple shape — a circle, a square, or a soft organic form against a plain background.",
+          "Top-right: one confident mark — a single brushstroke or a gentle wash of colour.",
+          "Bottom-left: negative space — let the bare canvas breathe and become part of the composition.",
+          "Bottom-right: a quiet detail — a thin line, a small dot, or the very faintest hint of colour."
+        ],
+        "connection": "Together the four panels form a quiet, modern composition where every mark earns its place."
+      },
+      "nl": {
+        "theme": "Een strakke, minimalistische compositie — minder is meer",
+        "canvases": [
+          "Linksboven: één eenvoudige vorm — een cirkel, een vierkant of een zachte organische vorm op een vlakke achtergrond.",
+          "Rechtsboven: één zekere streek — een enkel penseelstreek of een zachte kleurwassing.",
+          "Linksonder: negatieve ruimte — laat het blote canvas ademen en deel van de compositie worden.",
+          "Rechtsonder: een stil detail — een dunne lijn, een stipje of de fijnste hint van kleur."
+        ],
+        "connection": "Samen vormen de vier panelen een stille, moderne compositie waarin elke streek zijn plaats verdient."
+      }
+    },
+    "Landschappen": {
+      "en": {
+        "theme": "A landscape unfolding across four panels",
+        "canvases": [
+          "Top-left: a wide sky — clouds, light, and the mood of the hour.",
+          "Top-right: the horizon — where land and sky meet, soft and hazy.",
+          "Bottom-left: the foreground — grass, stones, roots, or water at the very edge.",
+          "Bottom-right: a focal point — a lone tree, a winding path, a distant house, or a figure in the field."
+        ],
+        "connection": "Together the four panels form one continuous landscape, sweeping from open sky down to solid ground."
+      },
+      "nl": {
+        "theme": "Een landschap dat zich uitstrekt over vier panelen",
+        "canvases": [
+          "Linksboven: een wijde lucht — wolken, licht en de sfeer van het moment.",
+          "Rechtsboven: de horizon — waar land en lucht elkaar ontmoeten, zacht en wazig.",
+          "Linksonder: het voorplan — gras, stenen, wortels of water aan de rand.",
+          "Rechtsonder: een blikvanger — een eenzame boom, een kronkelend pad, een verre boerderij of een figuur in het veld."
+        ],
+        "connection": "Samen vormen de vier panelen één doorgaand landschap, van de open lucht naar de vaste grond."
+      }
+    },
+    "Stilleven": {
+      "en": {
+        "theme": "A still life — objects arranged with intention and light",
+        "canvases": [
+          "Top-left: the main object — a vase, a bowl of fruit, or something that anchors the whole scene.",
+          "Top-right: a companion piece — a second object, slightly smaller or lighter, standing nearby.",
+          "Bottom-left: surface and shadow — the table or cloth where everything rests, with light falling across it.",
+          "Bottom-right: a close detail — the texture of ceramic, the shine on glass, or the bruise on a pear."
+        ],
+        "connection": "Together the four panels become one intimate still life — ordinary objects made extraordinary."
+      },
+      "nl": {
+        "theme": "Een stilleven — voorwerpen gerangschikt met bedoeling en licht",
+        "canvases": [
+          "Linksboven: het hoofdobject — een vaas, een schaal fruit of iets dat de hele scène verankert.",
+          "Rechtsboven: een gezelstuk — een tweede voorwerp, kleiner of lichter, vlakbij.",
+          "Linksonder: ondergrond en schaduw — het tafelblad of de doek waarop alles rust, met het licht eroverheen.",
+          "Rechtsonder: een close-updetail — de textuur van keramiek, de glinstering van glas of de deuk in een peer."
+        ],
+        "connection": "Samen worden de vier panelen één intiem stilleven — gewone voorwerpen buitengewoon gemaakt."
+      }
+    },
+    "Speels": {
+      "en": {
+        "theme": "A playful, joyful composition — colour, fun, and pure creative freedom",
+        "canvases": [
+          "Top-left: bright colours and bold shapes — make it pop. No rules, just energy.",
+          "Top-right: a fun character or whimsical creature — something that couldn't exist but absolutely should.",
+          "Bottom-left: a pattern or repeat — your own invented polka dots, stripes, or anything you feel like.",
+          "Bottom-right: a delightful surprise — something unexpected in the corner that makes you grin."
+        ],
+        "connection": "Together the four panels build a world that doesn't take itself seriously — and that is exactly the point."
+      },
+      "nl": {
+        "theme": "Een speelse, vrolijke compositie — kleur, plezier en pure creatieve vrijheid",
+        "canvases": [
+          "Linksboven: heldere kleuren en krachtige vormen — maak het opvallend. Geen regels, puur energie.",
+          "Rechtsboven: een grappig figuur of fantasiewezen — iets dat niet kan bestaan maar absoluut zou moeten.",
+          "Linksonder: een patroon of herhaling — je eigen verzonnen stipjes, strepen of wat je maar wilt.",
+          "Rechtsonder: een leuke verrassing — iets onverwachts in de hoek dat je doet glimlachen."
+        ],
+        "connection": "Samen bouwen de vier panelen een wereld op die zichzelf niet serieus neemt — en dat is precies de bedoeling."
+      }
+    },
+    "Aesthetic": {
+      "en": {
+        "theme": "A curated, atmospheric composition — moody and considered",
+        "canvases": [
+          "Top-left: a muted background — dusty rose, warm beige, sage green, or soft grey as the base.",
+          "Top-right: a silhouette or soft shadow — something half-seen, half-imagined.",
+          "Bottom-left: a delicate texture — the suggestion of linen, fog, or petals on the edge of falling.",
+          "Bottom-right: one quiet detail — a dried flower, a crescent moon, a single droplet, or a fading shape."
+        ],
+        "connection": "Together the four panels form a carefully crafted world — beautiful precisely because of what it leaves out."
+      },
+      "nl": {
+        "theme": "Een gecureerde, sfeervolle compositie — doorvoeld en bewust",
+        "canvases": [
+          "Linksboven: een gedempte achtergrond — stofroze, warm beige, saliegroen of zachtgrijs als basis.",
+          "Rechtsboven: een silhouet of zachte schaduw — iets half gezien, half ingebeeld.",
+          "Linksonder: een subtiele textuur — de suggestie van linnen, mist of bloemblaadjes aan de rand van vallen.",
+          "Rechtsonder: één stil detail — een gedroogde bloem, een maansikkel, een druppel of een vervagende vorm."
+        ],
+        "connection": "Samen vormen de vier panelen een zorgvuldig gecreëerde wereld — mooi juist door wat ze weglaat."
+      }
+    },
+    "Dranken": {
+      "en": {
+        "theme": "A still life of drinks — glassware, colour, and the art of a good pour",
+        "canvases": [
+          "Top-left: a full glass — wine, coffee, or a cocktail — catching the light just right.",
+          "Top-right: the bottle or vessel — its shape, its label, its presence on the table.",
+          "Bottom-left: the setting — a cloth, condensation on the glass, a coaster, a small spill.",
+          "Bottom-right: the last sip — an almost-empty glass and the ring it leaves behind."
+        ],
+        "connection": "Together the four panels tell the quiet story of a drink enjoyed — from the first pour to the last drop."
+      },
+      "nl": {
+        "theme": "Een stilleven van dranken — glaswerk, kleur en de kunst van een goed glas",
+        "canvases": [
+          "Linksboven: een vol glas — wijn, koffie of een cocktail — dat het licht precies goed opvangt.",
+          "Rechtsboven: de fles of het vat — zijn vorm, etiket en aanwezigheid op tafel.",
+          "Linksonder: de setting — een kleedje, condens op het glas, een onderzettertje, een kleine druppel.",
+          "Rechtsonder: de laatste slok — een bijna leeg glas en de kring die het achterlaat."
+        ],
+        "connection": "Samen vertellen de vier panelen het stille verhaal van een genoten drankje — van de eerste schenk tot de laatste druppel."
+      }
+    },
+    "Dieren": {
+      "en": {
+        "theme": "An animal portrait — up close and full of character",
+        "canvases": [
+          "Top-left: the face — eyes full of life, close enough to feel the animal's presence.",
+          "Top-right: the body — fur, feathers, or scales catching the light.",
+          "Bottom-left: the paws or feet — grounded, resting, or caught mid-step.",
+          "Bottom-right: the habitat — a glimpse of the world this creature belongs to."
+        ],
+        "connection": "Step back and the full creature appears — wild, still, and alive in its own world."
+      },
+      "nl": {
+        "theme": "Een dierenportret — dichtbij en vol karakter",
+        "canvases": [
+          "Linksboven: het gezicht — ogen vol leven, dichtbij genoeg om de aanwezigheid van het dier te voelen.",
+          "Rechtsboven: het lichaam — vacht, veren of schubben in het licht.",
+          "Linksonder: de poten — gegrond, rustend of betrapt halverwege een stap.",
+          "Rechtsonder: de habitat — een glimp van de wereld waartoe dit dier behoort."
+        ],
+        "connection": "Stap achteruit en het volledige dier verschijnt — wild, stil en levend in zijn eigen wereld."
+      }
+    },
+    "Fantasie": {
+      "en": {
+        "theme": "A fantasy world — beyond the ordinary, strange and beautiful",
+        "canvases": [
+          "Top-left: a dramatic sky — twin moons, an aurora, or light streaming from an unknown source.",
+          "Top-right: a creature or figure in motion — mythical, strange, and unmistakably alive.",
+          "Bottom-left: an enchanted landscape — an ancient forest, floating ruins, or water that glows from within.",
+          "Bottom-right: a magical object or portal — the detail that holds the whole world together."
+        ],
+        "connection": "The four panels reveal a world beyond the ordinary — strange and beautiful, from the sky to the smallest secret."
+      },
+      "nl": {
+        "theme": "Een fantasiewereld — voorbij het gewone, vreemd en mooi",
+        "canvases": [
+          "Linksboven: een dramatische lucht — twee manen, een aurora of licht dat stroomt uit een onbekende bron.",
+          "Rechtsboven: een wezen of figuur in beweging — mythisch, vreemd en onmiskenbaar levend.",
+          "Linksonder: een betoverd landschap — een oud woud, zwevende ruïnes of water dat van binnenuit gloeit.",
+          "Rechtsonder: een magisch voorwerp of portaal — het detail dat de hele wereld bij elkaar houdt."
+        ],
+        "connection": "De vier panelen onthullen een wereld voorbij het gewone — vreemd en mooi, van de lucht tot het kleinste geheim."
+      }
+    },
+    "Natuur": {
+      "en": {
+        "theme": "Nature seen close up — the small world we walk past every day",
+        "canvases": [
+          "Top-left: a single leaf — its veins, its colour gradient, its imperfections.",
+          "Top-right: a cluster of plants or flowers — overlapping, leaning, alive.",
+          "Bottom-left: the ground beneath — moss, soil, fallen petals, or worn stones.",
+          "Bottom-right: light through leaves — dappled, warm, and gone in an instant."
+        ],
+        "connection": "Together the panels form a close-up portrait of the natural world — the part we usually walk straight past."
+      },
+      "nl": {
+        "theme": "Natuur van dichtbij — de kleine wereld die we elke dag voorbijlopen",
+        "canvases": [
+          "Linksboven: één blad — zijn nerven, zijn kleurverloop, zijn onvolkomenheden.",
+          "Rechtsboven: een cluster planten of bloemen — overlappend, leunend, levend.",
+          "Linksonder: de grond eronder — mos, aarde, gevallen bloemblaadjes of verweerde stenen.",
+          "Rechtsonder: licht door bladeren — gevlekt, warm en voorbij voor je het weet."
+        ],
+        "connection": "Samen vormen de panelen een close-upportret van de natuur — het deel dat we gewoonlijk voorbijlopen."
+      }
+    },
+    "Mensen": {
+      "en": {
+        "theme": "A portrait of people — faces, hands, and the space between",
+        "canvases": [
+          "Top-left: a face — close, warm, and full of expression.",
+          "Top-right: hands — reaching, holding, creating, or quietly resting.",
+          "Bottom-left: a shared moment — laughter caught mid-breath, or a look of quiet focus.",
+          "Bottom-right: the space between people — a shared object, a table, or something that belongs to everyone."
+        ],
+        "connection": "Together the four panels form a portrait of connection — the people and the world they make when they're together."
+      },
+      "nl": {
+        "theme": "Een portret van mensen — gezichten, handen en de ruimte ertussen",
+        "canvases": [
+          "Linksboven: een gezicht — dichtbij, warm en vol uitdrukking.",
+          "Rechtsboven: handen — reikend, vasthoudend, creërend of rustig liggend.",
+          "Linksonder: een gedeeld moment — lach gevangen halverwege een adem, of een blik van stille focus.",
+          "Rechtsonder: de ruimte ertussen — een gedeeld voorwerp, een tafel of iets dat van iedereen is."
+        ],
+        "connection": "Samen vormen de vier panelen een portret van verbinding — de mensen en de wereld die ze samen maken."
+      }
+    },
+    "Party": {
+      "en": {
+        "theme": "A celebration in full colour — the noise, the joy, and the quiet after",
+        "canvases": [
+          "Top-left: colour and movement — balloons, streamers, or confetti caught mid-air.",
+          "Top-right: the people — faces, raised glasses, and the joy of being together.",
+          "Bottom-left: the table — food, drinks, candles, and all the good things.",
+          "Bottom-right: a quiet detail — a gift, a handwritten note, or a single flickering flame."
+        ],
+        "connection": "Together the panels capture everything that makes a celebration worth remembering — the noise and the stillness."
+      },
+      "nl": {
+        "theme": "Een feest in volle kleur — het lawaai, de vreugde en de stilte erna",
+        "canvases": [
+          "Linksboven: kleur en beweging — ballonnen, slingers of confetti betrapt in de lucht.",
+          "Rechtsboven: de mensen — gezichten, geheven glazen en de vreugde van samen zijn.",
+          "Linksonder: de tafel — eten, drinken, kaarsen en alles wat goed is.",
+          "Rechtsonder: een stil detail — een cadeau, een handgeschreven kaartje of één flakkerend vlammetje."
+        ],
+        "connection": "Samen vangen de panelen alles wat een feest de moeite waard maakt — het lawaai en de stilte."
+      }
+    },
+    "Stad": {
+      "en": {
+        "theme": "An urban scene — the city in all its layers",
+        "canvases": [
+          "Top-left: the skyline — silhouettes of buildings against a dusk or dawn sky.",
+          "Top-right: a busy street — movement, colour, and the constant hum of city life.",
+          "Bottom-left: a storefront or doorway — an invitation inside, or a glimpse of someone's world.",
+          "Bottom-right: a quiet corner — an alley, a bench, or a plant pushing through the pavement."
+        ],
+        "connection": "The four panels form one city — from the grand view right down to the small, soul-giving details."
+      },
+      "nl": {
+        "theme": "Een stadsscène — de stad in al haar lagen",
+        "canvases": [
+          "Linksboven: de skyline — silhouetten van gebouwen tegen een avond- of ochtendlucht.",
+          "Rechtsboven: een drukke straat — beweging, kleur en het constante ruisen van het stadsleven.",
+          "Linksonder: een etalage of deuropening — een uitnodiging naar binnen, of een glimp van iemands wereld.",
+          "Rechtsonder: een rustig hoekje — een steeg, een bankje of een plant die door het plaveisel breekt."
+        ],
+        "connection": "De vier panelen vormen samen één stad — van het grote overzicht tot de kleine, zielgevende details."
+      }
+    },
+    "Seizoensgebonden": {
+      "winter": {
+        "en": {
+          "theme": "A winter scene — quiet, cold, and full of hidden warmth",
+          "canvases": [
+            "Top-left: a grey-white sky with the promise of snow — or the silence after it has fallen.",
+            "Top-right: bare branches or frost patterns — the intricate beauty of the cold.",
+            "Bottom-left: something warm — a lit window, a steaming mug, a candle in the dark.",
+            "Bottom-right: a moment of magic — footprints in snow, a bird on a wire, or the last light of a short day."
+          ],
+          "connection": "Together the panels tell the story of winter — its stillness and its unexpected warmth."
+        },
+        "nl": {
+          "theme": "Een winterscène — stil, koud en vol verborgen warmte",
+          "canvases": [
+            "Linksboven: een grijswitte lucht met de belofte van sneeuw — of de stilte nadat het gevallen is.",
+            "Rechtsboven: kale takken of rijmpatronen — de ingewikkelde schoonheid van de kou.",
+            "Linksonder: iets warms — een verlicht raam, een dampende mok, een kaars in het donker.",
+            "Rechtsonder: een magisch moment — voetstappen in de sneeuw, een vogel op een draad of het laatste licht van een korte dag."
+          ],
+          "connection": "Samen vertellen de panelen het verhaal van de winter — zijn stilte en zijn onverwachte warmte."
+        }
+      },
+      "spring": {
+        "en": {
+          "theme": "Spring unfolding — colour returning, everything waking up",
+          "canvases": [
+            "Top-left: a pale sky with the first real warmth — light that feels different from winter light.",
+            "Top-right: blossoms or buds — the first ones, still small and tentative.",
+            "Bottom-left: wet earth and new green — the smell of rain and something beginning.",
+            "Bottom-right: a bird, a bee, a butterfly — the first sign of life coming back."
+          ],
+          "connection": "Together the four panels capture the exact feeling of spring arriving — hope made visible."
+        },
+        "nl": {
+          "theme": "De lente ontvouwt zich — kleur keert terug, alles wordt wakker",
+          "canvases": [
+            "Linksboven: een bleke lucht met de eerste echte warmte — licht dat anders aanvoelt dan winterlicht.",
+            "Rechtsboven: bloesem of knoppen — de allereerste, nog klein en aarzelend.",
+            "Linksonder: natte aarde en nieuw groen — de geur van regen en iets wat begint.",
+            "Rechtsonder: een vogel, een bij, een vlinder — het eerste teken dat het leven terugkomt."
+          ],
+          "connection": "Samen vangen de vier panelen het exacte gevoel van de lente die aankomt — hoop die zichtbaar wordt."
+        }
+      },
+      "summer": {
+        "en": {
+          "theme": "High summer — heat, colour, and long golden evenings",
+          "canvases": [
+            "Top-left: a blazing sky — deep blue, or that particular white-gold of midday heat.",
+            "Top-right: lush greenery or wildflowers — saturated, almost overwhelmingly alive.",
+            "Bottom-left: shade and cool — the shadow under a tree, a splash of water, a fan.",
+            "Bottom-right: a summer ritual — an ice cream melting, a book in the grass, feet in the water."
+          ],
+          "connection": "Together the four panels capture the full weight and joy of a summer day — hot, generous, and fleeting."
+        },
+        "nl": {
+          "theme": "Hoogzomer — hitte, kleur en lange gouden avonden",
+          "canvases": [
+            "Linksboven: een stralende lucht — diepblauw of dat bijzondere witgoud van de middaghitte.",
+            "Rechtsboven: weelderig groen of wilde bloemen — verzadigd, bijna overweldigend levend.",
+            "Linksonder: schaduw en koelte — de schaduw onder een boom, een spatje water, een waaier.",
+            "Rechtsonder: een zomerritueel — een smeltend ijsje, een boek in het gras, voeten in het water."
+          ],
+          "connection": "Samen vangen de vier panelen het volle gewicht en de vreugde van een zomerdag — heet, royaal en vluchtig."
+        }
+      },
+      "autumn": {
+        "en": {
+          "theme": "Autumn settling in — warm tones, falling leaves, and the smell of change",
+          "canvases": [
+            "Top-left: a sky that has turned — pewter grey, amber-washed, or unexpectedly clear.",
+            "Top-right: leaves — copper, rust, and gold — still on the branch or mid-fall.",
+            "Bottom-left: the ground — a carpet of fallen leaves, mud, chestnuts, or wet cobblestones.",
+            "Bottom-right: something harvested — apples, mushrooms, a pumpkin, or a bonfire starting."
+          ],
+          "connection": "Together the four panels breathe the particular atmosphere of autumn — melancholy and abundance at once."
+        },
+        "nl": {
+          "theme": "De herfst nestelt zich — warme tinten, vallende bladeren en de geur van verandering",
+          "canvases": [
+            "Linksboven: een lucht die is omgeslagen — loodgrijs, ambergekleurd of onverwacht helder.",
+            "Rechtsboven: bladeren — koper, roest en goud — nog aan de tak of halverwege de val.",
+            "Linksonder: de grond — een tapijt van gevallen bladeren, modder, kastanjes of natte kinderkopjes.",
+            "Rechtsonder: iets geoogst — appels, paddenstoelen, een pompoen of een vuur dat begint."
+          ],
+          "connection": "Samen ademen de vier panelen de bijzondere sfeer van de herfst — melancholie en overvloed tegelijk."
+        }
+      }
+    }
+  },
+  "seasonal": [
+    {
+      "name": "new_year",
+      "from": "12-27",
+      "to": "01-03",
+      "en": "New Year is almost here — consider themes of transition, fireworks, midnight skies, or fresh beginnings.",
+      "nl": "Nieuwjaar is bijna — overweeg thema's van overgang: vuurwerk, middernachtslucht of een nieuw begin."
+    },
+    {
+      "name": "christmas",
+      "from": "12-18",
+      "to": "12-26",
+      "en": "Christmas is approaching — consider cosy, wintery, or festive themes: candlelight, snow, and the warmth of togetherness.",
+      "nl": "Kerstmis nadert — overweeg gezellige, winterse of feestelijke thema's: kaarslicht, sneeuw en de warmte van samenzijn."
+    },
+    {
+      "name": "valentine",
+      "from": "02-07",
+      "to": "02-14",
+      "en": "Valentine's is coming up — consider romantic or tender themes: hearts, roses, soft colours, or simply painting something you love.",
+      "nl": "Valentijn komt eraan — overweeg romantische of tedere thema's: harten, rozen, zachte kleuren of gewoon iets schilderen wat je liefhebt."
+    },
+    {
+      "name": "easter",
+      "from": "03-20",
+      "to": "04-10",
+      "en": "Easter is nearby — consider themes of spring renewal: pastel colours, blossoms, eggs, and new beginnings.",
+      "nl": "Pasen is nabij — overweeg thema's van lentehernieuwing: pastelkleuren, bloesem, eieren en nieuwe beginnen."
+    },
+    {
+      "name": "halloween",
+      "from": "10-24",
+      "to": "10-31",
+      "en": "Halloween is just around the corner — consider spooky, mysterious, or playfully eerie themes.",
+      "nl": "Halloween is vlakbij — overweeg enge, mysterieuze of speels griezelige thema's."
+    }
+  ],
+  "level": {
+    "Relaxed": {
+      "30 minutes": {
+        "en": "Keep it loose and enjoy the process. Colour and energy matter more than precision — a few confident marks go a long way.",
+        "nl": "Hou het los en geniet van het proces. Kleur en energie tellen meer dan precisie — enkele zekere streken doen wonderen."
+      },
+      "1 hour": {
+        "en": "Take your time. Let the painting breathe — not every area needs to be finished. Enjoy the journey.",
+        "nl": "Neem de tijd. Laat het schilderij ademen — niet elk deel hoeft afgewerkt te zijn. Geniet van de reis."
+      },
+      "2+ hours": {
+        "en": "A slow, meditative session — let each panel develop at its own pace. No rush, no pressure.",
+        "nl": "Een trage, meditatieve sessie — laat elk paneel op zijn eigen tempo groeien. Geen haast, geen druk."
+      }
+    },
+    "Balanced": {
+      "30 minutes": {
+        "en": "Work quickly but intentionally. Choose one thing per canvas to finish properly and let the rest stay loose.",
+        "nl": "Werk snel maar doelgericht. Kies per paneel één ding dat je goed afwerkt en laat de rest los."
+      },
+      "1 hour": {
+        "en": "Lay in the big shapes first, then add detail where it matters most. Save the last ten minutes for adjustments.",
+        "nl": "Begin met de grote vormen en voeg dan detail toe waar het het meeste telt. Bewaar de laatste tien minuten voor aanpassingen."
+      },
+      "2+ hours": {
+        "en": "Plenty of time to explore. Try a colour or technique you haven't used before — you have space to experiment.",
+        "nl": "Genoeg tijd om te verkennen. Probeer een kleur of techniek die je nog niet eerder hebt gebruikt — je hebt ruimte om te experimenteren."
+      }
+    },
+    "Ambitious": {
+      "30 minutes": {
+        "en": "Bold strokes, strong contrast. Commit to each mark and keep moving — there is no time for second-guessing.",
+        "nl": "Krachtige streken, sterk contrast. Zet je in voor elke streek en blijf bewegen — er is geen tijd voor twijfel."
+      },
+      "1 hour": {
+        "en": "Work in layers — build up gradually and don't be afraid to push further. Good painting decisions come from action, not planning.",
+        "nl": "Werk in lagen — bouw geleidelijk op en wees niet bang om verder te gaan. Goede schilderbeslissingen komen van actie, niet van planning."
+      },
+      "2+ hours": {
+        "en": "Go for it — refine edges, build up texture, and layer over what isn't working. Don't hesitate to paint over and start a section again.",
+        "nl": "Ga er volledig voor — verfijn randen, bouw textuur op en overschilder wat niet werkt. Aarzel niet om een gedeelte over te schilderen."
+      }
+    }
+  }
+}

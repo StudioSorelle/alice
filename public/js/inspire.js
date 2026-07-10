@@ -7,46 +7,42 @@
     { key: 'inspire.group.full', val: 'Full group' }
   ];
   var STYLES = [
-    { key: 'style.abstract', val: 'Abstract' },
-    { key: 'style.simplistic', val: 'Simplistic' },
-    { key: 'style.detailed', val: 'Detailed' },
-    { key: 'style.playful', val: 'Playful' },
-    { key: 'style.geometric', val: 'Geometric' },
-    { key: 'style.bold', val: 'Bold & Expressive' },
-    { key: 'style.girly', val: 'Girly / Pastel' },
-    { key: 'style.tumblr', val: 'Tumblr / Aesthetic' }
-  ];
-  var SUBJECTS = [
-    { key: 'subject.nature', val: 'Nature' },
-    { key: 'subject.animals', val: 'Animals' },
-    { key: 'subject.food', val: 'Food & Drink' },
-    { key: 'subject.party', val: 'Party' },
-    { key: 'subject.city', val: 'City' },
-    { key: 'subject.fantasy', val: 'Fantasy' },
-    { key: 'subject.people', val: 'People' }
+    { key: 'style.abstract',         val: 'Abstract' },
+    { key: 'style.simplistisch',     val: 'Simplistisch' },
+    { key: 'style.landschappen',     val: 'Landschappen' },
+    { key: 'style.stilleven',        val: 'Stilleven' },
+    { key: 'style.speels',           val: 'Speels' },
+    { key: 'style.aesthetic',        val: 'Aesthetic' },
+    { key: 'style.dranken',          val: 'Dranken' },
+    { key: 'style.dieren',           val: 'Dieren' },
+    { key: 'style.fantasie',         val: 'Fantasie' },
+    { key: 'style.natuur',           val: 'Natuur' },
+    { key: 'style.mensen',           val: 'Mensen' },
+    { key: 'style.party',            val: 'Party' },
+    { key: 'style.stad',             val: 'Stad' },
+    { key: 'style.seizoensgebonden', val: 'Seizoensgebonden' }
   ];
   var TIMES = [
     { key: 'time.30min', val: '30 minutes' },
-    { key: 'time.1h', val: '1 hour' },
-    { key: 'time.2h', val: '2+ hours' }
+    { key: 'time.1h',    val: '1 hour' },
+    { key: 'time.2h',    val: '2+ hours' }
   ];
   var DIFFS = [
-    { key: 'diff.relaxed', val: 'Relaxed' },
-    { key: 'diff.balanced', val: 'Balanced' },
+    { key: 'diff.relaxed',   val: 'Relaxed' },
+    { key: 'diff.balanced',  val: 'Balanced' },
     { key: 'diff.ambitious', val: 'Ambitious' }
   ];
 
-  // answers[0]=group, answers[1]=product, answers[2]=style, answers[3]=subject,
-  // answers[4]=time, answers[5]=ambition
+  // answers[0]=group, answers[1]=product, answers[2]=style, answers[3]=time, answers[4]=ambition
   var state = {
     step: 0, answers: [], products: [],
     idea: '', imageCount: 0, currentImageUrl: '',
-    otherSubjectText: ''
+    otherStyleText: ''
   };
 
   function t(key, vars) { return window.t ? window.t(key, vars) : key; }
-  function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-  function escAttr(s) { return String(s).replace(/"/g,'&quot;'); }
+  function escHtml(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  function escAttr(s) { return String(s).replace(/"/g, '&quot;'); }
 
   function render() {
     var el = document.getElementById('inspire-flow');
@@ -59,7 +55,6 @@
     var html = '<p class="flow-step-num">' + t('common.step', { n: step + 1, total: STEPS }) + '</p>';
 
     if (step === 0) {
-      // C1: alone or group
       html += '<p class="flow-question">' + t('inspire.q.group') + '</p>';
       html += '<div class="option-grid" id="opt-grid">';
       GROUP_SIZES.forEach(function (g) {
@@ -78,47 +73,38 @@
       html += '</div>';
 
     } else if (step === 2) {
-      // C3: style + subject combined
       html += '<p class="flow-question">' + t('inspire.q2') + '</p>';
       html += '<div class="option-grid" id="style-grid">';
       STYLES.forEach(function (s) {
         var sel = state.answers[2] === s.val ? ' active' : '';
-        html += '<button class="option-btn' + sel + '" data-style="' + s.val + '">' + t(s.key) + '</button>';
+        html += '<button class="option-btn' + sel + '" data-val="' + s.val + '">' + t(s.key) + '</button>';
       });
+      var otherSel = state.answers[2] === '__other__' ? ' active' : '';
+      html += '<button class="option-btn' + otherSel + '" data-val="__other__">' + t('inspire.other') + '</button>';
       html += '</div>';
-      html += '<p class="flow-question flow-subq">' + t('inspire.q3') + '</p>';
-      html += '<div class="option-grid" id="subject-grid">';
-      SUBJECTS.forEach(function (s) {
-        var sel = state.answers[3] === s.val ? ' active' : '';
-        html += '<button class="option-btn' + sel + '" data-subject="' + s.val + '">' + t(s.key) + '</button>';
-      });
-      var subjectOtherSel = state.answers[3] === '__other__' ? ' active' : '';
-      html += '<button class="option-btn' + subjectOtherSel + '" data-subject="__other__">' + t('inspire.other') + '</button>';
-      html += '</div>';
-      if (state.answers[3] === '__other__') {
-        html += '<input class="flow-other-input" id="other-input" placeholder="' + t('inspire.other.ph') + '" value="' + escAttr(state.otherSubjectText) + '">';
+      if (state.answers[2] === '__other__') {
+        html += '<input class="flow-other-input" id="other-input" placeholder="' + escAttr(t('inspire.other.ph')) + '" value="' + escAttr(state.otherStyleText) + '">';
       }
 
     } else if (step === 3) {
-      html += '<p class="flow-question">' + t('inspire.q4') + '</p>';
+      html += '<p class="flow-question">' + t('inspire.q3') + '</p>';
       html += '<div class="option-grid" id="opt-grid">';
       TIMES.forEach(function (ti) {
-        var sel = state.answers[4] === ti.val ? ' active' : '';
+        var sel = state.answers[3] === ti.val ? ' active' : '';
         html += '<button class="option-btn' + sel + '" data-val="' + ti.val + '">' + t(ti.key) + '</button>';
       });
       html += '</div>';
 
     } else if (step === 4) {
-      html += '<p class="flow-question">' + t('inspire.q5') + '</p>';
+      html += '<p class="flow-question">' + t('inspire.q4') + '</p>';
       html += '<div class="option-grid" id="opt-grid">';
       DIFFS.forEach(function (d) {
-        var sel = state.answers[5] === d.val ? ' active' : '';
+        var sel = state.answers[4] === d.val ? ' active' : '';
         html += '<button class="option-btn' + sel + '" data-val="' + d.val + '">' + t(d.key) + '</button>';
       });
       html += '</div>';
     }
 
-    // A3: Back left, Next right
     html += '<div class="flow-nav">';
     if (step > 0) html += '<button class="flow-ghost-btn" id="flow-back">' + t('common.back') + '</button>';
     html += '<button class="flow-next-btn" id="flow-next">' + (step === STEPS - 1 ? t('common.getidea') : t('common.next')) + '</button>';
@@ -126,12 +112,6 @@
 
     el.innerHTML = html;
     bindStepEvents();
-  }
-
-  function getAnswerIndex(step) {
-    if (step === 3) return 4;
-    if (step === 4) return 5;
-    return step;
   }
 
   function bindStepEvents() {
@@ -148,52 +128,35 @@
       if (!nextBtn) return;
       var ok = false;
       if (step === 2) {
-        var styleOk = !!state.answers[2];
-        var subjectOk = !!(state.answers[3] && !(state.answers[3] === '__other__' && !getOtherText()));
-        ok = styleOk && subjectOk;
+        ok = !!(state.answers[2] && !(state.answers[2] === '__other__' && !getOtherText()));
       } else {
-        var ans = state.answers[getAnswerIndex(step)];
-        ok = !!ans;
+        ok = !!state.answers[step];
       }
       nextBtn.disabled = !ok;
     }
 
     if (step === 2) {
       var styleGrid = document.getElementById('style-grid');
-      var subjectGrid = document.getElementById('subject-grid');
-
       if (styleGrid) {
         styleGrid.addEventListener('click', function (e) {
-          var btn = e.target.closest('[data-style]');
+          var btn = e.target.closest('[data-val]');
           if (!btn) return;
-          state.answers[2] = btn.getAttribute('data-style');
+          var val = btn.getAttribute('data-val');
+          state.answers[2] = val;
           styleGrid.querySelectorAll('.option-btn').forEach(function (b) { b.classList.remove('active'); });
           btn.classList.add('active');
-          updateNext();
-        });
-      }
-
-      if (subjectGrid) {
-        subjectGrid.addEventListener('click', function (e) {
-          var btn = e.target.closest('[data-subject]');
-          if (!btn) return;
-          var val = btn.getAttribute('data-subject');
-          state.answers[3] = val;
-          subjectGrid.querySelectorAll('.option-btn').forEach(function (b) { b.classList.remove('active'); });
-          btn.classList.add('active');
           if (val === '__other__') {
-            state.otherSubjectText = '';
+            state.otherStyleText = '';
             render();
           } else {
             updateNext();
           }
         });
       }
-
       var otherInput = document.getElementById('other-input');
       if (otherInput) {
         otherInput.addEventListener('input', function () {
-          state.otherSubjectText = otherInput.value;
+          state.otherStyleText = otherInput.value;
           updateNext();
         });
       }
@@ -204,8 +167,7 @@
           var btn = e.target.closest('.option-btn');
           if (!btn) return;
           var val = btn.getAttribute('data-val');
-          var ansIdx = getAnswerIndex(step);
-          state.answers[ansIdx] = val;
+          state.answers[step] = val;
           grid.querySelectorAll('.option-btn').forEach(function (b) { b.classList.remove('active'); });
           btn.classList.add('active');
           updateNext();
@@ -217,15 +179,14 @@
       updateNext();
       nextBtn.addEventListener('click', function () {
         if (step === 2) {
-          if (!state.answers[2] || !state.answers[3]) return;
-          if (state.answers[3] === '__other__') {
+          if (!state.answers[2]) return;
+          if (state.answers[2] === '__other__') {
             var txt = getOtherText();
             if (!txt) return;
-            state.answers[3] = txt;
+            state.answers[2] = txt;
           }
         } else {
-          var ansIdx = getAnswerIndex(step);
-          if (!state.answers[ansIdx]) return;
+          if (!state.answers[step]) return;
         }
         if (step === STEPS - 1) {
           submitInspire();
@@ -244,8 +205,8 @@
   function submitInspire() {
     var el = document.getElementById('inspire-flow');
     el.innerHTML = '<div class="flow-loading"><div class="flow-spinner"></div><p class="flow-loading-text">' + t('inspire.loading') + '</p></div>';
-    var qs = [t('inspire.q.group'), t('inspire.q1'), t('inspire.q2'), t('inspire.q3'), t('inspire.q4'), t('inspire.q5')];
-    var answers = state.answers.slice(0, 6).map(function (a, i) { return { question: qs[i], answer: a || '' }; });
+    var qs = [t('inspire.q.group'), t('inspire.q1'), t('inspire.q2'), t('inspire.q3'), t('inspire.q4')];
+    var answers = state.answers.slice(0, 5).map(function (a, i) { return { question: qs[i], answer: a || '' }; });
     fetch('/api/inspire', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -265,7 +226,6 @@
   function renderResult(el) {
     var html = '<div class="inspire-result">';
 
-    // C5: Show generated image prominently at top if available
     if (state.currentImageUrl) {
       html += '<img src="' + escAttr(state.currentImageUrl) + '" class="inspire-img inspire-img-full" alt="Generated painting idea">';
     }
@@ -337,7 +297,7 @@
     state.idea = '';
     state.imageCount = 0;
     state.currentImageUrl = '';
-    state.otherSubjectText = '';
+    state.otherStyleText = '';
 
     var el = document.getElementById('inspire-flow');
     if (!el) return;
