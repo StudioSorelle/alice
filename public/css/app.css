@@ -318,7 +318,7 @@ body {
 
 /* ── Hero logo ── */
 .hero-logo {
-  width: 96px; height: 96px; object-fit: contain;
+  width: 240px; height: 240px; object-fit: contain;
   margin-bottom: 1.25rem;
 }
 
