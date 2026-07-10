@@ -1,12 +1,12 @@
 (function () {
   // ── Six kit paints (Kubelka-Munk mixing) ──
   var BASES = [
-    { name: 'White',      color: '#ffffff', rgb: [255, 255, 255] },
-    { name: 'Red',        color: '#d42030', rgb: [212,  32,  48] },
-    { name: 'Black',      color: '#12121a', rgb: [ 18,  18,  26] },
-    { name: 'Dark Green', color: '#006432', rgb: [  0, 100,  50] },
-    { name: 'Dark Blue',  color: '#003296', rgb: [  0,  50, 150] },
-    { name: 'Yellow',     color: '#ffd200', rgb: [255, 210,   0] }
+    { name: 'White',      color: '#ffffff', rgb: [255, 255, 255], km: [1.000, 1.000, 1.000] },
+    { name: 'Red',        color: '#d42030', rgb: [212,  32,  48], km: [0.912, 0.354, 0.434] },
+    { name: 'Black',      color: '#12121a', rgb: [ 18,  18,  26], km: [0.266, 0.266, 0.319] },
+    { name: 'Dark Green', color: '#006432', rgb: [  0, 100,  50], km: [0.000, 0.626, 0.443] },
+    { name: 'Dark Blue',  color: '#003296', rgb: [  0,  50, 150], km: [0.000, 0.443, 0.767] },
+    { name: 'Yellow',     color: '#ffd200', rgb: [255, 210,   0], km: [1.000, 0.908, 0.000] }
   ];
 
   // ── K-M colour mixing ──
@@ -21,36 +21,101 @@
     ];
   }
 
-  function findMix(targetRgb) {
-    var n = BASES.length;
-    var target = toKM(targetRgb);
-    var bkm = [];
-    var i, j;
-    for (i = 0; i < n; i++) bkm.push(toKM(BASES[i].rgb));
-    var w = [];
-    for (i = 0; i < n; i++) w.push(1 / n);
-    for (var iter = 0; iter < 400; iter++) {
-      var cur = [0, 0, 0], s = 0;
-      for (j = 0; j < n; j++) {
-        cur[0] += w[j] * bkm[j][0];
-        cur[1] += w[j] * bkm[j][1];
-        cur[2] += w[j] * bkm[j][2];
-      }
-      for (j = 0; j < n; j++) {
-        var g = 2 * (
-          (cur[0] - target[0]) * bkm[j][0] +
-          (cur[1] - target[1]) * bkm[j][1] +
-          (cur[2] - target[2]) * bkm[j][2]
-        );
-        w[j] = Math.max(0, w[j] - 0.07 * g);
-      }
-      for (j = 0; j < n; j++) s += w[j];
-      if (s > 0) for (j = 0; j < n; j++) w[j] /= s;
+  function projectToSimplex(v) {
+    var n = v.length;
+    var u = v.slice().sort(function(a, b) { return b - a; });
+    var cumsum = 0, rho = 0;
+    for (var j = 0; j < n; j++) {
+      cumsum += u[j];
+      if (u[j] > (cumsum - 1.0) / (j + 1)) rho = j;
     }
-    var s = 0;
-    for (i = 0; i < n; i++) { if (w[i] < 0.02) w[i] = 0; else s += w[i]; }
-    if (s > 0) for (i = 0; i < n; i++) w[i] /= s;
-    return w;
+    var sumRho = 0;
+    for (var j = 0; j <= rho; j++) sumRho += u[j];
+    var theta = (sumRho - 1.0) / (rho + 1);
+    var result = [];
+    for (var i = 0; i < n; i++) result.push(Math.max(0.0, v[i] - theta));
+    return result;
+  }
+
+  function similarityInit(targetRgb) {
+    var n = BASES.length;
+    var sims = [], total = 0.0;
+    for (var i = 0; i < n; i++) {
+      var dist = colorDiff(BASES[i].rgb, targetRgb);
+      var sim = 1.0 / (1.0 + dist * 0.015);
+      sims.push(sim);
+      total += sim;
+    }
+    var weights = [];
+    for (var i = 0; i < n; i++) weights.push(sims[i] / total);
+    return weights;
+  }
+
+  function proposeWeights(targetRgb, initWeights) {
+    var n = BASES.length;
+    var targetKm = toKM(targetRgb);
+    if (!initWeights) initWeights = similarityInit(targetRgb);
+    var activeIdx = [];
+    for (var i = 0; i < n; i++) { if (initWeights[i] > 0) activeIdx.push(i); }
+    if (activeIdx.length === 0) { for (var i = 0; i < n; i++) activeIdx.push(i); }
+    var aw = [], awSum = 0.0;
+    for (var j = 0; j < activeIdx.length; j++) {
+      aw.push(initWeights[activeIdx[j]]);
+      awSum += initWeights[activeIdx[j]];
+    }
+    if (awSum > 0.0) { for (var j = 0; j < aw.length; j++) aw[j] /= awSum; }
+    else             { for (var j = 0; j < aw.length; j++) aw[j] = 1.0 / aw.length; }
+    var lr = 0.07;
+    for (var iter = 0; iter < 400; iter++) {
+      var mixKm = [0.0, 0.0, 0.0];
+      for (var j = 0; j < activeIdx.length; j++) {
+        var bi = activeIdx[j];
+        mixKm[0] += aw[j] * BASES[bi].km[0];
+        mixKm[1] += aw[j] * BASES[bi].km[1];
+        mixKm[2] += aw[j] * BASES[bi].km[2];
+      }
+      var dr = mixKm[0] - targetKm[0], dg = mixKm[1] - targetKm[1], db = mixKm[2] - targetKm[2];
+      var stepped = [];
+      for (var j = 0; j < activeIdx.length; j++) {
+        var bi = activeIdx[j];
+        var grad = 2.0 * (dr * BASES[bi].km[0] + dg * BASES[bi].km[1] + db * BASES[bi].km[2]);
+        stepped.push(aw[j] - lr * grad);
+      }
+      aw = projectToSimplex(stepped);
+      if ((iter + 1) % 100 === 0) lr *= 0.5;
+    }
+    var fullWeights = [];
+    for (var i = 0; i < n; i++) fullWeights.push(0.0);
+    for (var j = 0; j < activeIdx.length; j++) fullWeights[activeIdx[j]] = aw[j];
+    return fullWeights;
+  }
+
+  function verifyAndRefine(weights, targetRgb) {
+    var n = BASES.length;
+    var CUTOFF_P1 = 0.04, CUTOFF_P2 = 0.02;
+    var pruned = [], prunedSum = 0.0;
+    for (var i = 0; i < n; i++) {
+      var w = (weights[i] < CUTOFF_P1) ? 0.0 : weights[i];
+      pruned.push(w);
+      prunedSum += w;
+    }
+    if (prunedSum <= 0.0) return similarityInit(targetRgb);
+    for (var i = 0; i < n; i++) pruned[i] /= prunedSum;
+    var refined = proposeWeights(targetRgb, pruned);
+    var finalSum = 0.0;
+    for (var i = 0; i < n; i++) {
+      if (refined[i] < CUTOFF_P2) refined[i] = 0.0;
+      finalSum += refined[i];
+    }
+    if (finalSum <= 0.0) return pruned;
+    for (var i = 0; i < n; i++) refined[i] /= finalSum;
+    return refined;
+  }
+
+  function findMix(targetRgb) {
+    var initWeights = similarityInit(targetRgb);
+    var phase1 = proposeWeights(targetRgb, initWeights);
+    return verifyAndRefine(phase1, targetRgb);
   }
 
   function applyMix(weights) {
