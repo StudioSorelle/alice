@@ -448,8 +448,11 @@ body {
 @media (max-width: 600px) {
   .lang-btn:not(.lang-btn-hero) { display: none; }
   .lang-btn-hero { display: block; }
-  .nav { padding: .7rem 1rem; }
-  .nav-links { gap: 1rem; }
+  .nav { padding: .6rem .75rem .4rem; flex-wrap: wrap; gap: .2rem 0; }
+  .nav-logo { width: 100%; }
+  .nav-right { width: 100%; flex-wrap: wrap; gap: .3rem; }
+  .nav-links { display: grid; grid-template-columns: 1fr 1fr; gap: .2rem .4rem; width: 100%; }
+  .nav-links a { font-size: .68rem; letter-spacing: .02em; line-height: 1.3; text-align: center; padding: .3rem .2rem; opacity: .75; }
   .hero-swatches { padding: 1.5rem 1rem; }
   .hero-panel { padding: 2rem 1rem; }
   .hero-title { font-size: 2.8rem; }
