@@ -6,9 +6,9 @@
     { key: 'time.2h', val: '2+ hours' }
   ];
   var ACTIVITY_TYPES = [
-    { key: 'spark.physical', val: 'Physical' },
-    { key: 'spark.mental', val: 'Mental game' },
-    { key: 'spark.mix', val: 'Mix of both' }
+    { key: 'spark.studio_games', val: 'studio_games' },
+    { key: 'spark.sorelle_talks', val: 'sorelle_talks' },
+    { key: 'spark.mix', val: 'mix' }
   ];
   var PEOPLE_OPTS = [1, 2, 3, 4];
 
@@ -155,26 +155,10 @@
       .then(function (r) { return r.json(); })
       .then(function (data) {
         if (data.error) { showError(data.error); return; }
-        var activities = parseActivities(data.text);
-        if (!activities.length) { showError(t('common.retry')); return; }
-        renderDeck(activities);
+        if (!data.activities || !data.activities.length) { showError(t('common.retry')); return; }
+        renderDeck(data.activities.map(function (a) { return a.description; }));
       })
       .catch(function () { showError(t('common.retry')); });
-  }
-
-  function parseActivities(text) {
-    var lines = text.split('\n').map(function (l) { return l.trim(); }).filter(Boolean);
-    var out = [], buf = '';
-    lines.forEach(function (line) {
-      if (/^\d+[\.\)]/.test(line)) {
-        if (buf) out.push(buf.trim());
-        buf = line.replace(/^\d+[\.\)]\s*/, '');
-      } else {
-        buf += (buf ? ' ' : '') + line;
-      }
-    });
-    if (buf) out.push(buf.trim());
-    return out.slice(0, 7);
   }
 
   function renderDeck(activities) {

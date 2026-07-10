@@ -134,22 +134,38 @@ app.post('/api/inspire', function (req, res) {
   res.json({ idea: buildInspireIdea(answers, lang) });
 });
 
-// ── Spark ──
+// ── Spark (DB-based randomizer, no AI) ──
 app.post('/api/spark', async (req, res) => {
-  if (!anthropic) return res.status(503).json({ error: 'AI features not yet configured on this server.' });
   const { answers, lang } = req.body;
   if (!answers || !Array.isArray(answers) || !answers.length)
     return res.status(400).json({ error: 'Please answer the questions first.' });
   try {
-    const message = await anthropic.messages.create({
-      model: 'claude-haiku-4-5-20251001',
-      max_tokens: 700,
-      messages: [{ role: 'user', content: buildSparkPrompt(answers, lang) }]
+    var occasion = answers[3] ? answers[3].answer : 'any';
+    var actType = answers[4] ? answers[4].answer : 'mix';
+    var result;
+    if (actType === 'mix') {
+      result = await db.query(
+        "SELECT * FROM activities WHERE (occasion = 'any' OR occasion = ?)",
+        [occasion]
+      );
+    } else {
+      result = await db.query(
+        "SELECT * FROM activities WHERE type = ? AND (occasion = 'any' OR occasion = ?)",
+        [actType, occasion]
+      );
+    }
+    var rows = result.rows.slice();
+    for (var i = rows.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = rows[i]; rows[i] = rows[j]; rows[j] = tmp;
+    }
+    var activities = rows.slice(0, 7).map(function (row) {
+      return { id: row.id, type: row.type, description: lang === 'nl' ? row.description_nl : row.description_en };
     });
-    res.json({ text: message.content[0].text });
+    res.json({ activities: activities });
   } catch (err) {
-    console.error('Claude API error:', err.message);
-    res.status(500).json({ error: 'Could not generate activities right now. Please try again.' });
+    console.error('Spark DB error:', err.message);
+    res.status(500).json({ error: 'Could not load activities. Please try again.' });
   }
 });
 
