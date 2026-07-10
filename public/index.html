@@ -44,16 +44,35 @@
   <section id="view-home" class="view active">
     <div class="hero">
       <div class="hero-swatches">
-        <div class="swatch" style="background:#f4e9dd"></div>
-        <div class="swatch" style="background:#c48a6a"></div>
-        <div class="swatch" style="background:#6a1f2a"></div>
-        <div class="swatch" style="background:#ffe7c2"></div>
-        <div class="swatch" style="background:#d8c2a7"></div>
-        <div class="swatch" style="background:#2b1a17"></div>
-        <div class="swatch" style="background:#2b1a17"></div>
-        <div class="brand-card">
-          <img src="/assets/logo.png" alt="Studio Sorelle" class="bc-logo-img" onerror="this.style.display='none'">
-        </div>
+        <button class="swatch-tile" style="background:#f4e9dd" data-view="mix">
+          <p class="tile-num">01</p>
+          <div class="tile-visual"><div class="tile-vis-wheel"></div></div>
+          <h2 class="tile-title" data-i18n="tile.mix.title">Mix your moment</h2>
+          <p class="tile-desc" data-i18n="tile.mix.desc">Struggling to find the right colour? Browse our full colour spectrum and discover the exact mixing ratio using your six kit paints.</p>
+        </button>
+        <button class="swatch-tile" style="background:#c48a6a" data-view="inspire">
+          <p class="tile-num">02</p>
+          <div class="tile-visual"><span class="tile-vis-q">?</span></div>
+          <h2 class="tile-title" data-i18n="tile.inspire.title">Find your moment</h2>
+          <p class="tile-desc" data-i18n="tile.inspire.desc">Let yourself be surprised: answer a couple of questions and receive a painting idea made just for your mood.</p>
+        </button>
+        <button class="swatch-tile st-dark" style="background:#6a1f2a" data-view="spark">
+          <p class="tile-num">03</p>
+          <div class="tile-visual"><div class="tile-vis-spark"></div></div>
+          <h2 class="tile-title" data-i18n="tile.spark.title">Spark your moment</h2>
+          <p class="tile-desc" data-i18n="tile.spark.desc">Answer some questions, and you'll unlock seven playful challenges to keep the moment alive.</p>
+        </button>
+        <button class="swatch-tile" style="background:#ffe7c2" data-view="moment">
+          <p class="tile-num">04</p>
+          <div class="tile-visual"><span class="tile-vis-share">&#9829;</span></div>
+          <h2 class="tile-title" data-i18n="tile.share.title">Share your moment</h2>
+          <p class="tile-desc" data-i18n="tile.share.desc">Upload a photo of your painting and capture the moment forever.</p>
+        </button>
+        <a href="https://open.spotify.com/user/31mgcv55qjxjlsvw3stg7me2ujkq" target="_blank" rel="noopener" class="swatch-tile swatch-tile-spotify" style="background:#d8c2a7">
+          <div class="tile-visual"><span class="tile-vis-music">&#9835;</span></div>
+          <h2 class="tile-title" data-i18n="tile.spotify.title">Set the mood</h2>
+          <p class="tile-desc" data-i18n="tile.spotify.desc">Put on the Studio Sorelle playlist and paint in the right vibe.</p>
+        </a>
       </div>
       <div class="hero-panel">
         <button class="lang-btn lang-btn-hero" id="langToggleMobile">NL</button>
@@ -62,57 +81,6 @@
         <h1 class="hero-title">create<br>moments.</h1>
         <p class="hero-body" data-i18n="hero.body">Six colours, three ways to make something together. Mix, find your theme, or let chance decide.</p>
         <a href="https://open.spotify.com/user/31mgcv55qjxjlsvw3stg7me2ujkq" target="_blank" rel="noopener" class="cta-btn" data-i18n="hero.cta">Set the mood →</a>
-      </div>
-    </div>
-
-    <div id="tiles" class="tiles-wrap">
-      <p class="eyebrow" data-i18n="tiles.eyebrow">Choose where to start</p>
-      <div class="tiles-grid">
-
-        <button class="tile" data-view="mix">
-          <p class="tile-num">01</p>
-          <div class="tile-visual">
-            <div class="tile-vis-wheel"></div>
-          </div>
-          <h2 class="tile-title" data-i18n="tile.mix.title">Mix your moment</h2>
-          <p class="tile-desc" data-i18n="tile.mix.desc">Struggling to find the right colour? Browse our full colour spectrum and discover the exact mixing ratio using your six kit paints.</p>
-        </button>
-
-        <button class="tile" data-view="inspire">
-          <p class="tile-num">02</p>
-          <div class="tile-visual">
-            <span class="tile-vis-q">?</span>
-          </div>
-          <h2 class="tile-title" data-i18n="tile.inspire.title">Find your moment</h2>
-          <p class="tile-desc" data-i18n="tile.inspire.desc">Let yourself be surprised: answer a couple of questions and receive a painting idea made just for your mood.</p>
-        </button>
-
-        <button class="tile" data-view="spark">
-          <p class="tile-num">03</p>
-          <div class="tile-visual">
-            <div class="tile-vis-spark"></div>
-          </div>
-          <h2 class="tile-title" data-i18n="tile.spark.title">Spark your moment</h2>
-          <p class="tile-desc" data-i18n="tile.spark.desc">Answer some questions, and you'll unlock seven playful challenges to keep the moment alive.</p>
-        </button>
-
-        <button class="tile" data-view="moment">
-          <p class="tile-num">04</p>
-          <div class="tile-visual">
-            <span class="tile-vis-share">&#9829;</span>
-          </div>
-          <h2 class="tile-title" data-i18n="tile.share.title">Share your moment</h2>
-          <p class="tile-desc" data-i18n="tile.share.desc">Upload a photo of your painting and capture the moment forever.</p>
-        </button>
-
-        <a href="https://open.spotify.com/user/31mgcv55qjxjlsvw3stg7me2ujkq" target="_blank" rel="noopener" class="tile tile-spotify">
-          <div class="tile-visual">
-            <span class="tile-vis-music">&#9835;</span>
-          </div>
-          <h2 class="tile-title" data-i18n="tile.spotify.title">Set the mood</h2>
-          <p class="tile-desc" data-i18n="tile.spotify.desc">Put on the Studio Sorelle playlist and paint in the right vibe.</p>
-        </a>
-
       </div>
     </div>
 
@@ -130,9 +98,7 @@
     </div>
     <div class="mixer-layout">
       <div class="picker-col">
-        <p class="picker-label" data-i18n="mix.colorfield">Colour field</p>
-        <canvas id="sqCanvas" width="260" height="190"></canvas>
-        <canvas id="hueCanvas" width="260" height="18"></canvas>
+        <canvas id="hexCanvas" width="260" height="290"></canvas>
 
         <div class="color-compare">
           <div class="color-col">

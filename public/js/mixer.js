@@ -9,10 +9,6 @@
     { name: 'Yellow',     color: '#ffd200', rgb: [255, 210,   0] }
   ];
 
-  var PW = 260, PH = 190, HH = 18;
-  var pickerH = 200, pickerS = 0.65, pickerV = 0.72;
-  var initialized = false, sqDrag = false, hueDrag = false;
-
   // ── K-M colour mixing ──
   function toKM(rgb) {
     return [Math.sqrt(rgb[0] / 255), Math.sqrt(rgb[1] / 255), Math.sqrt(rgb[2] / 255)];
@@ -33,7 +29,6 @@
     for (i = 0; i < n; i++) bkm.push(toKM(BASES[i].rgb));
     var w = [];
     for (i = 0; i < n; i++) w.push(1 / n);
-
     for (var iter = 0; iter < 400; iter++) {
       var cur = [0, 0, 0], s = 0;
       for (j = 0; j < n; j++) {
@@ -52,8 +47,6 @@
       for (j = 0; j < n; j++) s += w[j];
       if (s > 0) for (j = 0; j < n; j++) w[j] /= s;
     }
-
-    // Drop traces < 2 %
     var s = 0;
     for (i = 0; i < n; i++) { if (w[i] < 0.02) w[i] = 0; else s += w[i]; }
     if (s > 0) for (i = 0; i < n; i++) w[i] /= s;
@@ -111,73 +104,148 @@
     return t;
   }
 
-  // ── Canvas drawing ──
-  function hsvToRgb(h, s, v) {
-    var i = Math.floor(h / 60) % 6;
-    var f = h / 60 - Math.floor(h / 60);
-    var p = v * (1 - s), q = v * (1 - f * s), t = v * (1 - (1 - f) * s);
-    var sets = [[v,t,p],[q,v,p],[p,v,t],[p,q,v],[t,p,v],[v,p,q]];
-    var c = sets[i];
-    return [Math.round(c[0] * 255), Math.round(c[1] * 255), Math.round(c[2] * 255)];
+  // ── Hex wheel ──
+  var SQRT3 = Math.sqrt(3);
+  var HEX_RINGS = 6;
+  var HEX_SIZE = 11;    // circumradius (center to vertex)
+  var HEX_CX = 130;     // wheel center x on canvas
+  var HEX_CY = 126;     // wheel center y on canvas
+  var GRAY_Y = 265;     // grayscale strip y
+  var GRAY_N = 9;       // number of grayscale cells
+
+  var hexGrid = [];
+  var grayGrid = [];
+  var pickerRgb = [212, 150, 80];
+  var initialized = false;
+  var drag = false;
+
+  function hslToRgb(h, s, l) {
+    h = ((h % 360) + 360) % 360;
+    var c = (1 - Math.abs(2 * l - 1)) * s;
+    var x = c * (1 - Math.abs((h / 60) % 2 - 1));
+    var m = l - c / 2;
+    var r, g, b;
+    if      (h < 60)  { r = c; g = x; b = 0; }
+    else if (h < 120) { r = x; g = c; b = 0; }
+    else if (h < 180) { r = 0; g = c; b = x; }
+    else if (h < 240) { r = 0; g = x; b = c; }
+    else if (h < 300) { r = x; g = 0; b = c; }
+    else              { r = c; g = 0; b = x; }
+    return [
+      Math.min(255, Math.max(0, Math.round((r + m) * 255))),
+      Math.min(255, Math.max(0, Math.round((g + m) * 255))),
+      Math.min(255, Math.max(0, Math.round((b + m) * 255)))
+    ];
   }
 
-  function drawSq() {
-    var sq = document.getElementById('sqCanvas');
-    if (!sq) return;
-    var ctx = sq.getContext('2d');
-    var gh = ctx.createLinearGradient(0, 0, PW, 0);
-    gh.addColorStop(0, 'rgba(255,255,255,1)');
-    gh.addColorStop(1, 'hsl(' + pickerH + ',100%,50%)');
-    ctx.fillStyle = gh; ctx.fillRect(0, 0, PW, PH);
-    var gv = ctx.createLinearGradient(0, 0, 0, PH);
-    gv.addColorStop(0, 'rgba(0,0,0,0)');
-    gv.addColorStop(1, 'rgba(0,0,0,1)');
-    ctx.fillStyle = gv; ctx.fillRect(0, 0, PW, PH);
-    // Cursor
-    var cx = pickerS * PW, cy = (1 - pickerV) * PH;
-    ctx.beginPath(); ctx.arc(cx, cy, 7, 0, Math.PI * 2);
-    ctx.strokeStyle = '#fff'; ctx.lineWidth = 2.5; ctx.stroke();
-    ctx.beginPath(); ctx.arc(cx, cy, 7, 0, Math.PI * 2);
-    ctx.strokeStyle = 'rgba(0,0,0,.4)'; ctx.lineWidth = 1; ctx.stroke();
+  function buildGrids() {
+    hexGrid = [];
+    for (var q = -HEX_RINGS; q <= HEX_RINGS; q++) {
+      var r1 = Math.max(-HEX_RINGS, -q - HEX_RINGS);
+      var r2 = Math.min(HEX_RINGS, -q + HEX_RINGS);
+      for (var r = r1; r <= r2; r++) {
+        var px = HEX_CX + HEX_SIZE * (SQRT3 * q + SQRT3 / 2 * r);
+        var py = HEX_CY + HEX_SIZE * (3 / 2 * r);
+        var dist = Math.max(Math.abs(q), Math.abs(r), Math.abs(q + r));
+        var rgb;
+        if (dist === 0) {
+          rgb = [255, 255, 255];
+        } else {
+          // Angle determines hue; use pixel offset from center
+          var angle = Math.atan2(py - HEX_CY, px - HEX_CX);
+          var hue = ((angle / (Math.PI * 2) + 1) % 1) * 360;
+          var t = dist / HEX_RINGS;
+          // Bottom area (positive r) gets darker
+          var vert = r / HEX_RINGS;
+          var baseLight = 1.0 - t * 0.5;
+          var darkening = Math.max(0, vert) * 0.32;
+          var light = Math.max(0.05, Math.min(0.98, baseLight - darkening));
+          var sat = t;
+          rgb = hslToRgb(hue, sat, light);
+        }
+        hexGrid.push({ q: q, r: r, px: px, py: py, rgb: rgb });
+      }
+    }
+
+    // Grayscale strip: white → black
+    grayGrid = [];
+    var totalW = (GRAY_N - 1) * HEX_SIZE * SQRT3;
+    var gx0 = HEX_CX - totalW / 2;
+    for (var i = 0; i < GRAY_N; i++) {
+      var v = Math.round((1 - i / (GRAY_N - 1)) * 255);
+      grayGrid.push({ px: gx0 + i * HEX_SIZE * SQRT3, py: GRAY_Y, rgb: [v, v, v] });
+    }
   }
 
-  function drawHue() {
-    var hu = document.getElementById('hueCanvas');
-    if (!hu) return;
-    var ctx = hu.getContext('2d');
-    var g = ctx.createLinearGradient(0, 0, PW, 0);
-    for (var i = 0; i <= 12; i++) g.addColorStop(i / 12, 'hsl(' + (i * 30) + ',100%,50%)');
-    ctx.fillStyle = g; ctx.fillRect(0, 0, PW, HH);
-    // Cursor
-    var hx = (pickerH / 360) * PW;
-    ctx.fillStyle = 'rgba(255,255,255,.9)'; ctx.fillRect(hx - 2, 0, 4, HH);
-    ctx.strokeStyle = 'rgba(0,0,0,.4)'; ctx.lineWidth = 1; ctx.strokeRect(hx - 2, 0, 4, HH);
+  function drawHexCell(ctx, px, py, rgb, selected) {
+    ctx.beginPath();
+    for (var i = 0; i < 6; i++) {
+      var a = Math.PI / 3 * i - Math.PI / 6;
+      var vx = px + (HEX_SIZE - 1.2) * Math.cos(a);
+      var vy = py + (HEX_SIZE - 1.2) * Math.sin(a);
+      if (i === 0) ctx.moveTo(vx, vy); else ctx.lineTo(vx, vy);
+    }
+    ctx.closePath();
+    ctx.fillStyle = 'rgb(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ')';
+    ctx.fill();
+    if (selected) {
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
+      ctx.strokeStyle = 'rgba(0,0,0,.55)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
   }
 
-  function getPos(e, el) {
-    var r = el.getBoundingClientRect();
-    var cx = e.touches ? e.touches[0].clientX : e.clientX;
-    var cy = e.touches ? e.touches[0].clientY : e.clientY;
-    return { x: cx - r.left, y: cy - r.top };
+  function drawWheel() {
+    var cv = document.getElementById('hexCanvas');
+    if (!cv) return;
+    var ctx = cv.getContext('2d');
+    ctx.clearRect(0, 0, cv.width, cv.height);
+
+    hexGrid.forEach(function (cell) {
+      var sel = cell.rgb[0] === pickerRgb[0] && cell.rgb[1] === pickerRgb[1] && cell.rgb[2] === pickerRgb[2];
+      drawHexCell(ctx, cell.px, cell.py, cell.rgb, sel);
+    });
+
+    grayGrid.forEach(function (cell) {
+      var sel = cell.rgb[0] === pickerRgb[0] && cell.rgb[1] === pickerRgb[1] && cell.rgb[2] === pickerRgb[2];
+      drawHexCell(ctx, cell.px, cell.py, cell.rgb, sel);
+    });
   }
 
-  function onSq(e) {
-    var sq = document.getElementById('sqCanvas');
-    var p = getPos(e, sq);
-    pickerS = Math.max(0, Math.min(1, p.x / PW));
-    pickerV = Math.max(0, Math.min(1, 1 - p.y / PH));
-    updateColor();
+  function hexRound(q, r) {
+    var s = -q - r;
+    var rq = Math.round(q), rr = Math.round(r), rs = Math.round(s);
+    var dq = Math.abs(rq - q), dr = Math.abs(rr - r), ds = Math.abs(rs - s);
+    if (dq > dr && dq > ds) rq = -rr - rs;
+    else if (dr > ds) rr = -rq - rs;
+    return { q: rq, r: rr };
   }
 
-  function onHue(e) {
-    var hu = document.getElementById('hueCanvas');
-    var p = getPos(e, hu);
-    pickerH = Math.max(0, Math.min(359.9, (p.x / PW) * 360));
-    updateColor();
+  function pickAtPixel(px, py) {
+    // Check grayscale strip first
+    for (var i = 0; i < grayGrid.length; i++) {
+      var g = grayGrid[i];
+      var dx = px - g.px, dy = py - g.py;
+      if (dx * dx + dy * dy < HEX_SIZE * HEX_SIZE) return g.rgb;
+    }
+    // Convert pixel to fractional axial
+    var dpx = px - HEX_CX, dpy = py - HEX_CY;
+    var fq = (SQRT3 / 3 * dpx - 1 / 3 * dpy) / HEX_SIZE;
+    var fr = (2 / 3 * dpy) / HEX_SIZE;
+    var c = hexRound(fq, fr);
+    var dist = Math.max(Math.abs(c.q), Math.abs(c.r), Math.abs(c.q + c.r));
+    if (dist > HEX_RINGS) return null;
+    for (var j = 0; j < hexGrid.length; j++) {
+      if (hexGrid[j].q === c.q && hexGrid[j].r === c.r) return hexGrid[j].rgb;
+    }
+    return null;
   }
 
-  function updateColor() {
-    var rgb = hsvToRgb(pickerH, pickerS, pickerV);
+  function updateColor(rgb) {
+    pickerRgb = rgb;
     var weights = findMix(rgb);
     var achieved = applyMix(weights);
     var diff = colorDiff(rgb, achieved);
@@ -212,16 +280,16 @@
     var bars = document.getElementById('recipeBars');
     if (bars) {
       bars.innerHTML = '';
-      for (var i = 0; i < BASES.length; i++) {
-        var pct = Math.round(weights[i] * 100);
+      for (var k = 0; k < BASES.length; k++) {
+        var pct = Math.round(weights[k] * 100);
         if (pct < 1) continue;
-        var isLight = (BASES[i].rgb[0] > 200 && BASES[i].rgb[1] > 180);
+        var isLight = (BASES[k].rgb[0] > 200 && BASES[k].rgb[1] > 180);
         var row = document.createElement('div');
         row.className = 'recipe-bar-row';
         row.innerHTML =
-          '<div class="rbd" style="background:' + BASES[i].color + ';' + (isLight ? 'border-color:#bbb' : '') + '"></div>' +
-          '<span class="rbn">' + BASES[i].name + '</span>' +
-          '<div class="rbt"><div class="rbf" style="width:' + pct + '%;background:' + BASES[i].color + '"></div></div>' +
+          '<div class="rbd" style="background:' + BASES[k].color + ';' + (isLight ? 'border-color:#bbb' : '') + '"></div>' +
+          '<span class="rbn">' + BASES[k].name + '</span>' +
+          '<div class="rbt"><div class="rbf" style="width:' + pct + '%;background:' + BASES[k].color + '"></div></div>' +
           '<span class="rbp">' + pct + '%</span>';
         bars.appendChild(row);
       }
@@ -237,34 +305,40 @@
       }
     }
 
-    drawSq(); drawHue();
+    drawWheel();
   }
 
-  // ── Public init — called by app.js when mix view opens ──
   window.initMixer = function () {
-    if (initialized) { updateColor(); return; }
+    if (initialized) { drawWheel(); return; }
     initialized = true;
 
-    var sq = document.getElementById('sqCanvas');
-    var hu = document.getElementById('hueCanvas');
-    if (!sq || !hu) return;
+    var cv = document.getElementById('hexCanvas');
+    if (!cv) return;
 
-    sq.addEventListener('mousedown', function (e) { sqDrag = true; onSq(e); });
-    sq.addEventListener('touchstart', function (e) { e.preventDefault(); sqDrag = true; onSq(e); }, { passive: false });
-    sq.addEventListener('touchmove', function (e) { e.preventDefault(); if (sqDrag) onSq(e); }, { passive: false });
-    sq.addEventListener('touchend', function () { sqDrag = false; });
+    buildGrids();
 
-    hu.addEventListener('mousedown', function (e) { hueDrag = true; onHue(e); });
-    hu.addEventListener('touchstart', function (e) { e.preventDefault(); hueDrag = true; onHue(e); }, { passive: false });
-    hu.addEventListener('touchmove', function (e) { e.preventDefault(); if (hueDrag) onHue(e); }, { passive: false });
-    hu.addEventListener('touchend', function () { hueDrag = false; });
+    function getPos(e) {
+      var rect = cv.getBoundingClientRect();
+      var scaleX = cv.width / rect.width;
+      var scaleY = cv.height / rect.height;
+      var cx = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+      var cy = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+      return { x: cx * scaleX, y: cy * scaleY };
+    }
 
-    document.addEventListener('mousemove', function (e) {
-      if (sqDrag) onSq(e);
-      if (hueDrag) onHue(e);
-    });
-    document.addEventListener('mouseup', function () { sqDrag = false; hueDrag = false; });
+    function handlePick(e) {
+      var pos = getPos(e);
+      var rgb = pickAtPixel(pos.x, pos.y);
+      if (rgb) updateColor(rgb.slice());
+    }
 
-    updateColor();
+    cv.addEventListener('mousedown', function (e) { drag = true; handlePick(e); });
+    cv.addEventListener('touchstart', function (e) { e.preventDefault(); drag = true; handlePick(e); }, { passive: false });
+    cv.addEventListener('touchmove', function (e) { e.preventDefault(); if (drag) handlePick(e); }, { passive: false });
+    cv.addEventListener('touchend', function () { drag = false; });
+    document.addEventListener('mousemove', function (e) { if (drag) handlePick(e); });
+    document.addEventListener('mouseup', function () { drag = false; });
+
+    updateColor(pickerRgb.slice());
   };
 })();

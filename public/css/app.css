@@ -102,15 +102,45 @@ body {
 }
 .hero-swatches {
   display: grid; grid-template-columns: 1fr 1fr;
-  align-content: center; padding: 3rem 2rem 3rem 3rem;
 }
-.swatch { aspect-ratio: 1; transition: transform .2s; }
-.swatch:hover { transform: scale(1.03); position: relative; z-index: 2; }
-.brand-card {
+/* ── Swatch navigation tiles ── */
+.swatch-tile {
   aspect-ratio: 1;
-  display: flex; align-items: center; justify-content: center;
+  display: flex; flex-direction: column;
+  padding: 1.25rem; cursor: pointer;
+  border: none; text-align: left; font-family: inherit;
+  transition: transform .18s, box-shadow .18s;
+  color: var(--text); text-decoration: none;
+  overflow: hidden; position: relative;
 }
-.bc-logo-img { width: 72%; height: 72%; object-fit: contain; }
+.swatch-tile:hover { transform: scale(1.04); z-index: 2; box-shadow: 0 8px 28px rgba(0,0,0,.2); }
+.swatch-tile .tile-num {
+  font-family: var(--ff-m); font-size: .62rem; letter-spacing: .08em;
+  color: rgba(43,26,23,.4); margin-bottom: .5rem;
+}
+.swatch-tile .tile-visual {
+  flex: 1; display: flex; align-items: center; justify-content: flex-start;
+  pointer-events: none;
+}
+.swatch-tile .tile-title {
+  font-family: var(--ff-d); font-size: 1rem; font-style: italic;
+  margin-bottom: .2rem; color: var(--text);
+}
+.swatch-tile:hover .tile-title::after { content: ' →'; }
+.swatch-tile .tile-desc {
+  font-size: .72rem; line-height: 1.4; color: rgba(43,26,23,.6);
+}
+.swatch-tile.st-dark .tile-num  { color: rgba(255,255,255,.45); }
+.swatch-tile.st-dark .tile-title { color: #fff; }
+.swatch-tile.st-dark .tile-desc  { color: rgba(255,255,255,.7); }
+.swatch-tile.st-dark .tile-vis-q { color: rgba(255,255,255,.5); }
+/* Spotify / Set the mood — spans both columns */
+.swatch-tile-spotify {
+  grid-column: 1 / -1; aspect-ratio: auto; min-height: 130px;
+  flex-direction: row; align-items: center; gap: 2rem;
+}
+.swatch-tile-spotify .tile-visual { flex: 0 0 auto; margin: 0; }
+.swatch-tile-spotify .tile-num { display: none; }
 .hero-panel {
   display: flex; flex-direction: column; justify-content: center;
   padding: 4rem 3rem 4rem 2.5rem; border-left: 1px solid var(--beige);
@@ -185,8 +215,7 @@ body {
 /* ── MIX view ── */
 .mixer-layout { display: grid; grid-template-columns: 290px 1fr; gap: 3rem; padding: 2.5rem 3rem; align-items: start; }
 .picker-label { font-family: var(--ff-m); font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; color: var(--mid); margin-bottom: .5rem; }
-#sqCanvas { display: block; cursor: crosshair; border-radius: 6px; border: 1px solid var(--beige); }
-#hueCanvas { display: block; cursor: crosshair; margin-top: 8px; border-radius: 4px; border: 1px solid var(--beige); }
+#hexCanvas { display: block; cursor: crosshair; border-radius: 6px; border: 1px solid var(--beige); }
 .color-compare { display: flex; gap: .5rem; margin-top: 1rem; align-items: flex-start; }
 .color-col { flex: 1; display: flex; flex-direction: column; gap: .35rem; }
 .color-col-label { font-family: var(--ff-m); font-size: .63rem; color: var(--mid); letter-spacing: .06em; text-transform: uppercase; }
