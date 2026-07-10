@@ -333,8 +333,8 @@ app.delete('/api/admin/codes/:id', adminAuth, async (req, res) => {
 
 function buildInspireIdea(answers, lang) {
   var l = lang === 'nl' ? 'nl' : 'en';
-  // answers[0]=group, answers[1]=product, answers[2]=style, answers[3]=time, answers[4]=ambition
-  var group = answers[0] ? answers[0].answer : 'Full group';
+  // answers[0]=group, answers[1]=product, answers[2]=style, answers[3]=time, answers[4]=level
+  var group = answers[0] ? answers[0].answer : 'Alone';
   var box   = answers[1] ? answers[1].answer : '';
   var style = answers[2] ? answers[2].answer : '';
   var time  = answers[3] ? answers[3].answer : '1 hour';
@@ -342,38 +342,50 @@ function buildInspireIdea(answers, lang) {
 
   var parts = [];
 
-  // Box context
+  // 1. Box instruction
   var boxFrag = PROMPTS.box[getBoxKey(box)];
   if (boxFrag && boxFrag[l]) parts.push(boxFrag[l]);
 
-  // Group context
-  var groupFrag = PROMPTS.group[group];
-  if (groupFrag && groupFrag[l]) parts.push(groupFrag[l]);
-
-  // Style / theme
-  var styleDef = PROMPTS.styles[style];
-  if (styleDef) {
-    var sf;
-    if (style === 'Seizoensgebonden') {
-      var season = getCurrentSeason();
-      sf = styleDef[season] && styleDef[season][l];
-    } else {
-      sf = styleDef[l];
+  // 2. Group / canvas count
+  if (group === 'Alone') {
+    var aloneFrag = PROMPTS.group.Alone;
+    if (aloneFrag && aloneFrag[l]) parts.push(aloneFrag[l]);
+  } else {
+    var count = group; // '2', '3', '4', '5+'
+    var multFrag = PROMPTS.group.multiple;
+    if (multFrag && multFrag[l]) {
+      parts.push(multFrag[l].replace(/\{count\}/g, count));
     }
-    if (sf) parts.push(sf.theme + '\n\n' + sf.canvases.join('\n') + '\n\n' + sf.connection);
-  } else if (style) {
-    parts.push(l === 'nl'
-      ? 'Schilder in de stijl of rond het thema: ' + style + '.'
-      : 'Paint in the style or around the theme: ' + style + '.');
+    var splitKey = (count === '5+' || parseInt(count, 10) >= 5) ? '5+' : count;
+    var splitFrag = PROMPTS.canvas_splits[splitKey];
+    if (splitFrag && splitFrag[l]) parts.push(splitFrag[l]);
   }
 
-  // Holiday overlay
-  var seasonal = getActiveSeasonal(l);
-  if (seasonal) parts.push(seasonal);
+  // 3. Style / theme
+  if (style === 'Seizoensgebonden') {
+    var seasonalStyle = getActiveSeasonal(l);
+    if (seasonalStyle) parts.push(seasonalStyle);
+  } else {
+    var styleDef = PROMPTS.styles[style];
+    if (styleDef && styleDef[l]) {
+      parts.push(styleDef[l]);
+    } else if (style) {
+      parts.push(l === 'nl'
+        ? 'Schilder in de stijl of rond het thema: ' + style + '.'
+        : 'Paint in the style or around the theme: ' + style + '.');
+    }
+    // Seasonal overlay for non-seasonal styles
+    var seasonal = getActiveSeasonal(l);
+    if (seasonal) parts.push(seasonal);
+  }
 
-  // Level + time hint
-  var levelObj = PROMPTS.level[level] && PROMPTS.level[level][time];
-  if (levelObj && levelObj[l]) parts.push(levelObj[l]);
+  // 4. Level
+  var levelFrag = PROMPTS.level[level];
+  if (levelFrag && levelFrag[l]) parts.push(levelFrag[l]);
+
+  // 5. Time
+  var timeFrag = PROMPTS.time[time];
+  if (timeFrag && timeFrag[l]) parts.push(timeFrag[l]);
 
   return parts.join('\n\n');
 }

@@ -2,9 +2,10 @@
   var STEPS = 5;
   var GROUP_SIZES = [
     { key: 'inspire.group.alone', val: 'Alone' },
-    { key: 'inspire.group.two', val: 'With 2' },
-    { key: 'inspire.group.small', val: 'With 3-4' },
-    { key: 'inspire.group.full', val: 'Full group' }
+    { key: 'inspire.group.2',     val: '2' },
+    { key: 'inspire.group.3',     val: '3' },
+    { key: 'inspire.group.4',     val: '4' },
+    { key: 'inspire.group.5plus', val: '5+' }
   ];
   var STYLES = [
     { key: 'style.abstract',         val: 'Abstract' },

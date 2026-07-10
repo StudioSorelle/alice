@@ -1,493 +1,213 @@
 {
   "box": {
     "canvas": {
-      "en": "You're working with the Studio Sorelle Canvas Moment — four canvases, ready to come alive.",
-      "nl": "Je werkt met het Studio Sorelle Canvas Moment — vier canvassen, klaar om tot leven te komen."
+      "nl": "Maak het voorbeeld op een canvas.",
+      "en": "Create the example on a canvas."
     },
     "mini": {
-      "en": "You have the Studio Sorelle Mini Canvas Moment — a smaller set, perfect for a focused and intimate session.",
-      "nl": "Je hebt het Studio Sorelle Mini Canvas Moment — kleiner, perfect voor een gerichte en intieme sessie."
+      "nl": "Maak het voorbeeld op een canvas. Werk het voorbeeld uit voor een kleiner canvas-formaat — houd rekening met minder werkoppervlak bij het aantal elementen en opdrachten dat je voorstelt.",
+      "en": "Create the example on a canvas. Adapt the idea to the smaller canvas format — take into account the reduced working surface when choosing the number of elements."
     },
     "tote": {
-      "en": "You have the Studio Sorelle Tote Moment — your creative kit in a beautiful tote bag, ready to go anywhere.",
-      "nl": "Je hebt het Studio Sorelle Tote Moment — je creatieve kit in een prachtige tas, klaar om mee te nemen."
+      "nl": "Maak het voorbeeld op een totebag. Houd rekening met een platter, minder poreus oppervlak — minder geschikt voor heel natte technieken zoals schilderen met je vingers of veel water gebruiken.",
+      "en": "Create the example on a tote bag. Take into account the flatter, less porous surface — less suitable for very wet techniques such as finger painting or using lots of water."
     }
   },
   "group": {
     "Alone": {
-      "en": "You're painting solo — all four canvases are yours to shape however you like. Let instinct lead.",
-      "nl": "Je schildert alleen — alle vier de canvassen zijn van jou. Laat je intuïtie de leiding nemen."
+      "nl": "1 canvas — 1 volledig zelfstandig idee.",
+      "en": "1 canvas — one fully standalone idea."
     },
-    "With 2": {
-      "en": "Two painters, four canvases. You might each take two, or collaborate on all four — your call.",
-      "nl": "Twee schilders, vier canvassen. Neem er elk twee, of werk samen aan alle vier — jullie kiezen."
+    "multiple": {
+      "nl": "Jullie schilderen met {count} personen. Het idee wordt opgesplitst in {count} panelen die samen 1 beeld vormen (zoals een polyptiek). Hieronder staat beschreven welk deel van de compositie op welk canvas komt. De kleuren en het lichtpunt moeten in alle panelen doorlopen zodat het geheel klopt als ze naast elkaar hangen.",
+      "en": "You are painting with {count} people. The idea is split across {count} panels that together form one image (like a polyptych). Below is a description of which part of the composition goes on each canvas. Make sure colours and the focal light point continue across all panels so the whole works as one when hung side by side."
+    }
+  },
+  "canvas_splits": {
+    "2": {
+      "nl": "Canvas 1 — linkerhelft: het beginpunt van de compositie, met het voornaamste element of de lichtkant.\nCanvas 2 — rechterhelft: het vervolg en de afronding van het beeld, met het tweede hoofdelement of de donkerdere kant.",
+      "en": "Canvas 1 — left half: the starting point of the composition, with the main element or the lighter side.\nCanvas 2 — right half: the continuation and completion, with the second main element or the darker side."
     },
-    "With 3-4": {
-      "en": "A small group of 3–4 people. Divide the canvases and paint your own piece of the bigger picture.",
-      "nl": "Een kleine groep van 3–4 mensen. Verdeel de canvassen en schilder je eigen deel van het grote geheel."
+    "3": {
+      "nl": "Canvas 1 — linkerdeel: het beginpunt van de compositie.\nCanvas 2 — middendeel: het hart van het beeld, met het centrale motief.\nCanvas 3 — rechterdeel: de afronding en het slotelement van de compositie.",
+      "en": "Canvas 1 — left section: the starting point of the composition.\nCanvas 2 — middle section: the heart of the image, with the central motif.\nCanvas 3 — right section: the conclusion and final element of the composition."
     },
-    "Full group": {
-      "en": "A full group with four canvases — one per person. Each panel is unique, but together they tell one story.",
-      "nl": "Een volledige groep met vier canvassen — één per persoon. Elk paneel is uniek, maar samen vertellen ze één verhaal."
+    "4": {
+      "nl": "Canvas 1 (linksboven): het bovenste linkse deel — lucht, licht of het openingselement.\nCanvas 2 (rechtsboven): het bovenste rechtse deel — aansluitend element of voortzetting van de achtergrond.\nCanvas 3 (linksonder): het onderste linkse deel — voorgrond, detail of grondingselement.\nCanvas 4 (rechtsonder): het onderste rechtse deel — afronding, schaduw of slotaccent.",
+      "en": "Canvas 1 (top-left): upper-left area — sky, light, or the opening element.\nCanvas 2 (top-right): upper-right area — connecting element or continuation of the background.\nCanvas 3 (bottom-left): lower-left area — foreground, detail, or grounding element.\nCanvas 4 (bottom-right): lower-right area — conclusion, shadow, or final accent."
+    },
+    "5+": {
+      "nl": "Verdeel de compositie over 5 of meer panelen, van links naar rechts (of van linksboven naar rechtsonder als een raster). Elk paneel bevat een deel van het grotere beeld; extra panelen voegen bijkomende details of accentelementen toe. De kleuren en het lichtpunt lopen door in alle panelen.",
+      "en": "Divide the composition across 5 or more panels, from left to right (or top-left to bottom-right as a grid). Each panel contains a section of the larger image; extra panels add complementary details or accent elements. Colours and the focal light point must continue across all panels."
     }
   },
   "styles": {
     "Abstract": {
-      "en": {
-        "theme": "An abstract composition — colour, shape, and feeling without rules",
-        "canvases": [
-          "Top-left: choose one bold colour and let it fill the panel. No form, just pure feeling.",
-          "Top-right: texture and movement — thick strokes, drips, or sweeping marks that go where they want.",
-          "Bottom-left: contrast and tension — place two colours side by side that push against each other.",
-          "Bottom-right: rest and breath — a calmer area that lets the eye settle after the energy of the others."
-        ],
-        "connection": "Together the four panels form an abstract work that pulses with energy and quiet in equal measure."
-      },
-      "nl": {
-        "theme": "Een abstracte compositie — kleur, vorm en gevoel zonder regels",
-        "canvases": [
-          "Linksboven: kies één krachtige kleur en laat die het paneel vullen. Geen vorm, puur gevoel.",
-          "Rechtsboven: textuur en beweging — dikke streken, druppels of vegen die gaan waar ze willen.",
-          "Linksonder: contrast en spanning — zet twee kleuren naast elkaar die tegen elkaar inwerken.",
-          "Rechtsonder: rust en ruimte — een rustiger vlak waar het oog kan landen na de energie van de anderen."
-        ],
-        "connection": "Samen vormen de vier panelen een abstract werk dat pulseert van energie en rust."
-      }
+      "nl": "Gebruik vloeiende vormen en kleurvlakken — geen herkenbare objecten. Geschikt voor beginners, weinig precisie nodig.",
+      "en": "Use flowing shapes and colour fields — no recognisable objects. Ideal for beginners, very little precision required."
     },
     "Simplistisch": {
-      "en": {
-        "theme": "A clean, minimal composition — less is more",
-        "canvases": [
-          "Top-left: one simple shape — a circle, a square, or a soft organic form against a plain background.",
-          "Top-right: one confident mark — a single brushstroke or a gentle wash of colour.",
-          "Bottom-left: negative space — let the bare canvas breathe and become part of the composition.",
-          "Bottom-right: a quiet detail — a thin line, a small dot, or the very faintest hint of colour."
-        ],
-        "connection": "Together the four panels form a quiet, modern composition where every mark earns its place."
-      },
-      "nl": {
-        "theme": "Een strakke, minimalistische compositie — minder is meer",
-        "canvases": [
-          "Linksboven: één eenvoudige vorm — een cirkel, een vierkant of een zachte organische vorm op een vlakke achtergrond.",
-          "Rechtsboven: één zekere streek — een enkel penseelstreek of een zachte kleurwassing.",
-          "Linksonder: negatieve ruimte — laat het blote canvas ademen en deel van de compositie worden.",
-          "Rechtsonder: een stil detail — een dunne lijn, een stipje of de fijnste hint van kleur."
-        ],
-        "connection": "Samen vormen de vier panelen een stille, moderne compositie waarin elke streek zijn plaats verdient."
-      }
+      "nl": "1–3 duidelijk herkenbare objecten (bv. een berg, een vaas met bloemen), platte kleuren, weinig detail. Makkelijk na te schilderen in korte tijd.",
+      "en": "1–3 clearly recognisable objects (e.g. a mountain, a vase of flowers), flat colours, little detail. Easy to paint in a short time."
     },
     "Landschappen": {
-      "en": {
-        "theme": "A landscape unfolding across four panels",
-        "canvases": [
-          "Top-left: a wide sky — clouds, light, and the mood of the hour.",
-          "Top-right: the horizon — where land and sky meet, soft and hazy.",
-          "Bottom-left: the foreground — grass, stones, roots, or water at the very edge.",
-          "Bottom-right: a focal point — a lone tree, a winding path, a distant house, or a figure in the field."
-        ],
-        "connection": "Together the four panels form one continuous landscape, sweeping from open sky down to solid ground."
-      },
-      "nl": {
-        "theme": "Een landschap dat zich uitstrekt over vier panelen",
-        "canvases": [
-          "Linksboven: een wijde lucht — wolken, licht en de sfeer van het moment.",
-          "Rechtsboven: de horizon — waar land en lucht elkaar ontmoeten, zacht en wazig.",
-          "Linksonder: het voorplan — gras, stenen, wortels of water aan de rand.",
-          "Rechtsonder: een blikvanger — een eenzame boom, een kronkelend pad, een verre boerderij of een figuur in het veld."
-        ],
-        "connection": "Samen vormen de vier panelen één doorgaand landschap, van de open lucht naar de vaste grond."
-      }
+      "nl": "Gebruik natuurelementen (zee, bos, grasland, bergen, zonsondergang) — altijd een horizon-compositie. Geschikt voor wie iets rustigs en meditatiefs wil.",
+      "en": "Use natural elements (sea, forest, grassland, mountains, sunset) — always with a horizon composition. Ideal for those wanting something calm and meditative."
     },
     "Stilleven": {
-      "en": {
-        "theme": "A still life — objects arranged with intention and light",
-        "canvases": [
-          "Top-left: the main object — a vase, a bowl of fruit, or something that anchors the whole scene.",
-          "Top-right: a companion piece — a second object, slightly smaller or lighter, standing nearby.",
-          "Bottom-left: surface and shadow — the table or cloth where everything rests, with light falling across it.",
-          "Bottom-right: a close detail — the texture of ceramic, the shine on glass, or the bruise on a pear."
-        ],
-        "connection": "Together the four panels become one intimate still life — ordinary objects made extraordinary."
-      },
-      "nl": {
-        "theme": "Een stilleven — voorwerpen gerangschikt met bedoeling en licht",
-        "canvases": [
-          "Linksboven: het hoofdobject — een vaas, een schaal fruit of iets dat de hele scène verankert.",
-          "Rechtsboven: een gezelstuk — een tweede voorwerp, kleiner of lichter, vlakbij.",
-          "Linksonder: ondergrond en schaduw — het tafelblad of de doek waarop alles rust, met het licht eroverheen.",
-          "Rechtsonder: een close-updetail — de textuur van keramiek, de glinstering van glas of de deuk in een peer."
-        ],
-        "connection": "Samen worden de vier panelen één intiem stilleven — gewone voorwerpen buitengewoon gemaakt."
-      }
+      "nl": "Gebruik alledaagse voorwerpen gegroepeerd op een tafel of oppervlak, altijd met fruit. Altijd een duidelijke lichtbron en schaduw. Rustige, warme composities. Geschikt voor wie precisie leuk vindt maar niet té ingewikkeld wil.",
+      "en": "Use everyday objects grouped on a table or surface, always including fruit. Always a clear light source and shadow. Calm, warm compositions. Ideal for those who enjoy precision but don't want anything too complex."
     },
     "Speels": {
-      "en": {
-        "theme": "A playful, joyful composition — colour, fun, and pure creative freedom",
-        "canvases": [
-          "Top-left: bright colours and bold shapes — make it pop. No rules, just energy.",
-          "Top-right: a fun character or whimsical creature — something that couldn't exist but absolutely should.",
-          "Bottom-left: a pattern or repeat — your own invented polka dots, stripes, or anything you feel like.",
-          "Bottom-right: a delightful surprise — something unexpected in the corner that makes you grin."
-        ],
-        "connection": "Together the four panels build a world that doesn't take itself seriously — and that is exactly the point."
-      },
-      "nl": {
-        "theme": "Een speelse, vrolijke compositie — kleur, plezier en pure creatieve vrijheid",
-        "canvases": [
-          "Linksboven: heldere kleuren en krachtige vormen — maak het opvallend. Geen regels, puur energie.",
-          "Rechtsboven: een grappig figuur of fantasiewezen — iets dat niet kan bestaan maar absoluut zou moeten.",
-          "Linksonder: een patroon of herhaling — je eigen verzonnen stipjes, strepen of wat je maar wilt.",
-          "Rechtsonder: een leuke verrassing — iets onverwachts in de hoek dat je doet glimlachen."
-        ],
-        "connection": "Samen bouwen de vier panelen een wereld op die zichzelf niet serieus neemt — en dat is precies de bedoeling."
-      }
+      "nl": "Gebruik vrolijke, niet-realistische vormen: druppels, confetti, ballonnen, swirls, dripping paint effecten. Felle, contrasterende kleuren toegestaan. Geen perfecte lijnen nodig — de 'fout' mag zichtbaar blijven.",
+      "en": "Use cheerful, non-realistic shapes: drops, confetti, balloons, swirls, dripping paint effects. Bold, contrasting colours allowed. No perfect lines needed — the 'mistake' can stay visible."
     },
     "Aesthetic": {
-      "en": {
-        "theme": "A curated, atmospheric composition — moody and considered",
-        "canvases": [
-          "Top-left: a muted background — dusty rose, warm beige, sage green, or soft grey as the base.",
-          "Top-right: a silhouette or soft shadow — something half-seen, half-imagined.",
-          "Bottom-left: a delicate texture — the suggestion of linen, fog, or petals on the edge of falling.",
-          "Bottom-right: one quiet detail — a dried flower, a crescent moon, a single droplet, or a fading shape."
-        ],
-        "connection": "Together the four panels form a carefully crafted world — beautiful precisely because of what it leaves out."
-      },
-      "nl": {
-        "theme": "Een gecureerde, sfeervolle compositie — doorvoeld en bewust",
-        "canvases": [
-          "Linksboven: een gedempte achtergrond — stofroze, warm beige, saliegroen of zachtgrijs als basis.",
-          "Rechtsboven: een silhouet of zachte schaduw — iets half gezien, half ingebeeld.",
-          "Linksonder: een subtiele textuur — de suggestie van linnen, mist of bloemblaadjes aan de rand van vallen.",
-          "Rechtsonder: één stil detail — een gedroogde bloem, een maansikkel, een druppel of een vervagende vorm."
-        ],
-        "connection": "Samen vormen de vier panelen een zorgvuldig gecreëerde wereld — mooi juist door wat ze weglaat."
-      }
+      "nl": "Combineer 1 schattig hoofdobject met 1 onverwacht tweede element, volgens de formule: [HOOFDOBJECT] + [CONTRASTEREND/NOSTALGISCH ELEMENT]\n\nHoofdobjecten (kies er 1): eendje, kersen, aardbei, paddenstoel, maan, ster, wolk, hartje, vlinder.\nTweede elementen (kies er 1 — moet NIET logisch bij het hoofdobject horen, maar wél esthetisch samengaan): discobal, bloemetjes/madeliefjes, parels, een strikje, sterretjes, een klein zonnetje met zonnebril, regenboog, checkerboard/schaakbord patroon.\n\nRegels:\n— Kleurenpalet: pastel of gedempt (baby roze, lavendel, mintgroen, boterzacht geel) — nooit fel/neon, tenzij het element zelf feestelijk is.\n— Compositie: hoofdobject centraal en groot, tweede element klein en decoratief eromheen (2–4 keer herhaald).\n— Vlakke, simpele vormen met een dunne outline (zwart of donkere kleur) rond elk object, zoals bij sticker-art.\n— Achtergrond: egale pastelkleur of subtiele gradient, nooit een complexe scène.\n\nVoorbeelden: Eendje + bloemetjes | Kers + discobal | Paddenstoel + parelkrans | Maan + sterretjes en wolkjes | Aardbei + strikje.",
+      "en": "Combine 1 cute main object with 1 unexpected second element, using the formula: [MAIN OBJECT] + [CONTRASTING/NOSTALGIC ELEMENT]\n\nMain objects (choose 1): duck, cherries, strawberry, mushroom, moon, star, cloud, heart, butterfly.\nSecond elements (choose 1 — must NOT logically match the main object, but should look good aesthetically): disco ball, daisies, pearls, a bow, little stars, a sun with sunglasses, rainbow, checkerboard pattern.\n\nRules:\n— Colour palette: pastel or muted (baby pink, lavender, mint green, butter yellow) — never bold/neon, unless the element itself is festive.\n— Composition: main object central and large, second element small and decorative, repeated 2–4 times around it.\n— Flat, simple shapes with a thin outline (black or dark colour) around each object, like sticker art.\n— Background: solid pastel colour or subtle gradient, never a complex scene.\n\nExamples: Duck + daisies | Cherry + disco ball | Mushroom + pearl wreath | Moon + stars and clouds | Strawberry + bow."
     },
     "Dranken": {
-      "en": {
-        "theme": "A still life of drinks — glassware, colour, and the art of a good pour",
-        "canvases": [
-          "Top-left: a full glass — wine, coffee, or a cocktail — catching the light just right.",
-          "Top-right: the bottle or vessel — its shape, its label, its presence on the table.",
-          "Bottom-left: the setting — a cloth, condensation on the glass, a coaster, a small spill.",
-          "Bottom-right: the last sip — an almost-empty glass and the ring it leaves behind."
-        ],
-        "connection": "Together the four panels tell the quiet story of a drink enjoyed — from the first pour to the last drop."
-      },
-      "nl": {
-        "theme": "Een stilleven van dranken — glaswerk, kleur en de kunst van een goed glas",
-        "canvases": [
-          "Linksboven: een vol glas — wijn, koffie of een cocktail — dat het licht precies goed opvangt.",
-          "Rechtsboven: de fles of het vat — zijn vorm, etiket en aanwezigheid op tafel.",
-          "Linksonder: de setting — een kleedje, condens op het glas, een onderzettertje, een kleine druppel.",
-          "Rechtsonder: de laatste slok — een bijna leeg glas en de kring die het achterlaat."
-        ],
-        "connection": "Samen vertellen de vier panelen het stille verhaal van een genoten drankje — van de eerste schenk tot de laatste druppel."
-      }
+      "nl": "Cocktails, wijnglazen, koffiekopjes, champagneflûtes als hoofdonderwerp. Mag gecombineerd worden met sfeerelementen (ijsblokjes, citroenschijfjes, condensatie op glas). Warme of feestelijke kleurtoon.",
+      "en": "Cocktails, wine glasses, coffee cups, champagne flutes as the main subject. Can be combined with atmospheric elements (ice cubes, lemon slices, condensation on glass). Warm or festive colour tone."
     },
     "Dieren": {
-      "en": {
-        "theme": "An animal portrait — up close and full of character",
-        "canvases": [
-          "Top-left: the face — eyes full of life, close enough to feel the animal's presence.",
-          "Top-right: the body — fur, feathers, or scales catching the light.",
-          "Bottom-left: the paws or feet — grounded, resting, or caught mid-step.",
-          "Bottom-right: the habitat — a glimpse of the world this creature belongs to."
-        ],
-        "connection": "Step back and the full creature appears — wild, still, and alive in its own world."
-      },
-      "nl": {
-        "theme": "Een dierenportret — dichtbij en vol karakter",
-        "canvases": [
-          "Linksboven: het gezicht — ogen vol leven, dichtbij genoeg om de aanwezigheid van het dier te voelen.",
-          "Rechtsboven: het lichaam — vacht, veren of schubben in het licht.",
-          "Linksonder: de poten — gegrond, rustend of betrapt halverwege een stap.",
-          "Rechtsonder: de habitat — een glimp van de wereld waartoe dit dier behoort."
-        ],
-        "connection": "Stap achteruit en het volledige dier verschijnt — wild, stil en levend in zijn eigen wereld."
-      }
+      "nl": "Eén dominant dier per canvas, weergegeven in een schattige, vereenvoudigde chibi-stijl — niet als fotorealistisch silhouet, maar als een 'aandoenlijk personage.'\n\nKenmerken:\n— Ronde, zachte vormen: dikke kop, klein lijfje, geen scherpe hoeken.\n— Minimale maar aanwezige gezichtsdetails: 2 kleine ovale oogjes (vaak met een klein wit lichtpuntje voor een glimmende blik), blosjes op de wangen (2 kleine roze rondjes), soms een klein glimlachje.\n— Dikke, donkere outline (zwart of donkerbruin) rond het hele dier, zoals bij sticker-art.\n— Egale kleurvlakken zonder realistisch schaduwwerk — hooguit 1 subtiele schaduwtint voor diepte.\n— Optioneel: een klein accessoire dat past bij de sfeer (bloemetje achter het oor, vlindertje ernaast, kleine muts).\n\nAchtergrond: egale pastelkleur of een heel simpele scène met max 2 elementen — nooit een drukke achtergrond.\n\nVoorbeelddieren: eendje, vosje, katje, uiltje, konijntje, olifantje, pandaatje, egeltje.",
+      "en": "One dominant animal per canvas, depicted in a cute, simplified chibi style — not a photorealistic silhouette, but an 'adorable character.'\n\nCharacteristics:\n— Round, soft shapes: big head, small body, no sharp angles.\n— Minimal but present facial details: 2 small oval eyes (often with a tiny white highlight for a shiny look), rosy cheeks (2 small pink circles), sometimes a small smile.\n— Thick, dark outline (black or dark brown) around the whole animal, like sticker art.\n— Flat colour areas without realistic shading — at most 1 subtle shadow tint for depth.\n— Optional: a small accessory that fits the mood (flower behind the ear, small butterfly, tiny hat).\n\nBackground: solid pastel colour or a very simple scene with max 2 elements — never a busy background.\n\nExample animals: duckling, fox, kitten, owl, bunny, elephant, panda, hedgehog."
     },
     "Fantasie": {
-      "en": {
-        "theme": "A fantasy world — beyond the ordinary, strange and beautiful",
-        "canvases": [
-          "Top-left: a dramatic sky — twin moons, an aurora, or light streaming from an unknown source.",
-          "Top-right: a creature or figure in motion — mythical, strange, and unmistakably alive.",
-          "Bottom-left: an enchanted landscape — an ancient forest, floating ruins, or water that glows from within.",
-          "Bottom-right: a magical object or portal — the detail that holds the whole world together."
-        ],
-        "connection": "The four panels reveal a world beyond the ordinary — strange and beautiful, from the sky to the smallest secret."
-      },
-      "nl": {
-        "theme": "Een fantasiewereld — voorbij het gewone, vreemd en mooi",
-        "canvases": [
-          "Linksboven: een dramatische lucht — twee manen, een aurora of licht dat stroomt uit een onbekende bron.",
-          "Rechtsboven: een wezen of figuur in beweging — mythisch, vreemd en onmiskenbaar levend.",
-          "Linksonder: een betoverd landschap — een oud woud, zwevende ruïnes of water dat van binnenuit gloeit.",
-          "Rechtsonder: een magisch voorwerp of portaal — het detail dat de hele wereld bij elkaar houdt."
-        ],
-        "connection": "De vier panelen onthullen een wereld voorbij het gewone — vreemd en mooi, van de lucht tot het kleinste geheim."
-      }
+      "nl": "Gebruik niet-realistische elementen: sterrenhemels, melkwegen, eenhoorns, magische bossen, drakensilhouetten. Gebruik diepe blauwtinten, paars en goud/zilveraccenten voor een magisch effect.",
+      "en": "Use non-realistic elements: starry skies, galaxies, unicorns, magical forests, dragon silhouettes. Use deep blues, purples, and gold/silver accents for a magical effect."
     },
     "Natuur": {
-      "en": {
-        "theme": "Nature seen close up — the small world we walk past every day",
-        "canvases": [
-          "Top-left: a single leaf — its veins, its colour gradient, its imperfections.",
-          "Top-right: a cluster of plants or flowers — overlapping, leaning, alive.",
-          "Bottom-left: the ground beneath — moss, soil, fallen petals, or worn stones.",
-          "Bottom-right: light through leaves — dappled, warm, and gone in an instant."
-        ],
-        "connection": "Together the panels form a close-up portrait of the natural world — the part we usually walk straight past."
-      },
-      "nl": {
-        "theme": "Natuur van dichtbij — de kleine wereld die we elke dag voorbijlopen",
-        "canvases": [
-          "Linksboven: één blad — zijn nerven, zijn kleurverloop, zijn onvolkomenheden.",
-          "Rechtsboven: een cluster planten of bloemen — overlappend, leunend, levend.",
-          "Linksonder: de grond eronder — mos, aarde, gevallen bloemblaadjes of verweerde stenen.",
-          "Rechtsonder: licht door bladeren — gevlekt, warm en voorbij voor je het weet."
-        ],
-        "connection": "Samen vormen de panelen een close-upportret van de natuur — het deel dat we gewoonlijk voorbijlopen."
-      }
+      "nl": "Zee, bos, grasland, bergen, bloemenvelden, zonsondergangen — altijd met een duidelijke horizonlijn of compositieas. Rustig en meditatief, geschikt voor wie het simpel wil houden.",
+      "en": "Sea, forest, grassland, mountains, flower fields, sunsets — always with a clear horizon line or composition axis. Calm and meditative, ideal for those who want to keep it simple."
     },
     "Mensen": {
-      "en": {
-        "theme": "A portrait of people — faces, hands, and the space between",
-        "canvases": [
-          "Top-left: a face — close, warm, and full of expression.",
-          "Top-right: hands — reaching, holding, creating, or quietly resting.",
-          "Bottom-left: a shared moment — laughter caught mid-breath, or a look of quiet focus.",
-          "Bottom-right: the space between people — a shared object, a table, or something that belongs to everyone."
-        ],
-        "connection": "Together the four panels form a portrait of connection — the people and the world they make when they're together."
-      },
-      "nl": {
-        "theme": "Een portret van mensen — gezichten, handen en de ruimte ertussen",
-        "canvases": [
-          "Linksboven: een gezicht — dichtbij, warm en vol uitdrukking.",
-          "Rechtsboven: handen — reikend, vasthoudend, creërend of rustig liggend.",
-          "Linksonder: een gedeeld moment — lach gevangen halverwege een adem, of een blik van stille focus.",
-          "Rechtsonder: de ruimte ertussen — een gedeeld voorwerp, een tafel of iets dat van iedereen is."
-        ],
-        "connection": "Samen vormen de vier panelen een portret van verbinding — de mensen en de wereld die ze samen maken."
-      }
+      "nl": "Silhouetten of vereenvoudigde figuren (geen gezichtsdetails nodig) — bijvoorbeeld een dansend koppel, een figuur kijkend naar de zonsondergang, twee handen die elkaar vasthouden. Focus op houding en emotie, niet op gelaatstrekken.",
+      "en": "Silhouettes or simplified figures (no facial details needed) — for example a dancing couple, a figure looking at the sunset, two hands holding each other. Focus on posture and emotion, not facial features."
     },
     "Party": {
-      "en": {
-        "theme": "A celebration in full colour — the noise, the joy, and the quiet after",
-        "canvases": [
-          "Top-left: colour and movement — balloons, streamers, or confetti caught mid-air.",
-          "Top-right: the people — faces, raised glasses, and the joy of being together.",
-          "Bottom-left: the table — food, drinks, candles, and all the good things.",
-          "Bottom-right: a quiet detail — a gift, a handwritten note, or a single flickering flame."
-        ],
-        "connection": "Together the panels capture everything that makes a celebration worth remembering — the noise and the stillness."
-      },
-      "nl": {
-        "theme": "Een feest in volle kleur — het lawaai, de vreugde en de stilte erna",
-        "canvases": [
-          "Linksboven: kleur en beweging — ballonnen, slingers of confetti betrapt in de lucht.",
-          "Rechtsboven: de mensen — gezichten, geheven glazen en de vreugde van samen zijn.",
-          "Linksonder: de tafel — eten, drinken, kaarsen en alles wat goed is.",
-          "Rechtsonder: een stil detail — een cadeau, een handgeschreven kaartje of één flakkerend vlammetje."
-        ],
-        "connection": "Samen vangen de panelen alles wat een feest de moeite waard maakt — het lawaai en de stilte."
-      }
+      "nl": "Confetti, slingers, champagne, dansende silhouetten, feestverlichting. Felle, energieke kleuren (roze, goud, felblauw). Compositie mag chaotisch en dynamisch zijn.",
+      "en": "Confetti, streamers, champagne, dancing silhouettes, party lights. Bold, energetic colours (pink, gold, bright blue). The composition can be chaotic and dynamic."
     },
     "Stad": {
-      "en": {
-        "theme": "An urban scene — the city in all its layers",
-        "canvases": [
-          "Top-left: the skyline — silhouettes of buildings against a dusk or dawn sky.",
-          "Top-right: a busy street — movement, colour, and the constant hum of city life.",
-          "Bottom-left: a storefront or doorway — an invitation inside, or a glimpse of someone's world.",
-          "Bottom-right: a quiet corner — an alley, a bench, or a plant pushing through the pavement."
-        ],
-        "connection": "The four panels form one city — from the grand view right down to the small, soul-giving details."
-      },
-      "nl": {
-        "theme": "Een stadsscène — de stad in al haar lagen",
-        "canvases": [
-          "Linksboven: de skyline — silhouetten van gebouwen tegen een avond- of ochtendlucht.",
-          "Rechtsboven: een drukke straat — beweging, kleur en het constante ruisen van het stadsleven.",
-          "Linksonder: een etalage of deuropening — een uitnodiging naar binnen, of een glimp van iemands wereld.",
-          "Rechtsonder: een rustig hoekje — een steeg, een bankje of een plant die door het plaveisel breekt."
-        ],
-        "connection": "De vier panelen vormen samen één stad — van het grote overzicht tot de kleine, zielgevende details."
-      }
+      "nl": "Skyline-silhouetten, straatlantaarns, regenachtige straten met reflecties, een specifieke herkenbare stad indien gewenst. Vaak nachtelijke sfeer met warme lichtpunten tegen een donkere achtergrond.",
+      "en": "Skyline silhouettes, street lamps, rainy streets with reflections, a specific recognisable city if desired. Often a night-time atmosphere with warm light points against a dark background."
     },
-    "Seizoensgebonden": {
-      "winter": {
-        "en": {
-          "theme": "A winter scene — quiet, cold, and full of hidden warmth",
-          "canvases": [
-            "Top-left: a grey-white sky with the promise of snow — or the silence after it has fallen.",
-            "Top-right: bare branches or frost patterns — the intricate beauty of the cold.",
-            "Bottom-left: something warm — a lit window, a steaming mug, a candle in the dark.",
-            "Bottom-right: a moment of magic — footprints in snow, a bird on a wire, or the last light of a short day."
-          ],
-          "connection": "Together the panels tell the story of winter — its stillness and its unexpected warmth."
-        },
-        "nl": {
-          "theme": "Een winterscène — stil, koud en vol verborgen warmte",
-          "canvases": [
-            "Linksboven: een grijswitte lucht met de belofte van sneeuw — of de stilte nadat het gevallen is.",
-            "Rechtsboven: kale takken of rijmpatronen — de ingewikkelde schoonheid van de kou.",
-            "Linksonder: iets warms — een verlicht raam, een dampende mok, een kaars in het donker.",
-            "Rechtsonder: een magisch moment — voetstappen in de sneeuw, een vogel op een draad of het laatste licht van een korte dag."
-          ],
-          "connection": "Samen vertellen de panelen het verhaal van de winter — zijn stilte en zijn onverwachte warmte."
-        }
-      },
-      "spring": {
-        "en": {
-          "theme": "Spring unfolding — colour returning, everything waking up",
-          "canvases": [
-            "Top-left: a pale sky with the first real warmth — light that feels different from winter light.",
-            "Top-right: blossoms or buds — the first ones, still small and tentative.",
-            "Bottom-left: wet earth and new green — the smell of rain and something beginning.",
-            "Bottom-right: a bird, a bee, a butterfly — the first sign of life coming back."
-          ],
-          "connection": "Together the four panels capture the exact feeling of spring arriving — hope made visible."
-        },
-        "nl": {
-          "theme": "De lente ontvouwt zich — kleur keert terug, alles wordt wakker",
-          "canvases": [
-            "Linksboven: een bleke lucht met de eerste echte warmte — licht dat anders aanvoelt dan winterlicht.",
-            "Rechtsboven: bloesem of knoppen — de allereerste, nog klein en aarzelend.",
-            "Linksonder: natte aarde en nieuw groen — de geur van regen en iets wat begint.",
-            "Rechtsonder: een vogel, een bij, een vlinder — het eerste teken dat het leven terugkomt."
-          ],
-          "connection": "Samen vangen de vier panelen het exacte gevoel van de lente die aankomt — hoop die zichtbaar wordt."
-        }
-      },
-      "summer": {
-        "en": {
-          "theme": "High summer — heat, colour, and long golden evenings",
-          "canvases": [
-            "Top-left: a blazing sky — deep blue, or that particular white-gold of midday heat.",
-            "Top-right: lush greenery or wildflowers — saturated, almost overwhelmingly alive.",
-            "Bottom-left: shade and cool — the shadow under a tree, a splash of water, a fan.",
-            "Bottom-right: a summer ritual — an ice cream melting, a book in the grass, feet in the water."
-          ],
-          "connection": "Together the four panels capture the full weight and joy of a summer day — hot, generous, and fleeting."
-        },
-        "nl": {
-          "theme": "Hoogzomer — hitte, kleur en lange gouden avonden",
-          "canvases": [
-            "Linksboven: een stralende lucht — diepblauw of dat bijzondere witgoud van de middaghitte.",
-            "Rechtsboven: weelderig groen of wilde bloemen — verzadigd, bijna overweldigend levend.",
-            "Linksonder: schaduw en koelte — de schaduw onder een boom, een spatje water, een waaier.",
-            "Rechtsonder: een zomerritueel — een smeltend ijsje, een boek in het gras, voeten in het water."
-          ],
-          "connection": "Samen vangen de vier panelen het volle gewicht en de vreugde van een zomerdag — heet, royaal en vluchtig."
-        }
-      },
-      "autumn": {
-        "en": {
-          "theme": "Autumn settling in — warm tones, falling leaves, and the smell of change",
-          "canvases": [
-            "Top-left: a sky that has turned — pewter grey, amber-washed, or unexpectedly clear.",
-            "Top-right: leaves — copper, rust, and gold — still on the branch or mid-fall.",
-            "Bottom-left: the ground — a carpet of fallen leaves, mud, chestnuts, or wet cobblestones.",
-            "Bottom-right: something harvested — apples, mushrooms, a pumpkin, or a bonfire starting."
-          ],
-          "connection": "Together the four panels breathe the particular atmosphere of autumn — melancholy and abundance at once."
-        },
-        "nl": {
-          "theme": "De herfst nestelt zich — warme tinten, vallende bladeren en de geur van verandering",
-          "canvases": [
-            "Linksboven: een lucht die is omgeslagen — loodgrijs, ambergekleurd of onverwacht helder.",
-            "Rechtsboven: bladeren — koper, roest en goud — nog aan de tak of halverwege de val.",
-            "Linksonder: de grond — een tapijt van gevallen bladeren, modder, kastanjes of natte kinderkopjes.",
-            "Rechtsonder: iets geoogst — appels, paddenstoelen, een pompoen of een vuur dat begint."
-          ],
-          "connection": "Samen ademen de vier panelen de bijzondere sfeer van de herfst — melancholie en overvloed tegelijk."
-        }
-      }
-    }
+    "Seizoensgebonden": null
   },
   "seasonal": [
     {
-      "name": "new_year",
-      "from": "12-27",
+      "name": "kerst",
+      "from": "12-07",
       "to": "01-03",
-      "en": "New Year is almost here — consider themes of transition, fireworks, midnight skies, or fresh beginnings.",
-      "nl": "Nieuwjaar is bijna — overweeg thema's van overgang: vuurwerk, middernachtslucht of een nieuw begin."
+      "nl": "Seizoensthema — Kerst: Kerstboom (silhouet of vereenvoudigd), kerstbal, cadeautjes, sneeuwvlokken, warme kerstsfeer met kaarsjes, mistletoe, kerstman-hoedje. Kleurenpalet: donkergroen, rood, goud, wit. Optioneel: sneeuw-textuur op de achtergrond.",
+      "en": "Seasonal theme — Christmas: Christmas tree (silhouette or simplified), bauble, gifts, snowflakes, warm festive atmosphere with candles, mistletoe, Santa hat. Colour palette: dark green, red, gold, white. Optional: snow texture in the background."
     },
     {
-      "name": "christmas",
-      "from": "12-18",
-      "to": "12-26",
-      "en": "Christmas is approaching — consider cosy, wintery, or festive themes: candlelight, snow, and the warmth of togetherness.",
-      "nl": "Kerstmis nadert — overweeg gezellige, winterse of feestelijke thema's: kaarslicht, sneeuw en de warmte van samenzijn."
+      "name": "winter",
+      "from": "01-04",
+      "to": "02-01",
+      "nl": "Seizoensthema — Winter: Sneeuwlandschap, kale bomen met sneeuw, een eenzame lantaarnpaal, sneeuwpop, warme muts/sjaal elementen, ijskristallen. Kleurenpalet: wit, ijsblauw, grijs met 1 warm accent (bv. een rode muts). Rustige, serene sfeer — geen feestelijke elementen meer, puur winterse rust.",
+      "en": "Seasonal theme — Winter: Snowy landscape, bare snow-covered trees, a lone street lamp, snowman, warm hat/scarf elements, ice crystals. Colour palette: white, ice blue, grey with 1 warm accent (e.g. a red hat). Calm, serene atmosphere — no festive elements, pure winter quiet."
     },
     {
-      "name": "valentine",
-      "from": "02-07",
+      "name": "valentijn",
+      "from": "02-02",
       "to": "02-14",
-      "en": "Valentine's is coming up — consider romantic or tender themes: hearts, roses, soft colours, or simply painting something you love.",
-      "nl": "Valentijn komt eraan — overweeg romantische of tedere thema's: harten, rozen, zachte kleuren of gewoon iets schilderen wat je liefhebt."
+      "nl": "Seizoensthema — Valentijn: Hartjes, rozen (vooral rood/roze), twee figuren/silhouetten hand in hand, cupido-elementen (pijl en boog), een liefdesbriefje. Kleurenpalet: rood, roze, wit, klein goud accent. Zacht en romantisch, geschikt zowel voor koppels als 'self-love' invulling.",
+      "en": "Seasonal theme — Valentine's Day: Hearts, roses (especially red/pink), two figures/silhouettes holding hands, cupid elements (bow and arrow), a love letter. Colour palette: red, pink, white, small gold accent. Soft and romantic, suitable for couples or a self-love approach."
     },
     {
-      "name": "easter",
-      "from": "03-20",
-      "to": "04-10",
-      "en": "Easter is nearby — consider themes of spring renewal: pastel colours, blossoms, eggs, and new beginnings.",
-      "nl": "Pasen is nabij — overweeg thema's van lentehernieuwing: pastelkleuren, bloesem, eieren en nieuwe beginnen."
+      "name": "cosy_binnen",
+      "from": "02-15",
+      "to": "03-25",
+      "nl": "Seizoensthema — Cosy Binnen: Geen hard seizoensthema — focus op binnen-sfeer en comfort: een kopje thee/koffie, een kaars, een boek, een dekentje, een raam met regen erbuiten, een kat opgekruld. Kleurenpalet: warme neutrale tinten (terracotta, crème, mosterdgeel, bruin). Sfeer: rustig, hygge, overgangsperiode tussen winter en lente.",
+      "en": "Seasonal theme — Cosy Indoors: No hard seasonal theme — focus on indoor atmosphere and comfort: a cup of tea/coffee, a candle, a book, a blanket, a rain-streaked window, a curled-up cat. Colour palette: warm neutral tones (terracotta, cream, mustard yellow, brown). Mood: calm, hygge, the quiet transition between winter and spring."
+    },
+    {
+      "name": "pasen",
+      "from": "03-26",
+      "to": "04-15",
+      "nl": "Seizoensthema — Pasen: Paaseitjes (versierd of gestileerd), lammetje, paashaas (silhouet of chibi-stijl), lentebloemen (narcissen, tulpen), een nest met eitjes. Kleurenpalet: pastel (geel, roze, mint, lila) met een klein goud/wit accent. Speelse, frisse compositie.",
+      "en": "Seasonal theme — Easter: Easter eggs (decorated or stylised), lamb, Easter bunny (silhouette or chibi style), spring flowers (daffodils, tulips), a nest with eggs. Colour palette: pastel (yellow, pink, mint, lilac) with a small gold/white accent. Playful, fresh composition."
+    },
+    {
+      "name": "lente",
+      "from": "04-16",
+      "to": "05-01",
+      "nl": "Seizoensthema — Lente: Bloesemtakken, tulpen- of narcissenveld, vlinders, vogeltjes, een fris groen grasveld met bloemen. Kleurenpalet: pastelgroen, roze, geel, lichtblauw. Licht en fris, zonder paas-symboliek (geen eitjes of haas — puur natuur).",
+      "en": "Seasonal theme — Spring: Blossom branches, tulip or daffodil fields, butterflies, little birds, a fresh green meadow with flowers. Colour palette: pastel green, pink, yellow, light blue. Light and fresh, without Easter symbolism (no eggs or bunnies — pure nature)."
+    },
+    {
+      "name": "moederdag",
+      "from": "05-02",
+      "to": "05-15",
+      "nl": "Seizoensthema — Moederdag: Bloemboeket of enkele bloem in vaas, hartjes, zachte kleuren, eventueel klein tekstwoord 'mama' of 'for mom' in handschriftstijl. Kleurenpalet: roze, lila, zachtgeel, wit. Warme, liefdevolle sfeer — meer 'dankbaarheid en waardering' dan romantiek.",
+      "en": "Seasonal theme — Mother's Day: A bouquet or single flower in a vase, hearts, soft colours, optionally a small 'mama' or 'for mom' in handwriting style. Colour palette: pink, lilac, soft yellow, white. Warm, loving atmosphere — more 'gratitude and appreciation' than romance."
+    },
+    {
+      "name": "vaderdag",
+      "from": "05-16",
+      "to": "06-15",
+      "nl": "Seizoensthema — Vaderdag: Mannelijke/neutrale sfeer — koffie/whiskeyglas, gereedschap, vissen (hengel/vis silhouet), auto/motor silhouet, bergen of buiten-thema. Kleurenpalet: donkerblauw, houtbruin, oker, mosgroen. Geen bloemetjes of pastel — steviger, 'warme mannencadeau' uitstraling. Optioneel klein tekstwoord: 'dad' of 'papa'.",
+      "en": "Seasonal theme — Father's Day: Masculine/neutral atmosphere — coffee/whiskey glass, tools, fishing (rod/fish silhouette), car/motorbike silhouette, mountains or outdoor theme. Colour palette: dark blue, wood brown, ochre, moss green. No flowers or pastels — bolder, warm gift-for-dad feel. Optional small word: 'dad' or 'papa'."
+    },
+    {
+      "name": "zomer",
+      "from": "06-16",
+      "to": "09-15",
+      "nl": "Seizoensthema — Zomer: Strand, zee, palmbomen, zonsondergang, ijsjes, watermeloen, vakantie-elementen (zonnebril, hoedje). Felle, warme kleuren: koraal, turquoise, geel, oranje. Speelse, luchtige compositie.",
+      "en": "Seasonal theme — Summer: Beach, sea, palm trees, sunset, ice cream, watermelon, holiday elements (sunglasses, hat). Bold, warm colours: coral, turquoise, yellow, orange. Playful, airy composition."
+    },
+    {
+      "name": "herfst",
+      "from": "09-16",
+      "to": "10-10",
+      "nl": "Seizoensthema — Herfst: Vallende bladeren, paddenstoelen, pompoenen, kastanjes, een enkele boom met herfstkleuren, warme drankjes (chai/koffie). Kleurenpalet: oranje, roestbruin, mosterdgeel, donkerrood. Sfeer: knus en warm.",
+      "en": "Seasonal theme — Autumn: Falling leaves, mushrooms, pumpkins, chestnuts, a single tree in autumn colours, warm drinks (chai/coffee). Colour palette: orange, rust brown, mustard yellow, dark red. Mood: cosy and warm."
     },
     {
       "name": "halloween",
-      "from": "10-24",
-      "to": "10-31",
-      "en": "Halloween is just around the corner — consider spooky, mysterious, or playfully eerie themes.",
-      "nl": "Halloween is vlakbij — overweeg enge, mysterieuze of speels griezelige thema's."
+      "from": "10-11",
+      "to": "11-02",
+      "nl": "Seizoensthema — Halloween: Pompoenen (jack-o-lantern), spinnenwebben, spoken, heksenhoed, zwarte kat silhouet, volle maan met vleermuizen. Kleurenpalet: zwart, oranje, paars. Mag speels/schattig of net iets spookachtiger — geef dit als sub-optie ('cute halloween' vs. 'spooky halloween').",
+      "en": "Seasonal theme — Halloween: Pumpkins (jack-o-lantern), spider webs, ghosts, witch hat, black cat silhouette, full moon with bats. Colour palette: black, orange, purple. Can be playful/cute or slightly spookier — offer this as a sub-option ('cute halloween' vs. 'spooky halloween')."
+    },
+    {
+      "name": "sinterklaas",
+      "from": "11-03",
+      "to": "12-06",
+      "nl": "Seizoensthema — Sinterklaas: Mijter, staf, pepernoten, cadeauzakje, paard silhouet, roe. Kleurenpalet: rood, goud, donkerbruin. Sfeer: warm en traditioneel — niet te kinderlijk voor volwassenen; focus dan liever op kaarslicht, pepernoten in een schaaltje of één enkel Sinterklaas-symbool.",
+      "en": "Seasonal theme — Sinterklaas: Bishop's mitre, staff, pepernoten (spiced cookies), gift bag, horse silhouette, birch twigs. Colour palette: red, gold, dark brown. Mood: warm and traditional — for adults, focus on candlelight, cookies in a small bowl, or a single St. Nicholas symbol rather than a full scene."
     }
   ],
   "level": {
     "Relaxed": {
-      "30 minutes": {
-        "en": "Keep it loose and enjoy the process. Colour and energy matter more than precision — a few confident marks go a long way.",
-        "nl": "Hou het los en geniet van het proces. Kleur en energie tellen meer dan precisie — enkele zekere streken doen wonderen."
-      },
-      "1 hour": {
-        "en": "Take your time. Let the painting breathe — not every area needs to be finished. Enjoy the journey.",
-        "nl": "Neem de tijd. Laat het schilderij ademen — niet elk deel hoeft afgewerkt te zijn. Geniet van de reis."
-      },
-      "2+ hours": {
-        "en": "A slow, meditative session — let each panel develop at its own pace. No rush, no pressure.",
-        "nl": "Een trage, meditatieve sessie — laat elk paneel op zijn eigen tempo groeien. Geen haast, geen druk."
-      }
+      "nl": "Niveau — Ontspannen: Houd de compositie zo simpel mogelijk — max 1–2 hoofdvormen, brede vlakke penseelstreken, geen fijne lijnen of kleine details nodig. Vergevingsgezind voor 'foutjes' — oneffenheden passen net bij de losse stijl. Geen precisiewerk zoals rechte lijnen, symmetrie of kleine gezichtjes. Ideaal voor absolute beginners of wie vooral wil ontspannen zonder druk.",
+      "en": "Level — Relaxed: Keep the composition as simple as possible — max 1–2 main shapes, broad flat brushstrokes, no fine lines or small details needed. Forgiving of mistakes — imperfections suit the loose style. No precision work like straight lines, symmetry, or tiny faces. Ideal for absolute beginners or those who just want to relax without pressure."
     },
     "Balanced": {
-      "30 minutes": {
-        "en": "Work quickly but intentionally. Choose one thing per canvas to finish properly and let the rest stay loose.",
-        "nl": "Werk snel maar doelgericht. Kies per paneel één ding dat je goed afwerkt en laat de rest los."
-      },
-      "1 hour": {
-        "en": "Lay in the big shapes first, then add detail where it matters most. Save the last ten minutes for adjustments.",
-        "nl": "Begin met de grote vormen en voeg dan detail toe waar het het meeste telt. Bewaar de laatste tien minuten voor aanpassingen."
-      },
-      "2+ hours": {
-        "en": "Plenty of time to explore. Try a colour or technique you haven't used before — you have space to experiment.",
-        "nl": "Genoeg tijd om te verkennen. Probeer een kleur of techniek die je nog niet eerder hebt gebruikt — je hebt ruimte om te experimenteren."
-      }
+      "nl": "Niveau — Gebalanceerd: Gemiddelde compositie met 2–4 elementen die op elkaar inspelen. Enkele fijnere details toegestaan (bv. een dun lijntje, een klein accent, een simpel gezichtje), maar het geheel blijft goed haalbaar zonder voorkennis. Wat afwisseling in penseeltechniek (vlak + wat textuur) mag, maar niets dat veel oefening vereist.",
+      "en": "Level — Balanced: Average composition with 2–4 elements that interact. Some finer details allowed (e.g. a thin line, a small accent, a simple face), but the whole remains very achievable without prior experience. Some variation in brushwork (flat + some texture) is fine, but nothing requiring a lot of practice."
     },
     "Ambitious": {
-      "30 minutes": {
-        "en": "Bold strokes, strong contrast. Commit to each mark and keep moving — there is no time for second-guessing.",
-        "nl": "Krachtige streken, sterk contrast. Zet je in voor elke streek en blijf bewegen — er is geen tijd voor twijfel."
-      },
-      "1 hour": {
-        "en": "Work in layers — build up gradually and don't be afraid to push further. Good painting decisions come from action, not planning.",
-        "nl": "Werk in lagen — bouw geleidelijk op en wees niet bang om verder te gaan. Goede schilderbeslissingen komen van actie, niet van planning."
-      },
-      "2+ hours": {
-        "en": "Go for it — refine edges, build up texture, and layer over what isn't working. Don't hesitate to paint over and start a section again.",
-        "nl": "Ga er volledig voor — verfijn randen, bouw textuur op en overschilder wat niet werkt. Aarzel niet om een gedeelte over te schilderen."
-      }
+      "nl": "Niveau — Ambitieus: Rijkere compositie met meerdere lagen, overlappende elementen, of een duidelijk licht/schaduwspel. Fijnere details zijn toegestaan en gewenst (bv. adertjes in een blad, precieze belijning, kleine highlights). Mag uitdagender kleurmengwerk bevatten (verlopen, meerdere tinten van dezelfde kleur). Voor wie al ervaring heeft of extra tijd en moeite wil steken.",
+      "en": "Level — Ambitious: Richer composition with multiple layers, overlapping elements, or a clear light/shadow interplay. Finer details are allowed and encouraged (e.g. leaf veins, precise outlines, small highlights). Can include more challenging colour mixing (gradients, multiple tints). For those with some experience or willing to invest extra time and effort."
+    }
+  },
+  "time": {
+    "30 minutes": {
+      "nl": "Tijd — 30 minuten: Max 2 elementen totaal (1 hoofdelement + optioneel 1 klein accent, bv. een sterretje naast een maantje). Max 3 kleuren. Geen extra elementen toevoegen, ook niet bij een verfijnde uitvoering. Simpele uitvoering: brede, grove penseelstreken, geen outline, geen fijn lijnwerk. Verfijnde uitvoering (zelfde elementen, meer precisie): voeg 1 dunne outline of 1 klein highlight-detail toe aan het hoofdelement. De verfijning zit in nauwkeurigheid, niet in complexiteit. Alles schilderbaar in 1 sessie, geen droogtijd nodig.",
+      "en": "Time — 30 minutes: Max 2 elements total (1 main element + optionally 1 small accent, e.g. a star next to a moon). Max 3 colours. No extra elements, even in a refined version. Simple version: broad rough brushstrokes, no outline, no fine linework. Refined version (same elements, more precision): add 1 thin outline or 1 small highlight detail to the main element. Refinement is in accuracy, not complexity. Everything paintable in 1 session, no drying time needed."
+    },
+    "1 hour": {
+      "nl": "Tijd — 1 uur: 2–3 elementen in de compositie (hoofdobject + 1–2 decoratieve accenten of een simpele achtergrond — elk apart meegeteld). Max 4–6 kleuren. Simpele uitvoering: vlakke kleuren, 1 basale outline. Verfijnde uitvoering (zelfde elementen, meer diepte): voeg 1 kleurverloop of schaduw/highlight-combinatie toe aan het hoofdelement, en verfijn de belijning van alle elementen. Nog steeds geen extra elementen — de tijd gaat naar afwerking, niet naar meer inhoud. Ruimte voor 1 korte droogpauze indien met laagjes gewerkt wordt.",
+      "en": "Time — 1 hour: 2–3 elements in the composition (main object + 1–2 decorative accents or a simple background — each counted separately). Max 4–6 colours. Simple version: flat colours, 1 basic outline. Refined version (same elements, more depth): add 1 colour gradient or shadow/highlight combination to the main element, and refine the outlines of all elements. No extra elements — time goes toward finishing, not adding more. Room for 1 short drying pause if working in layers."
+    },
+    "2+ hours": {
+      "nl": "Tijd — 2+ uur: 3–5 elementen, eventueel met een achtergrond die uit meerdere lagen bestaat (bv. lucht + horizon + voorgrondobject — elk apart meegeteld). Meer dan 6 kleuren toegestaan, inclusief kleurverlopen of gemengde tinten. Simpele uitvoering: nette vlakke uitwerking van alle elementen, 1 detail-laag (outline of highlight) per element. Verfijnde uitvoering (zelfde elementen, meer techniek): 2+ detail-lagen per element (bv. outline + schaduw + highlight samen), fijner lijnwerk, gemengde kleurovergangen. Ruimte voor droogtijd tussen lagen.",
+      "en": "Time — 2+ hours: 3–5 elements, optionally with a background consisting of multiple layers (e.g. sky + horizon + foreground object — each counted separately). More than 6 colours allowed, including gradients or mixed tints. Simple version: neat flat rendering of all elements, 1 detail layer (outline or highlight) per element. Refined version (same elements, more technique): 2+ detail layers per element (e.g. outline + shadow + highlight together), finer linework, blended colour transitions. Room for drying time between layers."
     }
   }
 }
