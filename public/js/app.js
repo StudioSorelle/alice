@@ -104,19 +104,11 @@
     initAuthForm();
     checkAuth();
 
+    function toggleLang() { window.setLang(window.currentLang === 'en' ? 'nl' : 'en'); }
     var langBtn = document.getElementById('langToggle');
-    if (langBtn) {
-      langBtn.addEventListener('click', function () {
-        window.setLang(window.currentLang === 'en' ? 'nl' : 'en');
-      });
-    }
-
-    var scrollBtn = document.getElementById('scrollToTiles');
-    if (scrollBtn) {
-      scrollBtn.addEventListener('click', function () {
-        document.getElementById('tiles').scrollIntoView({ behavior: 'smooth' });
-      });
-    }
+    if (langBtn) langBtn.addEventListener('click', toggleLang);
+    var langBtnMobile = document.getElementById('langToggleMobile');
+    if (langBtnMobile) langBtnMobile.addEventListener('click', toggleLang);
 
     document.getElementById('backBtn').addEventListener('click', function () { showView('home'); });
 

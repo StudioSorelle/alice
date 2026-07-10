@@ -62,6 +62,7 @@ function getSeasonalContext() {
 
   var holidays = [
     { month: 2,  day: 14, en: "Valentine's Day is coming up — consider romantic or heartfelt themes.",    nl: 'Valentijnsdag komt eraan — overweeg romantische of hartelijke thema\'s.' },
+    { month: 4,  day: 20, en: 'Easter is approaching — consider spring renewal, pastel colours, and new beginnings.', nl: 'Pasen nadert — overweeg lentehernieuwing, pastelkleuren en nieuwe beginnen.' },
     { month: 10, day: 31, en: 'Halloween is just around the corner — consider spooky, mysterious, or festive autumn themes.', nl: 'Halloween is vlakbij — overweeg spookachtige, mysterieuze of herfstfeestthema\'s.' },
     { month: 12, day: 25, en: 'Christmas is approaching — consider cosy, wintery, or festive themes.',   nl: 'Kerstmis nadert — overweeg gezellige, winterse of feestelijke thema\'s.' },
   ];
@@ -70,13 +71,14 @@ function getSeasonalContext() {
     var hol = holidays[h];
     var holDate = new Date(now.getFullYear(), hol.month - 1, hol.day);
     var diff = (holDate - now) / (1000 * 60 * 60 * 24);
-    if (diff >= 0 && diff <= 7) return { en: hol.en, nl: hol.nl };
+    if (diff >= 0 && diff <= 10) return { en: hol.en, nl: hol.nl };
   }
 
-  if (month >= 3 && month <= 5) return { en: 'It is spring.', nl: 'Het is lente.' };
-  if (month >= 6 && month <= 8) return { en: 'It is summer.', nl: 'Het is zomer.' };
-  if (month >= 9 && month <= 11) return { en: 'It is autumn.', nl: 'Het is herfst.' };
-  return { en: 'It is winter.', nl: 'Het is winter.' };
+  if (month >= 3 && month <= 5) return { en: 'It is spring — consider fresh colours, blossoms, and new energy.', nl: 'Het is lente — overweeg frisse kleuren, bloesem en nieuwe energie.' };
+  if (month >= 6 && month <= 8) return { en: 'It is summer — consider warm light, vibrant colours, and outdoor scenes.', nl: 'Het is zomer — overweeg warm licht, levendige kleuren en buitenscènes.' };
+  if (month >= 9 && month <= 10) return { en: 'It is autumn — consider earthy tones, falling leaves, and warm amber light.', nl: 'Het is herfst — overweeg aardse tinten, vallende bladeren en warm amberkleurig licht.' };
+  if (month >= 11) return { en: 'The festive season is here — consider warm, cosy, or sparkling winter themes.', nl: 'Het feestseizoen is aangebroken — overweeg warme, gezellige of fonkelende winterthema\'s.' };
+  return { en: 'It is winter — consider stark, quiet, or magical winter scenes.', nl: 'Het is winter — overweeg stille, kale of magische winterscènes.' };
 }
 
 // ── Auth ──
@@ -171,12 +173,14 @@ app.post('/api/spark', async (req, res) => {
 
 // ── Generate image ──
 var STYLE_HINTS = {
-  'Abstract':         'abstract expressionist canvas, fluid shapes and colour fields',
-  'Simplistic':       'minimalist canvas, clean simple forms, flat colour areas',
-  'Detailed':         'highly detailed oil painting, intricate fine brushwork',
-  'Playful':          'playful whimsical painting, bright warm palette, joyful energy',
-  'Geometric':        'geometric painting, angular structured forms, bold outlines',
-  'Bold & Expressive':'bold expressive impasto painting, thick visible brushstrokes'
+  'Abstract':           'abstract expressionist canvas, fluid shapes and colour fields',
+  'Simplistic':         'minimalist canvas, clean simple forms, flat colour areas',
+  'Detailed':           'highly detailed oil painting, intricate fine brushwork',
+  'Playful':            'playful whimsical painting, bright warm palette, joyful energy',
+  'Geometric':          'geometric painting, angular structured forms, bold outlines',
+  'Bold & Expressive':  'bold expressive impasto painting, thick visible brushstrokes',
+  'Girly / Pastel':     'soft pastel painting, blush pinks, lavenders, and mints, gentle dreamy aesthetic',
+  'Tumblr / Aesthetic': 'moody aesthetic painting, vintage tones, soft grunge, muted palette with one accent colour'
 };
 
 function trimIdea(text, maxLen) {
@@ -323,12 +327,14 @@ var STYLE_ADJECTIVES = {
   en: {
     'Abstract': 'abstract', 'Simplistic': 'simple and clean',
     'Detailed': 'richly detailed', 'Playful': 'playful',
-    'Geometric': 'geometric', 'Bold & Expressive': 'bold and expressive'
+    'Geometric': 'geometric', 'Bold & Expressive': 'bold and expressive',
+    'Girly / Pastel': 'soft pastel', 'Tumblr / Aesthetic': 'moody aesthetic'
   },
   nl: {
     'Abstract': 'abstract', 'Simplistic': 'eenvoudig en helder',
     'Detailed': 'rijk gedetailleerd', 'Playful': 'speels',
-    'Geometric': 'geometrisch', 'Bold & Expressive': 'gedurfd en expressief'
+    'Geometric': 'geometrisch', 'Bold & Expressive': 'gedurfd en expressief',
+    'Girly / Pastel': 'zacht pastel', 'Tumblr / Aesthetic': 'moodige esthetiek'
   }
 };
 
@@ -538,10 +544,12 @@ var TIME_HINTS = {
 
 function buildInspireIdea(answers, lang) {
   var l = lang === 'nl' ? 'nl' : 'en';
-  var style = answers[1] ? answers[1].answer : '';
-  var subject = answers[2] ? answers[2].answer : 'Nature';
-  var time = answers[3] ? answers[3].answer : '1 hour';
-  var ambition = answers[4] ? answers[4].answer : 'Balanced';
+  // answers[0]=group, answers[1]=product, answers[2]=style, answers[3]=subject,
+  // answers[4]=time, answers[5]=ambition
+  var style = answers[2] ? answers[2].answer : '';
+  var subject = answers[3] ? answers[3].answer : 'Nature';
+  var time = answers[4] ? answers[4].answer : '1 hour';
+  var ambition = answers[5] ? answers[5].answer : 'Balanced';
 
   var adj = (STYLE_ADJECTIVES[l] && STYLE_ADJECTIVES[l][style]) || style.toLowerCase() || 'beautiful';
   var templates = SUBJECT_TEMPLATES[l] || SUBJECT_TEMPLATES['en'];
@@ -553,7 +561,10 @@ function buildInspireIdea(answers, lang) {
   var timeHints = (TIME_HINTS[l] && TIME_HINTS[l][time]) || TIME_HINTS['en']['1 hour'];
   var hint = timeHints[ambition] || timeHints['Balanced'];
 
-  return theme + '\n\n' + canvasLines + '\n\n' + tpl.connection + '\n\n' + hint;
+  var seasonal = getSeasonalContext();
+  var seasonalNote = seasonal ? seasonal[l] : '';
+
+  return theme + '\n\n' + canvasLines + '\n\n' + tpl.connection + '\n\n' + hint + (seasonalNote ? '\n\n' + seasonalNote : '');
 }
 
 function buildSparkPrompt(answers, lang) {

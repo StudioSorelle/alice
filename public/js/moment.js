@@ -64,8 +64,8 @@
     }
 
     html += '<div class="flow-nav">';
-    html += '<button class="flow-next-btn" id="flow-next"' + (state.file ? '' : ' disabled') + '>' + t('common.next') + '</button>';
     html += '<button class="flow-ghost-btn" id="flow-back">' + t('common.back') + '</button>';
+    html += '<button class="flow-next-btn" id="flow-next"' + (state.file ? '' : ' disabled') + '>' + t('common.next') + '</button>';
     html += '</div>';
     el.innerHTML = html;
 
@@ -113,8 +113,8 @@
     html += '</div>';
 
     html += '<div class="flow-nav">';
-    html += '<button class="flow-next-btn" id="flow-submit">' + t('share.submit') + '</button>';
     html += '<button class="flow-ghost-btn" id="flow-back">' + t('common.back') + '</button>';
+    html += '<button class="flow-next-btn" id="flow-submit">' + t('share.submit') + '</button>';
     html += '</div>';
     el.innerHTML = html;
 

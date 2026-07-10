@@ -1,7 +1,7 @@
 (function () {
   var TRANSLATIONS = {
     en: {
-      'nav.brand': 'Studio Sorelle',
+      'nav.brand': 'Creation Lab by Studio Sorelle',
       'nav.mix': 'Mix your moment',
       'nav.inspire': 'Find your moment',
       'nav.spark': 'Spark your moment',
@@ -13,7 +13,7 @@
       'auth.error': 'Invalid code. Check the card inside your box and try again.',
       'hero.eyebrow': 'Welcome to Creation Lab by Studio Sorelle',
       'hero.body': 'Six colours, three ways to make something together. Mix, find your theme, or let chance decide.',
-      'hero.cta': 'Begin your session',
+      'hero.cta': 'Set the mood →',
       'tiles.eyebrow': 'Choose where to start',
       'tile.mix.title': 'Mix your moment',
       'tile.mix.desc': 'Struggling to find the right colour? Browse our full colour spectrum and discover the exact mixing ratio using your six kit paints.',
@@ -38,6 +38,11 @@
       'mix.recipe.title': 'Your mixing recipe',
       'mix.recipe.placeholder': 'Click or drag anywhere on the colour field to see your recipe.',
       'mix.kit.label': 'Your six kit paints',
+      'inspire.q.group': 'Are you painting alone or with a group?',
+      'inspire.group.alone': 'Alone',
+      'inspire.group.two': 'With 2',
+      'inspire.group.small': 'With 3–4',
+      'inspire.group.full': 'Full group (4 canvases)',
       'inspire.q1': 'What did you buy?',
       'inspire.q2': 'What painting style are you feeling?',
       'inspire.q3': 'What subject do you want to paint?',
@@ -60,6 +65,8 @@
       'style.playful': 'Playful',
       'style.geometric': 'Geometric',
       'style.bold': 'Bold & Expressive',
+      'style.girly': 'Girly / Pastel',
+      'style.tumblr': 'Tumblr / Aesthetic',
       'subject.nature': 'Nature',
       'subject.animals': 'Animals',
       'subject.food': 'Food & Drink',
@@ -101,6 +108,8 @@
       'nav.share': 'Share your moment',
       'tile.share.title': 'Share your moment',
       'tile.share.desc': 'Upload a photo of your painting and capture the moment forever.',
+      'tile.spotify.title': 'Set the mood',
+      'tile.spotify.desc': 'Put on the Studio Sorelle playlist and paint in the right vibe.',
       'view.share.eyebrow': 'Tool 04',
       'view.share.title': 'Share your moment',
       'view.share.sub': 'Three steps — your moment saved.',
@@ -122,7 +131,7 @@
       'share.consent': 'I give Studio Sorelle permission to use this photo on social media'
     },
     nl: {
-      'nav.brand': 'Studio Sorelle',
+      'nav.brand': 'Creation Lab by Studio Sorelle',
       'nav.mix': 'Mix je moment',
       'nav.inspire': 'Vind je moment',
       'nav.spark': 'Spark je moment',
@@ -134,7 +143,7 @@
       'auth.error': 'Ongeldige code. Controleer de kaart in je doos en probeer opnieuw.',
       'hero.eyebrow': 'Welkom bij Creation Lab by Studio Sorelle',
       'hero.body': 'Zes kleuren, drie manieren om samen iets te maken. Mix, vind je thema, of laat het lot beslissen.',
-      'hero.cta': 'Begin je sessie',
+      'hero.cta': 'Zet de sfeer →',
       'tiles.eyebrow': 'Kies waar je wilt beginnen',
       'tile.mix.title': 'Mix je moment',
       'tile.mix.desc': 'Moeilijk de juiste kleur vinden? Blader door ons volledige kleurenspectrum en ontdek de exacte mengverhouding met je zes kitverf kleuren.',
@@ -159,6 +168,11 @@
       'mix.recipe.title': 'Jouw mengrecept',
       'mix.recipe.placeholder': 'Klik of sleep op het kleurenveld om je recept te zien.',
       'mix.kit.label': 'Je zes kitverf kleuren',
+      'inspire.q.group': 'Schilder je alleen of met een groep?',
+      'inspire.group.alone': 'Alleen',
+      'inspire.group.two': 'Met 2',
+      'inspire.group.small': 'Met 3–4',
+      'inspire.group.full': 'Volledige groep (4 canvassen)',
       'inspire.q1': 'Wat heb je gekocht?',
       'inspire.q2': 'Welke schilderstijl voel jij?',
       'inspire.q3': 'Welk onderwerp wil je schilderen?',
@@ -181,6 +195,8 @@
       'style.playful': 'Speels',
       'style.geometric': 'Geometrisch',
       'style.bold': 'Gedurfd & Expressief',
+      'style.girly': 'Girly / Pastel',
+      'style.tumblr': 'Tumblr / Aesthetic',
       'subject.nature': 'Natuur',
       'subject.animals': 'Dieren',
       'subject.food': 'Eten & Drinken',
@@ -222,6 +238,8 @@
       'nav.share': 'Deel je moment',
       'tile.share.title': 'Deel je moment',
       'tile.share.desc': 'Upload een foto van je schilderij en bewaar het moment voor altijd.',
+      'tile.spotify.title': 'Zet de sfeer',
+      'tile.spotify.desc': 'Zet de Studio Sorelle playlist op en schilder in de juiste vibe.',
       'view.share.eyebrow': 'Tool 04',
       'view.share.title': 'Deel je moment',
       'view.share.sub': 'Drie stappen — je moment bewaard.',
@@ -268,5 +286,7 @@
     });
     var btn = document.getElementById('langToggle');
     if (btn) btn.textContent = lang === 'nl' ? 'EN' : 'NL';
+    var btn2 = document.getElementById('langToggleMobile');
+    if (btn2) btn2.textContent = lang === 'nl' ? 'EN' : 'NL';
   };
 })();

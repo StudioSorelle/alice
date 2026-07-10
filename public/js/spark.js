@@ -76,8 +76,8 @@
     }
 
     html += '<div class="flow-nav">';
-    html += '<button class="flow-next-btn" id="flow-next">' + (step === STEPS - 1 ? t('common.sparkcta') : t('common.next')) + '</button>';
     if (step > 0) html += '<button class="flow-ghost-btn" id="flow-back">' + t('common.back') + '</button>';
+    html += '<button class="flow-next-btn" id="flow-next">' + (step === STEPS - 1 ? t('common.sparkcta') : t('common.next')) + '</button>';
     html += '</div>';
 
     el.innerHTML = html;

@@ -52,25 +52,18 @@
         <div class="swatch" style="background:#2b1a17"></div>
         <div class="swatch" style="background:#2b1a17"></div>
         <div class="brand-card">
-          <span class="bc-logo">a</span>
-          <span class="bc-name">Studio Sorelle</span>
+          <img src="/assets/logo.png" alt="Studio Sorelle" class="bc-logo-img" onerror="this.style.display='none'">
         </div>
       </div>
       <div class="hero-panel">
+        <button class="lang-btn lang-btn-hero" id="langToggleMobile">NL</button>
         <img src="/assets/logo.png" alt="Studio Sorelle" class="hero-logo" onerror="this.style.display='none'">
         <p class="eyebrow" data-i18n="hero.eyebrow">Your kit is open. Now what?</p>
         <h1 class="hero-title">create<br>moments.</h1>
         <p class="hero-body" data-i18n="hero.body">Six colours, three ways to make something together. Mix, find your theme, or let chance decide.</p>
-        <button class="cta-btn" id="scrollToTiles" data-i18n="hero.cta">Begin your session</button>
+        <a href="https://open.spotify.com/user/31mgcv55qjxjlsvw3stg7me2ujkq" target="_blank" rel="noopener" class="cta-btn" data-i18n="hero.cta">Set the mood →</a>
       </div>
     </div>
-
-    <!-- ── Spotify section ── -->
-    <a href="https://open.spotify.com/user/31mgcv55qjxjlsvw3stg7me2ujkq" target="_blank" rel="noopener" class="spotify-band">
-      <img src="/assets/logo.png" alt="Studio Sorelle" class="spotify-logo" onerror="this.style.display='none'">
-      <span class="spotify-text" data-i18n="spotify.text">set the mood with your Sorelle sound</span>
-      <span class="spotify-note" data-i18n="spotify.note">Listen now ↗</span>
-    </a>
 
     <div id="tiles" class="tiles-wrap">
       <p class="eyebrow" data-i18n="tiles.eyebrow">Choose where to start</p>
@@ -112,6 +105,14 @@
           <p class="tile-desc" data-i18n="tile.share.desc">Upload a photo of your painting and capture the moment forever.</p>
         </button>
 
+        <a href="https://open.spotify.com/user/31mgcv55qjxjlsvw3stg7me2ujkq" target="_blank" rel="noopener" class="tile tile-spotify">
+          <div class="tile-visual">
+            <span class="tile-vis-music">&#9835;</span>
+          </div>
+          <h2 class="tile-title" data-i18n="tile.spotify.title">Set the mood</h2>
+          <p class="tile-desc" data-i18n="tile.spotify.desc">Put on the Studio Sorelle playlist and paint in the right vibe.</p>
+        </a>
+
       </div>
     </div>
 
@@ -134,13 +135,16 @@
         <canvas id="hueCanvas" width="260" height="18"></canvas>
 
         <div class="color-compare">
-          <div class="color-swatch" id="selColor"></div>
-          <div class="color-swatch" id="achColor"></div>
-          <div class="color-meta">
-            <strong id="selHex">#——</strong>
-            <span data-i18n="mix.youpicked">you picked</span>
-            <strong id="achHex">#——</strong>
-            <span data-i18n="mix.achievable">achievable</span>
+          <div class="color-col">
+            <span class="color-col-label" data-i18n="mix.youpicked">you picked</span>
+            <div class="color-swatch" id="selColor"></div>
+            <strong class="color-col-hex" id="selHex">#——</strong>
+          </div>
+          <div class="color-arrow">→</div>
+          <div class="color-col">
+            <span class="color-col-label" data-i18n="mix.achievable">achievable</span>
+            <div class="color-swatch" id="achColor"></div>
+            <strong class="color-col-hex" id="achHex">#——</strong>
           </div>
         </div>
         <div id="matchChip" class="match-chip" style="display:none"></div>
