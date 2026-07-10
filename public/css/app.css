@@ -194,13 +194,13 @@ body {
 .tile-num { font-family: var(--ff-m); font-size: .68rem; color: var(--mid); letter-spacing: .08em; margin-bottom: 1.25rem; }
 .tile-visual { height: 72px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; }
 .tile-vis-wheel {
-  width: 64px; height: 64px; border-radius: 50%;
+  width: 96px; height: 96px; border-radius: 50%;
   background: conic-gradient(hsl(0,70%,50%) 0deg 60deg, hsl(60,80%,52%) 60deg 120deg, hsl(120,55%,38%) 120deg 180deg, hsl(200,65%,38%) 180deg 240deg, hsl(240,60%,42%) 240deg 300deg, hsl(30,10%,15%) 300deg 360deg);
   box-shadow: 0 2px 12px rgba(0,0,0,.15);
 }
-.tile-vis-q { font-family: var(--ff-d); font-size: 3.5rem; color: var(--accent); font-style: italic; line-height: 1; opacity: .8; }
+.tile-vis-q { font-family: var(--ff-d); font-size: 5.25rem; color: var(--accent); font-style: italic; line-height: 1; opacity: .8; }
 .tile-vis-spark {
-  width: 64px; height: 64px; border-radius: 50%;
+  width: 96px; height: 96px; border-radius: 50%;
   background: conic-gradient(var(--accent) 0deg 60deg, var(--terra) 60deg 120deg, var(--warm) 120deg 180deg, var(--beige) 180deg 240deg, var(--mid) 240deg 300deg, var(--dark) 300deg 360deg);
   box-shadow: 0 2px 12px rgba(0,0,0,.15);
 }
@@ -418,10 +418,10 @@ body {
 
 /* Tile visual: share */
 .tile-vis-share {
-  font-family: var(--ff-d); font-size: 3.5rem; color: var(--terra);
+  font-family: var(--ff-d); font-size: 5.25rem; color: var(--terra);
   font-style: italic; line-height: 1; opacity: .8;
 }
-.tile-vis-music { font-size: 3rem; color: var(--terra); opacity: .8; }
+.tile-vis-music { font-size: 4.5rem; color: var(--terra); opacity: .8; }
 .tile-spotify { grid-column: 1 / -1; text-decoration: none; color: inherit; }
 
 /* ── Footer ── */
@@ -455,11 +455,11 @@ body {
   .nav-links a { font-size: .68rem; letter-spacing: .02em; line-height: 1.3; text-align: center; padding: .3rem .2rem; opacity: .75; }
   .hero-swatches { grid-template-columns: 1fr 1fr; padding: 0; }
   .swatch-tile { padding: 0.85rem 0.75rem; }
-  .swatch-tile .tile-visual { flex: 0 0 auto; height: 56px; }
+  .swatch-tile .tile-visual { flex: 0 0 auto; height: 72px; }
   .swatch-tile .tile-title { font-size: .88rem; }
   .swatch-tile .tile-desc { font-size: .63rem; line-height: 1.3; }
-  .tile-vis-wheel, .tile-vis-spark { width: 44px; height: 44px; }
-  .tile-vis-q, .tile-vis-share { font-size: 2.5rem; }
+  .tile-vis-wheel, .tile-vis-spark { width: 66px; height: 66px; }
+  .tile-vis-q, .tile-vis-share { font-size: 3.75rem; }
   .hero-panel { padding: 2rem 1rem; }
   .hero-title { font-size: 2.8rem; }
   .tiles-wrap { padding: 2rem 1rem; }
