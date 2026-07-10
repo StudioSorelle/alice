@@ -334,34 +334,62 @@ app.delete('/api/admin/codes/:id', adminAuth, async (req, res) => {
 function buildInspireIdea(answers, lang) {
   var l = lang === 'nl' ? 'nl' : 'en';
   // answers[0]=group, answers[1]=product, answers[2]=style, answers[3]=time, answers[4]=level
-  var group = answers[0] ? answers[0].answer : 'Alone';
-  var box   = answers[1] ? answers[1].answer : '';
-  var style = answers[2] ? answers[2].answer : '';
-  var time  = answers[3] ? answers[3].answer : '1 hour';
-  var level = answers[4] ? answers[4].answer : 'Balanced';
+  var group  = answers[0] ? answers[0].answer : 'Alone';
+  var box    = answers[1] ? answers[1].answer : '';
+  var style  = answers[2] ? answers[2].answer : '';
+  var time   = answers[3] ? answers[3].answer : '1 hour';
+  var level  = answers[4] ? answers[4].answer : 'Balanced';
 
-  var parts = [];
+  var boxKey = getBoxKey(box);
+  var parts  = [];
 
-  // 1. Box instruction
-  var boxFrag = PROMPTS.box[getBoxKey(box)];
-  if (boxFrag && boxFrag[l]) parts.push(boxFrag[l]);
-
-  // 2. Group / canvas count
-  if (group === 'Alone') {
-    var aloneFrag = PROMPTS.group.Alone;
-    if (aloneFrag && aloneFrag[l]) parts.push(aloneFrag[l]);
-  } else {
-    var count = group; // '2', '3', '4', '5+'
-    var multFrag = PROMPTS.group.multiple;
-    if (multFrag && multFrag[l]) {
-      parts.push(multFrag[l].replace(/\{count\}/g, count));
+  // 1. Box + group — logic differs per product type
+  if (boxKey === 'mini') {
+    // Mini: 2 small canvases (10×10 cm) per person, always separate, never grouped
+    if (group === 'Alone') {
+      var f = PROMPTS.mini_solo;
+      if (f && f[l]) parts.push(f[l]);
+    } else {
+      var peopleCount = group === '5+' ? 5 : parseInt(group, 10);
+      var total       = peopleCount * 2;
+      var countLabel  = group === '5+' ? '5+' : String(peopleCount);
+      var totalLabel  = group === '5+' ? '10+' : String(total);
+      var f = PROMPTS.mini_group;
+      if (f && f[l]) {
+        parts.push(f[l].replace(/\{count\}/g, countLabel).replace(/\{total\}/g, totalLabel));
+      }
     }
-    var splitKey = (count === '5+' || parseInt(count, 10) >= 5) ? '5+' : count;
-    var splitFrag = PROMPTS.canvas_splits[splitKey];
-    if (splitFrag && splitFrag[l]) parts.push(splitFrag[l]);
+
+  } else if (boxKey === 'tote') {
+    // Tote: each person paints their own separate tote bag (20×20 cm, textile), never grouped
+    if (group === 'Alone') {
+      var f = PROMPTS.tote_solo;
+      if (f && f[l]) parts.push(f[l]);
+    } else {
+      var f = PROMPTS.tote_group;
+      if (f && f[l]) {
+        parts.push(f[l].replace(/\{count\}/g, group));
+      }
+    }
+
+  } else {
+    // Canvas: 1 canvas per person (30×30 cm); groups combine into a polyptych
+    var boxFrag = PROMPTS.box.canvas;
+    if (boxFrag && boxFrag[l]) parts.push(boxFrag[l]);
+
+    if (group === 'Alone') {
+      var af = PROMPTS.group.Alone;
+      if (af && af[l]) parts.push(af[l]);
+    } else {
+      var mf = PROMPTS.group.multiple;
+      if (mf && mf[l]) parts.push(mf[l].replace(/\{count\}/g, group));
+      var splitKey = (group === '5+' || parseInt(group, 10) >= 5) ? '5+' : group;
+      var sf = PROMPTS.canvas_splits[splitKey];
+      if (sf && sf[l]) parts.push(sf[l]);
+    }
   }
 
-  // 3. Style / theme
+  // 2. Style / theme (applies to all box types)
   if (style === 'Seizoensgebonden') {
     var seasonalStyle = getActiveSeasonal(l);
     if (seasonalStyle) parts.push(seasonalStyle);
@@ -374,16 +402,15 @@ function buildInspireIdea(answers, lang) {
         ? 'Schilder in de stijl of rond het thema: ' + style + '.'
         : 'Paint in the style or around the theme: ' + style + '.');
     }
-    // Seasonal overlay for non-seasonal styles
     var seasonal = getActiveSeasonal(l);
     if (seasonal) parts.push(seasonal);
   }
 
-  // 4. Level
+  // 3. Level
   var levelFrag = PROMPTS.level[level];
   if (levelFrag && levelFrag[l]) parts.push(levelFrag[l]);
 
-  // 5. Time
+  // 4. Time
   var timeFrag = PROMPTS.time[time];
   if (timeFrag && timeFrag[l]) parts.push(timeFrag[l]);
 

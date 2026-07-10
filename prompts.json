@@ -1,17 +1,33 @@
 {
   "box": {
     "canvas": {
-      "nl": "Maak het voorbeeld op een canvas.",
-      "en": "Create the example on a canvas."
+      "nl": "Elke persoon schildert op een eigen canvas van ca. 30×30 cm.",
+      "en": "Each person paints on their own canvas, approx. 30×30 cm."
     },
     "mini": {
-      "nl": "Maak het voorbeeld op een canvas. Werk het voorbeeld uit voor een kleiner canvas-formaat — houd rekening met minder werkoppervlak bij het aantal elementen en opdrachten dat je voorstelt.",
-      "en": "Create the example on a canvas. Adapt the idea to the smaller canvas format — take into account the reduced working surface when choosing the number of elements."
+      "nl": "Elke persoon ontvangt 2 kleine canvasjes van ca. 10×10 cm — deze worden nooit gecombineerd.",
+      "en": "Each person receives 2 small canvases of approx. 10×10 cm — these are never combined."
     },
     "tote": {
-      "nl": "Maak het voorbeeld op een totebag. Houd rekening met een platter, minder poreus oppervlak — minder geschikt voor heel natte technieken zoals schilderen met je vingers of veel water gebruiken.",
-      "en": "Create the example on a tote bag. Take into account the flatter, less porous surface — less suitable for very wet techniques such as finger painting or using lots of water."
+      "nl": "Elke persoon schildert op een eigen totebag van ca. 20×20 cm (textieloppervlak).",
+      "en": "Each person paints on their own tote bag, approx. 20×20 cm (textile surface)."
     }
+  },
+  "mini_solo": {
+    "nl": "Je schildert op 2 kleine canvasjes van ca. 10×10 cm. Elk canvasje krijgt een ander, volledig zelfstandig idee — ze worden nooit gecombineerd tot één geheel. Stel 2 verschillende, simpele motieven voor in de gekozen stijl: 'Canvasje 1: ...' en 'Canvasje 2: ...'. Houd rekening met het kleine formaat — max 1–2 basisvormen per canvasje, brede penseelstreken, geen fijn detail.",
+    "en": "You are painting on 2 small canvases of approx. 10×10 cm. Each canvas gets a different, fully standalone idea — they are never combined into one whole. Suggest 2 different, simple motifs in the chosen style: 'Canvas 1: ...' and 'Canvas 2: ...'. Keep the small size in mind — max 1–2 basic shapes per canvas, broad brushstrokes, no fine detail."
+  },
+  "mini_group": {
+    "nl": "Jullie schilderen met {count} personen, elk op 2 kleine canvasjes van ca. 10×10 cm — {total} canvasjes in totaal. Elk canvasje krijgt een ander, volledig zelfstandig idee — ze worden nooit gecombineerd. Stel {total} verschillende, simpele motieven voor in de gekozen stijl, genummerd van 'Canvasje 1' tot 'Canvasje {total}'. Houd rekening met het kleine formaat — max 1–2 basisvormen per canvasje, brede penseelstreken, geen fijn detail.",
+    "en": "You are painting with {count} people, each on 2 small canvases of approx. 10×10 cm — {total} canvases in total. Each canvas gets a different, fully standalone idea — they are never combined. Suggest {total} different, simple motifs in the chosen style, numbered from 'Canvas 1' to 'Canvas {total}'. Keep the small size in mind — max 1–2 basic shapes per canvas, broad brushstrokes, no fine detail."
+  },
+  "tote_solo": {
+    "nl": "Je schildert op een eigen totebag van ca. 20×20 cm (textieloppervlak). Houd rekening met het textiel: minder poreus dan canvas — vermijd heel natte technieken zoals veel water of met de vingers schilderen.",
+    "en": "You are painting on your own tote bag of approx. 20×20 cm (textile surface). Keep the textile in mind: less porous than canvas — avoid very wet techniques such as lots of water or finger painting."
+  },
+  "tote_group": {
+    "nl": "Jullie schilderen met {count} personen, elk op een eigen totebag van ca. 20×20 cm (textieloppervlak). De tassen worden niet gecombineerd — stel {count} verschillende ideeën voor, genummerd van 'Totebag 1' tot 'Totebag {count}'. Houd rekening met het textiel: minder poreus dan canvas — vermijd heel natte technieken.",
+    "en": "You are painting with {count} people, each on their own tote bag of approx. 20×20 cm (textile surface). The bags are not combined — suggest {count} different ideas, numbered from 'Tote 1' to 'Tote {count}'. Keep the textile in mind: less porous than canvas — avoid very wet techniques."
   },
   "group": {
     "Alone": {
