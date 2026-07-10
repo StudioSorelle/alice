@@ -175,22 +175,25 @@ app.post('/api/spark', async (req, res) => {
 });
 
 // ── Generate image ──
-var STYLE_HINTS = {
-  'Abstract':         'abstract expressionist canvas, fluid shapes and sweeping colour fields',
-  'Simplistisch':     'minimalist canvas, clean simple forms, flat colour areas, generous negative space',
-  'Landschappen':     'landscape oil painting, open sky, horizon line, earthy tones, sweeping vista',
-  'Stilleven':        'still life oil painting, arranged objects, rich shadows and warm highlights',
-  'Speels':           'playful whimsical painting, bright cheerful palette, fun shapes and characters',
-  'Aesthetic':        'moody curated painting, muted palette, soft textures, atmospheric and considered',
-  'Dranken':          'still life of drinks and glassware, warm light, condensation on glass, rich saturated colours',
-  'Dieren':           'animal portrait, expressive eyes, detailed fur or feathers, natural habitat glimpse',
-  'Fantasie':         'fantasy world painting, dramatic sky, mythical creatures, enchanted landscape, glowing magical light',
-  'Natuur':           'close-up botanical nature study, leaves and flowers, dappled light, organic forms',
-  'Mensen':           'portrait of people, warm expressions, hands and faces, intimate human connection',
-  'Party':            'celebration painting, balloons and confetti, festive colours, joyful energy',
-  'Stad':             'urban cityscape painting, skyline silhouettes, busy street life, architectural detail',
-  'Seizoensgebonden': 'seasonal landscape painting, seasonal colours and atmosphere, time of year captured in paint'
+// Visual image prompts per style — English only, descriptive of the final painting
+var STYLE_IMAGE_PROMPTS = {
+  'Abstract':         'abstract expressionist painting on canvas, sweeping fluid colour fields with bold gestural brushstrokes, no recognisable objects, rich layered paint texture, expressive and vibrant',
+  'Simplistisch':     'minimalist painting on canvas, 1 to 3 clearly recognisable objects such as a mountain or a vase with flowers, flat colour areas with clean outlines, generous white space, simple and clean',
+  'Landschappen':     'landscape painting on canvas, open sky above a clear horizon line, natural scene with trees or sea or mountains, atmospheric depth, earthy tones, sweeping peaceful vista',
+  'Stilleven':        'still life painting on canvas, everyday objects grouped on a table including fruit, warm directional light casting clear soft shadows, rich warm colour palette, calm and composed',
+  'Speels':           'playful whimsical painting on canvas, bright cheerful contrasting colours, fun loose shapes like drops or swirls or confetti, visible energetic brushstrokes, joyful and dynamic',
+  'Aesthetic':        'cute aesthetic painting on canvas, one adorable central object such as a duck or cherry or mushroom, surrounded by small repeated decorative accents like daisies or stars, pastel or muted colour palette, flat simplified shapes with thin dark outline, sticker art style, solid pastel background',
+  'Dranken':          'still life painting on canvas of drinks and glassware such as a cocktail or wine glass or coffee cup, condensation droplets on glass, citrus slice or ice cube accent, warm atmospheric light, rich saturated colours',
+  'Dieren':           'cute chibi-style animal painting on canvas, one adorable animal such as a fox or kitten or duckling, large round head and small body, two small shiny oval eyes with white highlight, rosy cheek blush marks, thick dark outline around the whole animal like sticker art, flat colour areas without realistic shading, solid soft pastel background',
+  'Fantasie':         'fantasy painting on canvas, dramatic deep-blue starry sky or swirling galaxy, unicorn or dragon silhouette or magical forest, deep blues and purples with gold and silver accents, glowing magical light source',
+  'Natuur':           'nature painting on canvas, botanical scene with flowers or trees or a flower field, clear horizon line or central composition axis, calm and meditative, pastel greens and blues, peaceful',
+  'Mensen':           'painting on canvas of human silhouettes or simplified figures without facial detail, such as a dancing couple or a figure watching a sunset, focus on posture and emotion, warm tones',
+  'Party':            'celebration painting on canvas, confetti and streamers and champagne and dancing silhouettes and party lights, bold energetic colours in pink and gold and bright blue, dynamic and chaotic composition',
+  'Stad':             'urban cityscape painting on canvas, skyline silhouette against a dark sky, glowing street lamps, rainy street reflections, night atmosphere with warm light points against dark background',
+  'Seizoensgebonden': 'seasonal painting on canvas, seasonal colours and atmospheric mood, time of year captured in expressive paint, harmonious seasonal palette'
 };
+
+var NEGATIVE_PROMPT = 'text, words, letters, watermark, signature, photograph, realistic photo, 3d render, blurry, distorted, ugly, low quality, frame, border, unfinished sketch, people holding brushes, artist hands';
 
 function trimIdea(text, maxLen) {
   if (text.length <= maxLen) return text;
@@ -203,15 +206,38 @@ function trimIdea(text, maxLen) {
 
 app.post('/api/generate-image', async (req, res) => {
   if (!replicate) return res.status(503).json({ error: 'Image generation not configured. Set REPLICATE_API_TOKEN.' });
-  const { idea, style } = req.body;
-  if (!idea) return res.status(400).json({ error: 'No idea provided.' });
+  const { style, box } = req.body;
   try {
-    const styleDesc = STYLE_HINTS[style] || 'impressionist oil painting';
-    const imagePrompt = styleDesc + ' on canvas, ' +
-      trimIdea(String(idea), 220) +
-      ', warm earth tones, four panel composition, beautiful studio art';
-    const output = await replicate.run('black-forest-labs/flux-schnell', {
-      input: { prompt: imagePrompt, num_outputs: 1, output_format: 'webp', output_quality: 80 }
+    const boxKey = getBoxKey(box || '');
+    const surfaceLabel = boxKey === 'tote'
+      ? 'painted design on a fabric tote bag'
+      : boxKey === 'mini'
+        ? 'small painting on a 10 by 10 centimetre canvas'
+        : 'painting on a 30 by 30 centimetre canvas';
+
+    const stylePrompt = STYLE_IMAGE_PROMPTS[style] || ('painting on canvas in the style of: ' + (style || 'impressionist oil painting'));
+
+    // Replace generic "on canvas" in the style prompt with the correct surface
+    const adjustedStyle = stylePrompt.replace(/\bon canvas\b/g, 'on a ' + (boxKey === 'tote' ? 'fabric tote bag' : 'canvas'));
+
+    const imagePrompt = [
+      adjustedStyle,
+      'high quality fine art',
+      'painterly brushwork',
+      'beautiful composition',
+      'suitable as a painting reference for a beginner painter'
+    ].join(', ');
+
+    const output = await replicate.run('black-forest-labs/flux-dev', {
+      input: {
+        prompt: imagePrompt,
+        negative_prompt: NEGATIVE_PROMPT,
+        num_outputs: 1,
+        num_inference_steps: 28,
+        guidance_scale: 3.5,
+        output_format: 'webp',
+        output_quality: 85
+      }
     });
     const raw = output[0];
     const imageUrl = (raw && typeof raw.url === 'function') ? raw.url().href : String(raw);
