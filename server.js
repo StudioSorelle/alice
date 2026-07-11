@@ -145,26 +145,41 @@ app.post('/api/spark', async (req, res) => {
   if (!answers || !Array.isArray(answers) || !answers.length)
     return res.status(400).json({ error: 'Please answer the questions first.' });
   try {
-    var occasion = answers[3] ? answers[3].answer : 'any';
-    var actType = answers[4] ? answers[4].answer : 'mix';
+    // answers[1] = player count ('1','2','3','4','5+')
+    // answers[2] = time ('45 minutes','1 hour','2+ hours')
+    // answers[3] = occasion
+    // answers[4] = activity type
+    var playersRaw  = answers[1] ? answers[1].answer : '2';
+    var playerCount = playersRaw === '5+' ? 5 : (parseInt(playersRaw, 10) || 2);
+    var timeAnswer  = answers[2] ? answers[2].answer : '1 hour';
+    var occasion    = answers[3] ? answers[3].answer : 'any';
+    var actType     = answers[4] ? answers[4].answer : 'mix';
+
+    // Number of activities scales with available time (PDF spec)
+    var actCount = timeAnswer === '45 minutes' ? 3 : timeAnswer === '1 hour' ? 5 : 7;
+
+    // Exclude long-format activities (e.g. "every 15 minutes") for short sessions
+    var durationClause = timeAnswer === '45 minutes' ? " AND duration != 'long'" : '';
+
     var result;
     if (actType === 'mix') {
       result = await db.query(
-        "SELECT * FROM activities WHERE (occasion = 'any' OR occasion = ?)",
-        [occasion]
+        "SELECT * FROM activities WHERE (occasion = 'any' OR occasion = ?) AND min_players <= ?" + durationClause,
+        [occasion, playerCount]
       );
     } else {
       result = await db.query(
-        "SELECT * FROM activities WHERE type = ? AND (occasion = 'any' OR occasion = ?)",
-        [actType, occasion]
+        "SELECT * FROM activities WHERE type = ? AND (occasion = 'any' OR occasion = ?) AND min_players <= ?" + durationClause,
+        [actType, occasion, playerCount]
       );
     }
     var rows = result.rows.slice();
+    // Fisher-Yates shuffle
     for (var i = rows.length - 1; i > 0; i--) {
       var j = Math.floor(Math.random() * (i + 1));
       var tmp = rows[i]; rows[i] = rows[j]; rows[j] = tmp;
     }
-    var activities = rows.slice(0, 7).map(function (row) {
+    var activities = rows.slice(0, actCount).map(function (row) {
       return { id: row.id, type: row.type, description: lang === 'nl' ? row.description_nl : row.description_en };
     });
     res.json({ activities: activities });
