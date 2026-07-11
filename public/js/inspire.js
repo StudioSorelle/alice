@@ -1,5 +1,4 @@
 (function () {
-  var STEPS = 5;
   var GROUP_SIZES = [
     { key: 'inspire.group.alone', val: 'Alone' },
     { key: 'inspire.group.2',     val: '2' },
@@ -34,26 +33,58 @@
     { key: 'diff.ambitious', val: 'Ambitious' }
   ];
 
-  // answers[0]=group, answers[1]=product, answers[2]=style, answers[3]=time, answers[4]=ambition
+  // answers[0]=group, answers[1]=product, answers[2]=style, answers[3]=time, answers[4]=level
   var state = {
     step: 0, answers: [], products: [],
     idea: '', imageCount: 0, currentImageUrl: '',
-    otherStyleText: ''
+    otherStyleText: '',
+    paintTogether: null   // true=together, false=separate, null=not asked
   };
 
   function t(key, vars) { return window.t ? window.t(key, vars) : key; }
   function escHtml(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
   function escAttr(s) { return String(s).replace(/"/g, '&quot;'); }
 
+  // Whether to show the "paint together or separate?" question
+  // Condition: group > 1 AND product is canvas (not mini, not tote)
+  function needsTogetherStep() {
+    var group = state.answers[0];
+    var box   = state.answers[1];
+    if (!group || group === 'Alone') return false;
+    if (!box) return false;
+    var lower = box.toLowerCase();
+    return lower.indexOf('mini') < 0 && lower.indexOf('tote') < 0;
+  }
+
+  // Total visible steps (5 or 6)
+  function getTotalSteps() { return needsTogetherStep() ? 6 : 5; }
+
+  // Is the current step the together/separate question?
+  function isTogetherStep(step) { return needsTogetherStep() && step === 2; }
+
+  // Map visual step → answers[] index (-1 = stored in state.paintTogether)
+  function getAnswerIdx(step) {
+    if (!needsTogetherStep()) return step;       // 5-step: direct map
+    if (step <= 1) return step;
+    if (step === 2) return -1;                   // together step
+    return step - 1;                             // 3→2, 4→3, 5→4
+  }
+
+  // Visual step for each question type in 6-step mode
+  function styleStep()  { return needsTogetherStep() ? 3 : 2; }
+  function timeStep()   { return needsTogetherStep() ? 4 : 3; }
+  function levelStep()  { return needsTogetherStep() ? 5 : 4; }
+
   function render() {
     var el = document.getElementById('inspire-flow');
     if (!el) return;
-    if (state.step < STEPS) renderStep(el);
+    renderStep(el);
   }
 
   function renderStep(el) {
-    var step = state.step;
-    var html = '<p class="flow-step-num">' + t('common.step', { n: step + 1, total: STEPS }) + '</p>';
+    var step  = state.step;
+    var total = getTotalSteps();
+    var html  = '<p class="flow-step-num">' + t('common.step', { n: step + 1, total: total }) + '</p>';
 
     if (step === 0) {
       html += '<p class="flow-question">' + t('inspire.q.group') + '</p>';
@@ -73,7 +104,16 @@
       });
       html += '</div>';
 
-    } else if (step === 2) {
+    } else if (isTogetherStep(step)) {
+      html += '<p class="flow-question">' + t('inspire.q.together') + '</p>';
+      html += '<div class="option-grid" id="opt-grid">';
+      var togSel = state.paintTogether === true  ? ' active' : '';
+      var sepSel = state.paintTogether === false ? ' active' : '';
+      html += '<button class="option-btn' + togSel + '" data-val="together">' + t('inspire.together.yes') + '</button>';
+      html += '<button class="option-btn' + sepSel + '" data-val="separate">' + t('inspire.together.no') + '</button>';
+      html += '</div>';
+
+    } else if (step === styleStep()) {
       html += '<p class="flow-question">' + t('inspire.q2') + '</p>';
       html += '<div class="option-grid" id="style-grid">';
       STYLES.forEach(function (s) {
@@ -87,7 +127,7 @@
         html += '<input class="flow-other-input" id="other-input" placeholder="' + escAttr(t('inspire.other.ph')) + '" value="' + escAttr(state.otherStyleText) + '">';
       }
 
-    } else if (step === 3) {
+    } else if (step === timeStep()) {
       html += '<p class="flow-question">' + t('inspire.q3') + '</p>';
       html += '<div class="option-grid" id="opt-grid">';
       TIMES.forEach(function (ti) {
@@ -96,7 +136,7 @@
       });
       html += '</div>';
 
-    } else if (step === 4) {
+    } else if (step === levelStep()) {
       html += '<p class="flow-question">' + t('inspire.q4') + '</p>';
       html += '<div class="option-grid" id="opt-grid">';
       DIFFS.forEach(function (d) {
@@ -108,7 +148,7 @@
 
     html += '<div class="flow-nav">';
     if (step > 0) html += '<button class="flow-ghost-btn" id="flow-back">' + t('common.back') + '</button>';
-    html += '<button class="flow-next-btn" id="flow-next">' + (step === STEPS - 1 ? t('common.getidea') : t('common.next')) + '</button>';
+    html += '<button class="flow-next-btn" id="flow-next">' + (step === getTotalSteps() - 1 ? t('common.getidea') : t('common.next')) + '</button>';
     html += '</div>';
 
     el.innerHTML = html;
@@ -116,7 +156,7 @@
   }
 
   function bindStepEvents() {
-    var step = state.step;
+    var step    = state.step;
     var nextBtn = document.getElementById('flow-next');
     var backBtn = document.getElementById('flow-back');
 
@@ -128,15 +168,30 @@
     function updateNext() {
       if (!nextBtn) return;
       var ok = false;
-      if (step === 2) {
+      if (isTogetherStep(step)) {
+        ok = state.paintTogether !== null;
+      } else if (step === styleStep()) {
         ok = !!(state.answers[2] && !(state.answers[2] === '__other__' && !getOtherText()));
       } else {
-        ok = !!state.answers[step];
+        var idx = getAnswerIdx(step);
+        ok = idx >= 0 ? !!state.answers[idx] : false;
       }
       nextBtn.disabled = !ok;
     }
 
-    if (step === 2) {
+    if (isTogetherStep(step)) {
+      var grid = document.getElementById('opt-grid');
+      if (grid) {
+        grid.addEventListener('click', function (e) {
+          var btn = e.target.closest('.option-btn');
+          if (!btn) return;
+          state.paintTogether = btn.getAttribute('data-val') === 'together';
+          grid.querySelectorAll('.option-btn').forEach(function (b) { b.classList.remove('active'); });
+          btn.classList.add('active');
+          updateNext();
+        });
+      }
+    } else if (step === styleStep()) {
       var styleGrid = document.getElementById('style-grid');
       if (styleGrid) {
         styleGrid.addEventListener('click', function (e) {
@@ -168,7 +223,8 @@
           var btn = e.target.closest('.option-btn');
           if (!btn) return;
           var val = btn.getAttribute('data-val');
-          state.answers[step] = val;
+          var idx = getAnswerIdx(step);
+          if (idx >= 0) state.answers[idx] = val;
           grid.querySelectorAll('.option-btn').forEach(function (b) { b.classList.remove('active'); });
           btn.classList.add('active');
           updateNext();
@@ -179,7 +235,9 @@
     if (nextBtn) {
       updateNext();
       nextBtn.addEventListener('click', function () {
-        if (step === 2) {
+        if (isTogetherStep(step)) {
+          if (state.paintTogether === null) return;
+        } else if (step === styleStep()) {
           if (!state.answers[2]) return;
           if (state.answers[2] === '__other__') {
             var txt = getOtherText();
@@ -187,9 +245,10 @@
             state.answers[2] = txt;
           }
         } else {
-          if (!state.answers[step]) return;
+          var idx = getAnswerIdx(step);
+          if (idx < 0 || !state.answers[idx]) return;
         }
-        if (step === STEPS - 1) {
+        if (step === getTotalSteps() - 1) {
           submitInspire();
         } else {
           state.step++;
@@ -211,7 +270,11 @@
     fetch('/api/inspire', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ answers: answers, lang: window.currentLang || 'en' })
+      body: JSON.stringify({
+        answers: answers,
+        lang: window.currentLang || 'en',
+        paintTogether: needsTogetherStep() ? state.paintTogether : null
+      })
     })
       .then(function (r) { return r.json(); })
       .then(function (data) {
@@ -252,13 +315,13 @@
 
     el.innerHTML = html;
 
-    var againBtn = document.getElementById('inspire-again');
+    var againBtn   = document.getElementById('inspire-again');
     var restartBtn = document.getElementById('inspire-restart');
-    var imgBtn = document.getElementById('inspire-img-btn');
+    var imgBtn     = document.getElementById('inspire-img-btn');
 
-    if (againBtn) againBtn.addEventListener('click', submitInspire);
+    if (againBtn)   againBtn.addEventListener('click', submitInspire);
     if (restartBtn) restartBtn.addEventListener('click', initInspire);
-    if (imgBtn) imgBtn.addEventListener('click', generateImage);
+    if (imgBtn)     imgBtn.addEventListener('click', generateImage);
   }
 
   function generateImage() {
@@ -299,6 +362,7 @@
     state.imageCount = 0;
     state.currentImageUrl = '';
     state.otherStyleText = '';
+    state.paintTogether = null;
 
     var el = document.getElementById('inspire-flow');
     if (!el) return;

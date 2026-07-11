@@ -134,9 +134,10 @@ app.get('/api/occasions', async (req, res) => {
 app.post('/api/inspire', function (req, res) {
   var answers = req.body.answers;
   var lang = req.body.lang;
+  var paintTogether = req.body.paintTogether; // true | false | null (not applicable)
   if (!answers || !Array.isArray(answers) || !answers.length)
     return res.status(400).json({ error: 'Please answer the questions first.' });
-  res.json({ idea: buildInspireIdea(answers, lang) });
+  res.json({ idea: buildInspireIdea(answers, lang, paintTogether) });
 });
 
 // ── Spark (DB-based randomizer, no AI) ──
@@ -390,7 +391,7 @@ app.delete('/api/admin/codes/:id', adminAuth, async (req, res) => {
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-function buildInspireIdea(answers, lang) {
+function buildInspireIdea(answers, lang, paintTogether) {
   var l = lang === 'nl' ? 'nl' : 'en';
   // answers[0]=group, answers[1]=product, answers[2]=style, answers[3]=time, answers[4]=level
   var group  = answers[0] ? answers[0].answer : 'Alone';
@@ -432,14 +433,19 @@ function buildInspireIdea(answers, lang) {
     }
 
   } else {
-    // Canvas: 1 canvas per person (30×30 cm); groups combine into a polyptych
+    // Canvas: 1 canvas per person (30×30 cm)
     var boxFrag = PROMPTS.box.canvas;
     if (boxFrag && boxFrag[l]) parts.push(boxFrag[l]);
 
     if (group === 'Alone') {
       var af = PROMPTS.group.Alone;
       if (af && af[l]) parts.push(af[l]);
+    } else if (paintTogether === false) {
+      // Separate: each person paints their own standalone canvas
+      var csf = PROMPTS.canvas_separate;
+      if (csf && csf[l]) parts.push(csf[l].replace(/\{count\}/g, group));
     } else {
+      // Together (default): canvases combine into a polyptych
       var mf = PROMPTS.group.multiple;
       if (mf && mf[l]) parts.push(mf[l].replace(/\{count\}/g, group));
       var splitKey = (group === '5+' || parseInt(group, 10) >= 5) ? '5+' : group;

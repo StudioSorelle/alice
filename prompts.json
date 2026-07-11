@@ -29,6 +29,10 @@
     "nl": "Jullie schilderen met {count} personen, elk op een eigen totebag van ca. 20×20 cm (textieloppervlak). De tassen worden niet gecombineerd — stel {count} verschillende ideeën voor, genummerd van 'Totebag 1' tot 'Totebag {count}'. Houd rekening met het textiel: minder poreus dan canvas — vermijd heel natte technieken.",
     "en": "You are painting with {count} people, each on their own tote bag of approx. 20×20 cm (textile surface). The bags are not combined — suggest {count} different ideas, numbered from 'Tote 1' to 'Tote {count}'. Keep the textile in mind: less porous than canvas — avoid very wet techniques."
   },
+  "canvas_separate": {
+    "nl": "Jullie schilderen met {count} personen, elk op een eigen canvas van ca. 30×30 cm. De schilderijen worden niet gecombineerd — elk canvas is een volledig zelfstandig idee. Stel {count} verschillende variaties voor in de gekozen stijl, genummerd van 'Canvas 1' tot 'Canvas {count}'.",
+    "en": "You are painting with {count} people, each on their own canvas of approx. 30×30 cm. The paintings are not combined — each canvas is a fully standalone idea. Suggest {count} different variations in the chosen style, numbered from 'Canvas 1' to 'Canvas {count}'."
+  },
   "group": {
     "Alone": {
       "nl": "1 canvas — 1 volledig zelfstandig idee.",
