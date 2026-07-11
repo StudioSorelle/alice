@@ -265,6 +265,8 @@ body {
   outline: none; transition: border-color .2s;
 }
 .flow-other-input:focus { border-color: var(--terra); }
+.flow-hint { font-size: .8rem; color: var(--terra); margin: -.75rem 0 .75rem; }
+.topic-presets { margin-top: 0; }
 
 .flow-nav { display: flex; align-items: center; gap: 1rem; }
 .flow-next-btn {

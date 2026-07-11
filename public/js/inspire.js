@@ -9,18 +9,20 @@
   var STYLES = [
     { key: 'style.abstract',         val: 'Abstract' },
     { key: 'style.simplistisch',     val: 'Simplistisch' },
-    { key: 'style.landschappen',     val: 'Landschappen' },
-    { key: 'style.stilleven',        val: 'Stilleven' },
     { key: 'style.speels',           val: 'Speels' },
     { key: 'style.aesthetic',        val: 'Aesthetic' },
-    { key: 'style.dranken',          val: 'Dranken' },
-    { key: 'style.dieren',           val: 'Dieren' },
-    { key: 'style.fantasie',         val: 'Fantasie' },
-    { key: 'style.natuur',           val: 'Natuur' },
-    { key: 'style.mensen',           val: 'Mensen' },
-    { key: 'style.party',            val: 'Party' },
-    { key: 'style.stad',             val: 'Stad' },
     { key: 'style.seizoensgebonden', val: 'Seizoensgebonden' }
+  ];
+  var TOPICS = [
+    { key: 'topic.landschappen', val: 'Landschappen' },
+    { key: 'topic.stilleven',    val: 'Stilleven' },
+    { key: 'topic.dranken',      val: 'Dranken' },
+    { key: 'topic.dieren',       val: 'Dieren' },
+    { key: 'topic.fantasie',     val: 'Fantasie' },
+    { key: 'topic.natuur',       val: 'Natuur' },
+    { key: 'topic.mensen',       val: 'Mensen' },
+    { key: 'topic.party',        val: 'Party' },
+    { key: 'topic.stad',         val: 'Stad' }
   ];
   var TIMES = [
     { key: 'time.30min', val: '30 minutes' },
@@ -33,11 +35,10 @@
     { key: 'diff.ambitious', val: 'Ambitious' }
   ];
 
-  // answers[0]=group, answers[1]=product, answers[2]=style, answers[3]=time, answers[4]=level
+  // answers[0]=group, answers[1]=product, answers[2]=style, answers[3]=topic, answers[4]=time, answers[5]=level
   var state = {
     step: 0, answers: [], products: [],
     idea: '', imageCount: 0, currentImageUrl: '',
-    otherStyleText: '',
     paintTogether: null   // true=together, false=separate, null=not asked
   };
 
@@ -56,24 +57,25 @@
     return lower.indexOf('mini') < 0 && lower.indexOf('tote') < 0;
   }
 
-  // Total visible steps (5 or 6)
-  function getTotalSteps() { return needsTogetherStep() ? 6 : 5; }
+  // Total visible steps (6 or 7)
+  function getTotalSteps() { return needsTogetherStep() ? 7 : 6; }
 
   // Is the current step the together/separate question?
   function isTogetherStep(step) { return needsTogetherStep() && step === 2; }
 
+  // Visual step numbers for each question type
+  function styleStep()  { return needsTogetherStep() ? 3 : 2; }
+  function topicStep()  { return needsTogetherStep() ? 4 : 3; }
+  function timeStep()   { return needsTogetherStep() ? 5 : 4; }
+  function levelStep()  { return needsTogetherStep() ? 6 : 5; }
+
   // Map visual step → answers[] index (-1 = stored in state.paintTogether)
   function getAnswerIdx(step) {
-    if (!needsTogetherStep()) return step;       // 5-step: direct map
+    if (!needsTogetherStep()) return step;       // 6-step: direct map 0→0, 1→1, 2→2(style), 3→3(topic), 4→4(time), 5→5(level)
     if (step <= 1) return step;
     if (step === 2) return -1;                   // together step
-    return step - 1;                             // 3→2, 4→3, 5→4
+    return step - 1;                             // 3→2(style), 4→3(topic), 5→4(time), 6→5(level)
   }
-
-  // Visual step for each question type in 6-step mode
-  function styleStep()  { return needsTogetherStep() ? 3 : 2; }
-  function timeStep()   { return needsTogetherStep() ? 4 : 3; }
-  function levelStep()  { return needsTogetherStep() ? 5 : 4; }
 
   function render() {
     var el = document.getElementById('inspire-flow');
@@ -115,23 +117,31 @@
 
     } else if (step === styleStep()) {
       html += '<p class="flow-question">' + t('inspire.q2') + '</p>';
-      html += '<div class="option-grid" id="style-grid">';
+      html += '<div class="option-grid" id="opt-grid">';
       STYLES.forEach(function (s) {
         var sel = state.answers[2] === s.val ? ' active' : '';
         html += '<button class="option-btn' + sel + '" data-val="' + s.val + '">' + t(s.key) + '</button>';
       });
-      var otherSel = state.answers[2] === '__other__' ? ' active' : '';
-      html += '<button class="option-btn' + otherSel + '" data-val="__other__">' + t('inspire.other') + '</button>';
       html += '</div>';
-      if (state.answers[2] === '__other__') {
-        html += '<input class="flow-other-input" id="other-input" placeholder="' + escAttr(t('inspire.other.ph')) + '" value="' + escAttr(state.otherStyleText) + '">';
-      }
+
+    } else if (step === topicStep()) {
+      html += '<p class="flow-question">' + t('inspire.q.topic') + '</p>';
+      html += '<input class="flow-other-input" id="topic-input" placeholder="' + escAttr(t('inspire.topic.ph')) + '" value="' + escAttr(state.answers[3] || '') + '" autocomplete="off">';
+      html += '<p class="flow-hint">' + t('inspire.topic.hint') + '</p>';
+      html += '<div class="option-grid topic-presets" id="topic-grid">';
+      TOPICS.forEach(function (tp) {
+        var sel = state.answers[3] === tp.val ? ' active' : '';
+        html += '<button class="option-btn' + sel + '" data-val="' + tp.val + '">' + t(tp.key) + '</button>';
+      });
+      var anySel = state.answers[3] === '__any__' ? ' active' : '';
+      html += '<button class="option-btn' + anySel + '" data-val="__any__">' + t('inspire.topic.any') + '</button>';
+      html += '</div>';
 
     } else if (step === timeStep()) {
       html += '<p class="flow-question">' + t('inspire.q3') + '</p>';
       html += '<div class="option-grid" id="opt-grid">';
       TIMES.forEach(function (ti) {
-        var sel = state.answers[3] === ti.val ? ' active' : '';
+        var sel = state.answers[4] === ti.val ? ' active' : '';
         html += '<button class="option-btn' + sel + '" data-val="' + ti.val + '">' + t(ti.key) + '</button>';
       });
       html += '</div>';
@@ -140,7 +150,7 @@
       html += '<p class="flow-question">' + t('inspire.q4') + '</p>';
       html += '<div class="option-grid" id="opt-grid">';
       DIFFS.forEach(function (d) {
-        var sel = state.answers[4] === d.val ? ' active' : '';
+        var sel = state.answers[5] === d.val ? ' active' : '';
         html += '<button class="option-btn' + sel + '" data-val="' + d.val + '">' + t(d.key) + '</button>';
       });
       html += '</div>';
@@ -160,18 +170,14 @@
     var nextBtn = document.getElementById('flow-next');
     var backBtn = document.getElementById('flow-back');
 
-    function getOtherText() {
-      var inp = document.getElementById('other-input');
-      return inp ? inp.value.trim() : '';
-    }
-
     function updateNext() {
       if (!nextBtn) return;
       var ok = false;
       if (isTogetherStep(step)) {
         ok = state.paintTogether !== null;
-      } else if (step === styleStep()) {
-        ok = !!(state.answers[2] && !(state.answers[2] === '__other__' && !getOtherText()));
+      } else if (step === topicStep()) {
+        // Topic is required: either typed something or picked a preset (including __any__)
+        ok = !!(state.answers[3] && state.answers[3].length > 0);
       } else {
         var idx = getAnswerIdx(step);
         ok = idx >= 0 ? !!state.answers[idx] : false;
@@ -191,31 +197,35 @@
           updateNext();
         });
       }
-    } else if (step === styleStep()) {
-      var styleGrid = document.getElementById('style-grid');
-      if (styleGrid) {
-        styleGrid.addEventListener('click', function (e) {
-          var btn = e.target.closest('[data-val]');
-          if (!btn) return;
-          var val = btn.getAttribute('data-val');
-          state.answers[2] = val;
-          styleGrid.querySelectorAll('.option-btn').forEach(function (b) { b.classList.remove('active'); });
-          btn.classList.add('active');
-          if (val === '__other__') {
-            state.otherStyleText = '';
-            render();
-          } else {
-            updateNext();
-          }
-        });
-      }
-      var otherInput = document.getElementById('other-input');
-      if (otherInput) {
-        otherInput.addEventListener('input', function () {
-          state.otherStyleText = otherInput.value;
+
+    } else if (step === topicStep()) {
+      var topicInput = document.getElementById('topic-input');
+      var topicGrid  = document.getElementById('topic-grid');
+
+      if (topicInput) {
+        topicInput.addEventListener('input', function () {
+          state.answers[3] = topicInput.value.trim() || '';
+          // Clear any active preset button if user is typing freely
+          if (topicGrid) topicGrid.querySelectorAll('.option-btn').forEach(function (b) { b.classList.remove('active'); });
           updateNext();
         });
       }
+      if (topicGrid) {
+        topicGrid.addEventListener('click', function (e) {
+          var btn = e.target.closest('.option-btn');
+          if (!btn) return;
+          var val = btn.getAttribute('data-val');
+          state.answers[3] = val;
+          if (topicInput) {
+            // Fill the text field with the preset label (or clear it for __any__)
+            topicInput.value = val === '__any__' ? '' : btn.textContent;
+          }
+          topicGrid.querySelectorAll('.option-btn').forEach(function (b) { b.classList.remove('active'); });
+          btn.classList.add('active');
+          updateNext();
+        });
+      }
+
     } else {
       var grid = document.getElementById('opt-grid');
       if (grid) {
@@ -237,13 +247,9 @@
       nextBtn.addEventListener('click', function () {
         if (isTogetherStep(step)) {
           if (state.paintTogether === null) return;
-        } else if (step === styleStep()) {
-          if (!state.answers[2]) return;
-          if (state.answers[2] === '__other__') {
-            var txt = getOtherText();
-            if (!txt) return;
-            state.answers[2] = txt;
-          }
+        } else if (step === topicStep()) {
+          var v = state.answers[3];
+          if (!v || !v.length) return;
         } else {
           var idx = getAnswerIdx(step);
           if (idx < 0 || !state.answers[idx]) return;
@@ -265,8 +271,8 @@
   function submitInspire() {
     var el = document.getElementById('inspire-flow');
     el.innerHTML = '<div class="flow-loading"><div class="flow-spinner"></div><p class="flow-loading-text">' + t('inspire.loading') + '</p></div>';
-    var qs = [t('inspire.q.group'), t('inspire.q1'), t('inspire.q2'), t('inspire.q3'), t('inspire.q4')];
-    var answers = state.answers.slice(0, 5).map(function (a, i) { return { question: qs[i], answer: a || '' }; });
+    var qs = [t('inspire.q.group'), t('inspire.q1'), t('inspire.q2'), t('inspire.q.topic'), t('inspire.q3'), t('inspire.q4')];
+    var answers = state.answers.slice(0, 6).map(function (a, i) { return { question: qs[i] || '', answer: a || '' }; });
     fetch('/api/inspire', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -330,7 +336,7 @@
     fetch('/api/generate-image', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ idea: state.idea, style: state.answers[2], box: state.answers[1] })
+      body: JSON.stringify({ idea: state.idea, style: state.answers[2], topic: state.answers[3], box: state.answers[1] })
     })
       .then(function (r) { return r.json(); })
       .then(function (data) {
@@ -361,7 +367,6 @@
     state.idea = '';
     state.imageCount = 0;
     state.currentImageUrl = '';
-    state.otherStyleText = '';
     state.paintTogether = null;
 
     var el = document.getElementById('inspire-flow');

@@ -63,58 +63,60 @@
   },
   "styles": {
     "Abstract": {
-      "nl": "Gebruik vloeiende vormen en kleurvlakken — geen herkenbare objecten. Geschikt voor beginners, weinig precisie nodig.",
-      "en": "Use flowing shapes and colour fields — no recognisable objects. Ideal for beginners, very little precision required."
+      "nl": "Schilderstijl — Abstract: Gebruik vloeiende vormen en kleurvlakken — geen herkenbare objecten. Geschikt voor beginners, weinig precisie nodig.",
+      "en": "Painting style — Abstract: Use flowing shapes and colour fields — no recognisable objects. Ideal for beginners, very little precision required."
     },
     "Simplistisch": {
-      "nl": "1–3 duidelijk herkenbare objecten (bv. een berg, een vaas met bloemen), platte kleuren, weinig detail. Makkelijk na te schilderen in korte tijd.",
-      "en": "1–3 clearly recognisable objects (e.g. a mountain, a vase of flowers), flat colours, little detail. Easy to paint in a short time."
-    },
-    "Landschappen": {
-      "nl": "Gebruik natuurelementen (zee, bos, grasland, bergen, zonsondergang) — altijd een horizon-compositie. Geschikt voor wie iets rustigs en meditatiefs wil.",
-      "en": "Use natural elements (sea, forest, grassland, mountains, sunset) — always with a horizon composition. Ideal for those wanting something calm and meditative."
-    },
-    "Stilleven": {
-      "nl": "Gebruik alledaagse voorwerpen gegroepeerd op een tafel of oppervlak, altijd met fruit. Altijd een duidelijke lichtbron en schaduw. Rustige, warme composities. Geschikt voor wie precisie leuk vindt maar niet té ingewikkeld wil.",
-      "en": "Use everyday objects grouped on a table or surface, always including fruit. Always a clear light source and shadow. Calm, warm compositions. Ideal for those who enjoy precision but don't want anything too complex."
+      "nl": "Schilderstijl — Simplistisch: 1–3 duidelijk herkenbare vormen, platte kleuren zonder schaduw, weinig detail. Makkelijk na te schilderen in korte tijd.",
+      "en": "Painting style — Minimalistic: 1–3 clearly recognisable shapes, flat colours without shading, little detail. Easy to paint in a short time."
     },
     "Speels": {
-      "nl": "Gebruik vrolijke, niet-realistische vormen: druppels, confetti, ballonnen, swirls, dripping paint effecten. Felle, contrasterende kleuren toegestaan. Geen perfecte lijnen nodig — de 'fout' mag zichtbaar blijven.",
-      "en": "Use cheerful, non-realistic shapes: drops, confetti, balloons, swirls, dripping paint effects. Bold, contrasting colours allowed. No perfect lines needed — the 'mistake' can stay visible."
+      "nl": "Schilderstijl — Speels: Gebruik vrolijke, niet-realistische vormen: druppels, confetti, ballonnen, swirls, dripping paint effecten. Felle, contrasterende kleuren toegestaan. Geen perfecte lijnen nodig — de 'fout' mag zichtbaar blijven.",
+      "en": "Painting style — Playful: Use cheerful, non-realistic shapes: drops, confetti, balloons, swirls, dripping paint effects. Bold, contrasting colours allowed. No perfect lines needed — the 'mistake' can stay visible."
     },
     "Aesthetic": {
-      "nl": "Combineer 1 schattig hoofdobject met 1 onverwacht tweede element, volgens de formule: [HOOFDOBJECT] + [CONTRASTEREND/NOSTALGISCH ELEMENT]\n\nHoofdobjecten (kies er 1): eendje, kersen, aardbei, paddenstoel, maan, ster, wolk, hartje, vlinder.\nTweede elementen (kies er 1 — moet NIET logisch bij het hoofdobject horen, maar wél esthetisch samengaan): discobal, bloemetjes/madeliefjes, parels, een strikje, sterretjes, een klein zonnetje met zonnebril, regenboog, checkerboard/schaakbord patroon.\n\nRegels:\n— Kleurenpalet: pastel of gedempt (baby roze, lavendel, mintgroen, boterzacht geel) — nooit fel/neon, tenzij het element zelf feestelijk is.\n— Compositie: hoofdobject centraal en groot, tweede element klein en decoratief eromheen (2–4 keer herhaald).\n— Vlakke, simpele vormen met een dunne outline (zwart of donkere kleur) rond elk object, zoals bij sticker-art.\n— Achtergrond: egale pastelkleur of subtiele gradient, nooit een complexe scène.\n\nVoorbeelden: Eendje + bloemetjes | Kers + discobal | Paddenstoel + parelkrans | Maan + sterretjes en wolkjes | Aardbei + strikje.",
-      "en": "Combine 1 cute main object with 1 unexpected second element, using the formula: [MAIN OBJECT] + [CONTRASTING/NOSTALGIC ELEMENT]\n\nMain objects (choose 1): duck, cherries, strawberry, mushroom, moon, star, cloud, heart, butterfly.\nSecond elements (choose 1 — must NOT logically match the main object, but should look good aesthetically): disco ball, daisies, pearls, a bow, little stars, a sun with sunglasses, rainbow, checkerboard pattern.\n\nRules:\n— Colour palette: pastel or muted (baby pink, lavender, mint green, butter yellow) — never bold/neon, unless the element itself is festive.\n— Composition: main object central and large, second element small and decorative, repeated 2–4 times around it.\n— Flat, simple shapes with a thin outline (black or dark colour) around each object, like sticker art.\n— Background: solid pastel colour or subtle gradient, never a complex scene.\n\nExamples: Duck + daisies | Cherry + disco ball | Mushroom + pearl wreath | Moon + stars and clouds | Strawberry + bow."
-    },
-    "Dranken": {
-      "nl": "Cocktails, wijnglazen, koffiekopjes, champagneflûtes als hoofdonderwerp. Mag gecombineerd worden met sfeerelementen (ijsblokjes, citroenschijfjes, condensatie op glas). Warme of feestelijke kleurtoon.",
-      "en": "Cocktails, wine glasses, coffee cups, champagne flutes as the main subject. Can be combined with atmospheric elements (ice cubes, lemon slices, condensation on glass). Warm or festive colour tone."
-    },
-    "Dieren": {
-      "nl": "Eén dominant dier per canvas, weergegeven in een schattige, vereenvoudigde chibi-stijl — niet als fotorealistisch silhouet, maar als een 'aandoenlijk personage.'\n\nKenmerken:\n— Ronde, zachte vormen: dikke kop, klein lijfje, geen scherpe hoeken.\n— Minimale maar aanwezige gezichtsdetails: 2 kleine ovale oogjes (vaak met een klein wit lichtpuntje voor een glimmende blik), blosjes op de wangen (2 kleine roze rondjes), soms een klein glimlachje.\n— Dikke, donkere outline (zwart of donkerbruin) rond het hele dier, zoals bij sticker-art.\n— Egale kleurvlakken zonder realistisch schaduwwerk — hooguit 1 subtiele schaduwtint voor diepte.\n— Optioneel: een klein accessoire dat past bij de sfeer (bloemetje achter het oor, vlindertje ernaast, kleine muts).\n\nAchtergrond: egale pastelkleur of een heel simpele scène met max 2 elementen — nooit een drukke achtergrond.\n\nVoorbeelddieren: eendje, vosje, katje, uiltje, konijntje, olifantje, pandaatje, egeltje.",
-      "en": "One dominant animal per canvas, depicted in a cute, simplified chibi style — not a photorealistic silhouette, but an 'adorable character.'\n\nCharacteristics:\n— Round, soft shapes: big head, small body, no sharp angles.\n— Minimal but present facial details: 2 small oval eyes (often with a tiny white highlight for a shiny look), rosy cheeks (2 small pink circles), sometimes a small smile.\n— Thick, dark outline (black or dark brown) around the whole animal, like sticker art.\n— Flat colour areas without realistic shading — at most 1 subtle shadow tint for depth.\n— Optional: a small accessory that fits the mood (flower behind the ear, small butterfly, tiny hat).\n\nBackground: solid pastel colour or a very simple scene with max 2 elements — never a busy background.\n\nExample animals: duckling, fox, kitten, owl, bunny, elephant, panda, hedgehog."
-    },
-    "Fantasie": {
-      "nl": "Gebruik niet-realistische elementen: sterrenhemels, melkwegen, eenhoorns, magische bossen, drakensilhouetten. Gebruik diepe blauwtinten, paars en goud/zilveraccenten voor een magisch effect.",
-      "en": "Use non-realistic elements: starry skies, galaxies, unicorns, magical forests, dragon silhouettes. Use deep blues, purples, and gold/silver accents for a magical effect."
-    },
-    "Natuur": {
-      "nl": "Zee, bos, grasland, bergen, bloemenvelden, zonsondergangen — altijd met een duidelijke horizonlijn of compositieas. Rustig en meditatief, geschikt voor wie het simpel wil houden.",
-      "en": "Sea, forest, grassland, mountains, flower fields, sunsets — always with a clear horizon line or composition axis. Calm and meditative, ideal for those who want to keep it simple."
-    },
-    "Mensen": {
-      "nl": "Silhouetten of vereenvoudigde figuren (geen gezichtsdetails nodig) — bijvoorbeeld een dansend koppel, een figuur kijkend naar de zonsondergang, twee handen die elkaar vasthouden. Focus op houding en emotie, niet op gelaatstrekken.",
-      "en": "Silhouettes or simplified figures (no facial details needed) — for example a dancing couple, a figure looking at the sunset, two hands holding each other. Focus on posture and emotion, not facial features."
-    },
-    "Party": {
-      "nl": "Confetti, slingers, champagne, dansende silhouetten, feestverlichting. Felle, energieke kleuren (roze, goud, felblauw). Compositie mag chaotisch en dynamisch zijn.",
-      "en": "Confetti, streamers, champagne, dancing silhouettes, party lights. Bold, energetic colours (pink, gold, bright blue). The composition can be chaotic and dynamic."
-    },
-    "Stad": {
-      "nl": "Skyline-silhouetten, straatlantaarns, regenachtige straten met reflecties, een specifieke herkenbare stad indien gewenst. Vaak nachtelijke sfeer met warme lichtpunten tegen een donkere achtergrond.",
-      "en": "Skyline silhouettes, street lamps, rainy streets with reflections, a specific recognisable city if desired. Often a night-time atmosphere with warm light points against a dark background."
+      "nl": "Schilderstijl — Aesthetic: Combineer 1 schattig hoofdobject met 1 onverwacht tweede element, volgens de formule: [HOOFDOBJECT] + [CONTRASTEREND/NOSTALGISCH ELEMENT]\n\nHoofdobjecten (kies er 1): eendje, kersen, aardbei, paddenstoel, maan, ster, wolk, hartje, vlinder.\nTweede elementen (kies er 1 — moet NIET logisch bij het hoofdobject horen, maar wél esthetisch samengaan): discobal, bloemetjes/madeliefjes, parels, een strikje, sterretjes, een klein zonnetje met zonnebril, regenboog, checkerboard/schaakbord patroon.\n\nRegels:\n— Kleurenpalet: pastel of gedempt (baby roze, lavendel, mintgroen, boterzacht geel) — nooit fel/neon, tenzij het element zelf feestelijk is.\n— Compositie: hoofdobject centraal en groot, tweede element klein en decoratief eromheen (2–4 keer herhaald).\n— Vlakke, simpele vormen met een dunne outline (zwart of donkere kleur) rond elk object, zoals bij sticker-art.\n— Achtergrond: egale pastelkleur of subtiele gradient, nooit een complexe scène.\n\nVoorbeelden: Eendje + bloemetjes | Kers + discobal | Paddenstoel + parelkrans | Maan + sterretjes en wolkjes | Aardbei + strikje.",
+      "en": "Painting style — Aesthetic: Combine 1 cute main object with 1 unexpected second element, using the formula: [MAIN OBJECT] + [CONTRASTING/NOSTALGIC ELEMENT]\n\nMain objects (choose 1): duck, cherries, strawberry, mushroom, moon, star, cloud, heart, butterfly.\nSecond elements (choose 1 — must NOT logically match the main object, but should look good aesthetically): disco ball, daisies, pearls, a bow, little stars, a sun with sunglasses, rainbow, checkerboard pattern.\n\nRules:\n— Colour palette: pastel or muted (baby pink, lavender, mint green, butter yellow) — never bold/neon, unless the element itself is festive.\n— Composition: main object central and large, second element small and decorative, repeated 2–4 times around it.\n— Flat, simple shapes with a thin outline (black or dark colour) around each object, like sticker art.\n— Background: solid pastel colour or subtle gradient, never a complex scene.\n\nExamples: Duck + daisies | Cherry + disco ball | Mushroom + pearl wreath | Moon + stars and clouds | Strawberry + bow."
     },
     "Seizoensgebonden": null
+  },
+  "topics": {
+    "Landschappen": {
+      "nl": "Onderwerp — Landschappen: Gebruik natuurelementen (zee, bos, grasland, bergen, zonsondergang) — altijd een horizon-compositie. Geschikt voor wie iets rustigs en meditatiefs wil.",
+      "en": "Subject — Landscapes: Use natural elements (sea, forest, grassland, mountains, sunset) — always with a horizon composition. Ideal for those wanting something calm and meditative."
+    },
+    "Stilleven": {
+      "nl": "Onderwerp — Stilleven: Gebruik alledaagse voorwerpen gegroepeerd op een tafel of oppervlak, altijd met fruit. Altijd een duidelijke lichtbron en schaduw. Rustige, warme composities. Geschikt voor wie precisie leuk vindt maar niet té ingewikkeld wil.",
+      "en": "Subject — Still Life: Use everyday objects grouped on a table or surface, always including fruit. Always a clear light source and shadow. Calm, warm compositions. Ideal for those who enjoy precision but don't want anything too complex."
+    },
+    "Dranken": {
+      "nl": "Onderwerp — Dranken: Cocktails, wijnglazen, koffiekopjes, champagneflûtes als hoofdonderwerp. Mag gecombineerd worden met sfeerelementen (ijsblokjes, citroenschijfjes, condensatie op glas). Warme of feestelijke kleurtoon.",
+      "en": "Subject — Drinks: Cocktails, wine glasses, coffee cups, champagne flutes as the main subject. Can be combined with atmospheric elements (ice cubes, lemon slices, condensation on glass). Warm or festive colour tone."
+    },
+    "Dieren": {
+      "nl": "Onderwerp — Dieren: Eén dominant dier per canvas, weergegeven in een schattige, vereenvoudigde chibi-stijl — niet als fotorealistisch silhouet, maar als een 'aandoenlijk personage.'\n\nKenmerken:\n— Ronde, zachte vormen: dikke kop, klein lijfje, geen scherpe hoeken.\n— Minimale maar aanwezige gezichtsdetails: 2 kleine ovale oogjes (vaak met een klein wit lichtpuntje voor een glimmende blik), blosjes op de wangen (2 kleine roze rondjes), soms een klein glimlachje.\n— Dikke, donkere outline (zwart of donkerbruin) rond het hele dier, zoals bij sticker-art.\n— Egale kleurvlakken zonder realistisch schaduwwerk — hooguit 1 subtiele schaduwtint voor diepte.\n— Optioneel: een klein accessoire dat past bij de sfeer (bloemetje achter het oor, vlindertje ernaast, kleine muts).\n\nAchtergrond: egale pastelkleur of een heel simpele scène met max 2 elementen — nooit een drukke achtergrond.\n\nVoorbeelddieren: eendje, vosje, katje, uiltje, konijntje, olifantje, pandaatje, egeltje.",
+      "en": "Subject — Animals: One dominant animal per canvas, depicted in a cute, simplified chibi style — not a photorealistic silhouette, but an 'adorable character.'\n\nCharacteristics:\n— Round, soft shapes: big head, small body, no sharp angles.\n— Minimal but present facial details: 2 small oval eyes (often with a tiny white highlight for a shiny look), rosy cheeks (2 small pink circles), sometimes a small smile.\n— Thick, dark outline (black or dark brown) around the whole animal, like sticker art.\n— Flat colour areas without realistic shading — at most 1 subtle shadow tint for depth.\n— Optional: a small accessory that fits the mood (flower behind the ear, small butterfly, tiny hat).\n\nBackground: solid pastel colour or a very simple scene with max 2 elements — never a busy background.\n\nExample animals: duckling, fox, kitten, owl, bunny, elephant, panda, hedgehog."
+    },
+    "Fantasie": {
+      "nl": "Onderwerp — Fantasie: Gebruik niet-realistische elementen: sterrenhemels, melkwegen, eenhoorns, magische bossen, drakensilhouetten. Gebruik diepe blauwtinten, paars en goud/zilveraccenten voor een magisch effect.",
+      "en": "Subject — Fantasy: Use non-realistic elements: starry skies, galaxies, unicorns, magical forests, dragon silhouettes. Use deep blues, purples, and gold/silver accents for a magical effect."
+    },
+    "Natuur": {
+      "nl": "Onderwerp — Natuur: Zee, bos, grasland, bergen, bloemenvelden, zonsondergangen — altijd met een duidelijke horizonlijn of compositieas. Rustig en meditatief, geschikt voor wie het simpel wil houden.",
+      "en": "Subject — Nature: Sea, forest, grassland, mountains, flower fields, sunsets — always with a clear horizon line or composition axis. Calm and meditative, ideal for those who want to keep it simple."
+    },
+    "Mensen": {
+      "nl": "Onderwerp — Mensen: Silhouetten of vereenvoudigde figuren (geen gezichtsdetails nodig) — bijvoorbeeld een dansend koppel, een figuur kijkend naar de zonsondergang, twee handen die elkaar vasthouden. Focus op houding en emotie, niet op gelaatstrekken.",
+      "en": "Subject — People: Silhouettes or simplified figures (no facial details needed) — for example a dancing couple, a figure looking at the sunset, two hands holding each other. Focus on posture and emotion, not facial features."
+    },
+    "Party": {
+      "nl": "Onderwerp — Feestje: Confetti, slingers, champagne, dansende silhouetten, feestverlichting. Felle, energieke kleuren (roze, goud, felblauw). Compositie mag chaotisch en dynamisch zijn.",
+      "en": "Subject — Party: Confetti, streamers, champagne, dancing silhouettes, party lights. Bold, energetic colours (pink, gold, bright blue). The composition can be chaotic and dynamic."
+    },
+    "Stad": {
+      "nl": "Onderwerp — Stad: Skyline-silhouetten, straatlantaarns, regenachtige straten met reflecties, een specifieke herkenbare stad indien gewenst. Vaak nachtelijke sfeer met warme lichtpunten tegen een donkere achtergrond.",
+      "en": "Subject — City: Skyline silhouettes, street lamps, rainy streets with reflections, a specific recognisable city if desired. Often a night-time atmosphere with warm light points against a dark background."
+    }
   },
   "seasonal": [
     {

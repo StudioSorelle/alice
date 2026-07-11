@@ -191,22 +191,26 @@ app.post('/api/spark', async (req, res) => {
 });
 
 // ── Generate image ──
-// Visual image prompts per style — English only, descriptive of the final painting
+// Visual style prompts — describe HOW the painting looks (not what it depicts)
 var STYLE_IMAGE_PROMPTS = {
-  'Abstract':         'abstract expressionist painting on canvas, sweeping fluid colour fields with bold gestural brushstrokes, no recognisable objects, rich layered paint texture, expressive and vibrant',
-  'Simplistisch':     'minimalist painting on canvas, 1 to 3 clearly recognisable objects such as a mountain or a vase with flowers, flat colour areas with clean outlines, generous white space, simple and clean',
-  'Landschappen':     'landscape painting on canvas, open sky above a clear horizon line, natural scene with trees or sea or mountains, atmospheric depth, earthy tones, sweeping peaceful vista',
-  'Stilleven':        'still life painting on canvas, everyday objects grouped on a table including fruit, warm directional light casting clear soft shadows, rich warm colour palette, calm and composed',
-  'Speels':           'playful whimsical painting on canvas, bright cheerful contrasting colours, fun loose shapes like drops or swirls or confetti, visible energetic brushstrokes, joyful and dynamic',
-  'Aesthetic':        'cute aesthetic painting on canvas, one adorable central object such as a duck or cherry or mushroom, surrounded by small repeated decorative accents like daisies or stars, pastel or muted colour palette, flat simplified shapes with thin dark outline, sticker art style, solid pastel background',
-  'Dranken':          'still life painting on canvas of drinks and glassware such as a cocktail or wine glass or coffee cup, condensation droplets on glass, citrus slice or ice cube accent, warm atmospheric light, rich saturated colours',
-  'Dieren':           'cute chibi-style animal painting on canvas, one adorable animal such as a fox or kitten or duckling, large round head and small body, two small shiny oval eyes with white highlight, rosy cheek blush marks, thick dark outline around the whole animal like sticker art, flat colour areas without realistic shading, solid soft pastel background',
-  'Fantasie':         'fantasy painting on canvas, dramatic deep-blue starry sky or swirling galaxy, unicorn or dragon silhouette or magical forest, deep blues and purples with gold and silver accents, glowing magical light source',
-  'Natuur':           'nature painting on canvas, botanical scene with flowers or trees or a flower field, clear horizon line or central composition axis, calm and meditative, pastel greens and blues, peaceful',
-  'Mensen':           'painting on canvas of human silhouettes or simplified figures without facial detail, such as a dancing couple or a figure watching a sunset, focus on posture and emotion, warm tones',
-  'Party':            'celebration painting on canvas, confetti and streamers and champagne and dancing silhouettes and party lights, bold energetic colours in pink and gold and bright blue, dynamic and chaotic composition',
-  'Stad':             'urban cityscape painting on canvas, skyline silhouette against a dark sky, glowing street lamps, rainy street reflections, night atmosphere with warm light points against dark background',
-  'Seizoensgebonden': 'seasonal painting on canvas, seasonal colours and atmospheric mood, time of year captured in expressive paint, harmonious seasonal palette'
+  'Abstract':         'abstract expressionist style, sweeping fluid colour fields with bold gestural brushstrokes, no recognisable objects, rich layered paint texture, expressive and vibrant',
+  'Simplistisch':     'minimalist simplistic style, flat colour areas with clean outlines, 1 to 3 clearly recognisable shapes, generous background space, simple and uncluttered',
+  'Speels':           'playful whimsical style, bright cheerful contrasting colours, fun loose shapes like drops or swirls or confetti, visible energetic brushstrokes, joyful and dynamic',
+  'Aesthetic':        'cute aesthetic sticker-art style, flat simplified shapes with thin dark outline around each element, pastel or muted colour palette (baby pink, lavender, mint green), solid pastel background, adorable and charming',
+  'Seizoensgebonden': 'seasonal style, seasonal colours and atmospheric mood, time of year captured in expressive paint, harmonious seasonal palette'
+};
+
+// Visual topic prompts — describe WHAT the painting depicts
+var TOPIC_IMAGE_PROMPTS = {
+  'Landschappen': 'landscape scene, open sky above a clear horizon line, natural elements like trees, sea, or mountains, atmospheric depth, peaceful vista',
+  'Stilleven':    'still life, everyday objects grouped on a table including fruit, warm directional light casting soft shadows, calm and composed',
+  'Dranken':      'drinks and glassware such as a cocktail, wine glass, or coffee cup, condensation droplets, citrus slice or ice cube accent, atmospheric light',
+  'Dieren':       'cute chibi-style animal, one adorable animal such as a fox or kitten or duckling, large round head and small body, two shiny oval eyes with white highlight, rosy cheek blush marks, thick dark outline like sticker art, solid soft pastel background',
+  'Fantasie':     'fantasy scene, dramatic deep-blue starry sky or swirling galaxy, unicorn or dragon silhouette or magical forest, deep blues and purples with gold and silver accents, glowing magical light source',
+  'Natuur':       'nature scene, botanical elements with flowers or trees or a flower field, clear horizon line or central composition axis, calm and meditative, soft greens and blues',
+  'Mensen':       'human silhouettes or simplified figures without facial detail, such as a dancing couple or a figure watching a sunset, focus on posture and emotion, warm tones',
+  'Party':        'celebration scene, confetti and streamers and champagne and dancing silhouettes and party lights, bold energetic colours in pink and gold and bright blue, dynamic composition',
+  'Stad':         'urban cityscape, skyline silhouette against a dark sky, glowing street lamps, rainy street reflections, night atmosphere with warm light points against dark background'
 };
 
 var NEGATIVE_PROMPT = 'text, words, letters, watermark, signature, realistic photograph, 3d render, digital illustration, vector art, blurry, distorted, ugly, low quality, ornate frame, thick border, mat board, unfinished sketch, people, hands, easel, paint tubes, palette knife in frame';
@@ -229,33 +233,37 @@ function trimIdea(text, maxLen) {
 
 app.post('/api/generate-image', async (req, res) => {
   if (!replicate) return res.status(503).json({ error: 'Image generation not configured. Set REPLICATE_API_TOKEN.' });
-  const { idea, style, box } = req.body;
+  const { idea, style, topic, box } = req.body;
   try {
     const boxKey = getBoxKey(box || '');
 
-    // Opening sentence: tell the model exactly what object to render
+    // Opening sentence: exact product + size, feasibility requirement
     const productIntro = boxKey === 'tote'
-      ? 'Generate an image of a finished painting on a 20 by 20 centimetre white cotton tote bag. The design is painted with acrylic paint on textile.'
+      ? 'This is a Studio Sorelle tote bag painting kit. Generate a photorealistic image of a finished acrylic design painted by hand on a white square cotton tote bag (approximately 20 by 20 centimetres of paintable surface). The design must be bold, simple, and clearly work on fabric texture. It must be something a first-time painter can feasibly recreate.'
       : boxKey === 'mini'
-        ? 'Generate an image of finished paintings on small 10 by 10 centimetre acrylic canvases.'
-        : 'Generate an image of a finished acrylic painting on a 30 by 30 centimetre canvas.';
+        ? 'This is a Studio Sorelle mini canvas painting kit. Generate a photorealistic image of a finished acrylic painting on a very small 10 by 10 centimetre square canvas. Because the canvas is tiny, the motif must be extremely simple — at most 1 or 2 shapes, broad brushstrokes, no fine detail. It must be something a first-time painter can feasibly recreate on this small surface.'
+        : 'This is a Studio Sorelle signature canvas painting kit. Generate a photorealistic image of a finished acrylic painting on a square 30 by 30 centimetre canvas. The composition should be clear and simple enough that a first-time painter can feasibly recreate it. Show the painting as a flat-lay or straight-on view so the canvas dimensions and composition are clearly visible.';
 
-    // Transition: connect the product to the style/idea
-    const transition = boxKey === 'tote'
-      ? 'The painted design on the tote bag is in the following style:'
-      : 'The painting on the canvas is in the following style:';
+    // Style + topic visual descriptors
+    const styleVisual = STYLE_IMAGE_PROMPTS[style] || '';
+    const topicClean  = (topic || '').trim();
+    const topicVisual = (topicClean && topicClean !== '__any__')
+      ? (TOPIC_IMAGE_PROMPTS[topicClean] || ('subject: ' + topicClean))
+      : '';
 
-    // Style/idea content: use the exact idea text shown on the site, fall back to style prompt
-    const styleContent = idea
-      ? String(idea).trim()
-      : (STYLE_IMAGE_PROMPTS[style] || ('acrylic painting in the style: ' + (style || 'impressionist')));
+    // If we have the full idea text, use it directly (it is already the authoritative description)
+    // Otherwise build from style + topic visuals
+    const ideaText = idea ? String(idea).trim() : '';
+    const styleContent = ideaText
+      || [styleVisual, topicVisual].filter(Boolean).join(', ')
+      || 'acrylic painting, simple beginner-friendly composition';
 
     // Presentation suffix: how the output photo should look
     const presentationSuffix = boxKey === 'tote' ? TOTE_PROMPT_SUFFIX
       : boxKey === 'mini' ? MINI_PROMPT_SUFFIX
       : CANVAS_PROMPT_SUFFIX;
 
-    const imagePrompt = productIntro + ' ' + transition + '\n\n' + styleContent + '\n\n' + presentationSuffix;
+    const imagePrompt = productIntro + '\n\nThe painting shows: ' + styleContent + '\n\n' + presentationSuffix;
 
     console.log('[generate-image] model: flux-dev | prompt:\n' + imagePrompt);
 
@@ -393,12 +401,13 @@ app.delete('/api/admin/codes/:id', adminAuth, async (req, res) => {
 
 function buildInspireIdea(answers, lang, paintTogether) {
   var l = lang === 'nl' ? 'nl' : 'en';
-  // answers[0]=group, answers[1]=product, answers[2]=style, answers[3]=time, answers[4]=level
+  // answers[0]=group, answers[1]=product, answers[2]=style, answers[3]=topic, answers[4]=time, answers[5]=level
   var group  = answers[0] ? answers[0].answer : 'Alone';
   var box    = answers[1] ? answers[1].answer : '';
   var style  = answers[2] ? answers[2].answer : '';
-  var time   = answers[3] ? answers[3].answer : '1 hour';
-  var level  = answers[4] ? answers[4].answer : 'Balanced';
+  var topic  = answers[3] ? answers[3].answer : '';
+  var time   = answers[4] ? answers[4].answer : '1 hour';
+  var level  = answers[5] ? answers[5].answer : 'Balanced';
 
   var boxKey = getBoxKey(box);
   var parts  = [];
@@ -454,28 +463,44 @@ function buildInspireIdea(answers, lang, paintTogether) {
     }
   }
 
-  // 2. Style / theme (applies to all box types)
+  // 2. Style (how to paint)
   if (style === 'Seizoensgebonden') {
     var seasonalStyle = getActiveSeasonal(l);
     if (seasonalStyle) parts.push(seasonalStyle);
+    // Seasonal is both style and topic — skip separate topic/overlay below
   } else {
     var styleDef = PROMPTS.styles[style];
     if (styleDef && styleDef[l]) {
       parts.push(styleDef[l]);
     } else if (style) {
       parts.push(l === 'nl'
-        ? 'Schilder in de stijl of rond het thema: ' + style + '.'
-        : 'Paint in the style or around the theme: ' + style + '.');
+        ? 'Schilderstijl: ' + style + '.'
+        : 'Painting style: ' + style + '.');
     }
+
+    // 3. Topic (what to paint)
+    var topicClean = (topic || '').trim();
+    if (topicClean && topicClean !== '__any__') {
+      var topicDef = PROMPTS.topics && PROMPTS.topics[topicClean];
+      if (topicDef && topicDef[l]) {
+        parts.push(topicDef[l]);
+      } else {
+        parts.push(l === 'nl'
+          ? 'Onderwerp: ' + topicClean + '.'
+          : 'Subject: ' + topicClean + '.');
+      }
+    }
+
+    // Seasonal overlay always applied on top (except when Seizoensgebonden is the style)
     var seasonal = getActiveSeasonal(l);
     if (seasonal) parts.push(seasonal);
   }
 
-  // 3. Level
+  // 4. Level
   var levelFrag = PROMPTS.level[level];
   if (levelFrag && levelFrag[l]) parts.push(levelFrag[l]);
 
-  // 4. Time
+  // 5. Time
   var timeFrag = PROMPTS.time[time];
   if (timeFrag && timeFrag[l]) parts.push(timeFrag[l]);
 
