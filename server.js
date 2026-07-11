@@ -238,16 +238,43 @@ function trimIdea(text, maxLen) {
 
 app.post('/api/generate-image', async (req, res) => {
   if (!replicate) return res.status(503).json({ error: 'Image generation not configured. Set REPLICATE_API_TOKEN.' });
-  const { idea, style, topic, box } = req.body;
+  const { idea, style, topic, box, group, paintTogether } = req.body;
   try {
-    const boxKey = getBoxKey(box || '');
+    const boxKey    = getBoxKey(box || '');
+    const groupVal  = group || 'Alone';
+    const count     = groupVal === 'Alone' ? 1 : (groupVal === '5+' ? 5 : (parseInt(groupVal, 10) || 1));
 
-    // Opening sentence: exact product + size, feasibility requirement
-    const productIntro = boxKey === 'tote'
-      ? 'This is a Studio Sorelle tote bag painting kit. Generate a photorealistic image of a finished acrylic design painted by hand on a white square cotton tote bag (approximately 20 by 20 centimetres of paintable surface). The design must be bold, simple, and clearly work on fabric texture. It must be something a first-time painter can feasibly recreate.'
-      : boxKey === 'mini'
-        ? 'This is a Studio Sorelle mini canvas painting kit. Generate a photorealistic image of a finished acrylic painting on a very small 10 by 10 centimetre square canvas. Because the canvas is tiny, the motif must be extremely simple — at most 1 or 2 shapes, broad brushstrokes, no fine detail. It must be something a first-time painter can feasibly recreate on this small surface.'
-        : 'This is a Studio Sorelle signature canvas painting kit. Generate a photorealistic image of a finished acrylic painting on a square 30 by 30 centimetre canvas. The composition should be clear and simple enough that a first-time painter can feasibly recreate it. Show the painting as a flat-lay or straight-on view so the canvas dimensions and composition are clearly visible.';
+    // Build product intro: exact number of physical items must appear in the image
+    var productIntro;
+
+    if (boxKey === 'mini') {
+      // Mini: every person gets 2 canvases → total = count × 2
+      const total = count * 2;
+      if (count === 1) {
+        productIntro = 'Studio Sorelle mini canvas painting kit. Generate a photorealistic flat-lay image showing exactly TWO small square 10×10 cm acrylic canvases side by side. Each canvas has a different simple motif in a matching style. Motifs must be extremely simple — at most 1 shape per canvas — because the canvases are tiny. Both canvases must be clearly and fully visible in the image.';
+      } else {
+        productIntro = 'Studio Sorelle mini canvas painting kit for ' + count + ' people. Generate a photorealistic flat-lay image showing exactly ' + total + ' small square 10×10 cm acrylic canvases arranged in a neat group (' + count + ' people × 2 canvases each = ' + total + ' canvases total). Every single canvas must be clearly visible. Each canvas has a different but stylistically consistent motif. Motifs must be extremely simple — at most 1 shape per canvas — because the canvases are tiny.';
+      }
+    } else if (boxKey === 'tote') {
+      // Tote: 1 per person
+      if (count === 1) {
+        productIntro = 'Studio Sorelle tote bag painting kit. Generate a photorealistic flat-lay image of a finished acrylic design painted by hand on a white square cotton tote bag (approximately 20×20 cm paintable surface). The design must be bold, simple, and clearly readable on fabric.';
+      } else {
+        productIntro = 'Studio Sorelle tote bag painting kit for ' + count + ' people. Generate a photorealistic flat-lay image showing exactly ' + count + ' white cotton tote bags arranged together in one image. Every tote bag must be clearly visible. Each bag has a different but stylistically consistent acrylic design painted on it (approximately 20×20 cm surface). The designs must be bold and simple enough to work on fabric.';
+      }
+    } else {
+      // Canvas 30×30 cm
+      if (count === 1) {
+        productIntro = 'Studio Sorelle signature canvas painting kit. Generate a photorealistic image of a finished acrylic painting on a single square 30×30 cm canvas. The composition should be clear and simple enough that a first-time painter can feasibly recreate it. Show the canvas straight-on so its square format and composition are fully visible.';
+      } else if (paintTogether === false) {
+        // Separate: each person has their own standalone 30×30 cm canvas
+        productIntro = 'Studio Sorelle signature canvas painting kit for ' + count + ' people painting separately. Generate a photorealistic flat-lay image showing exactly ' + count + ' separate square 30×30 cm canvases arranged together in one image. Every canvas must be clearly visible. Each canvas has a different but stylistically consistent standalone acrylic painting.';
+      } else {
+        // Together: polyptych where canvases combine into one image
+        var panelWord = count === 2 ? 'diptych (2 panels)' : count === 3 ? 'triptych (3 panels)' : (count + '-panel polyptych');
+        productIntro = 'Studio Sorelle signature canvas painting kit for ' + count + ' people painting one connected image together. Generate a photorealistic image showing a ' + panelWord + ' — exactly ' + count + ' separate square 30×30 cm canvases arranged side by side to form ONE single connected painting. Every canvas panel must be clearly visible. The colours, shapes, and light must flow continuously across all ' + count + ' panels as one unified composition.';
+      }
+    }
 
     // Style + topic visual descriptors
     const styleVisual = STYLE_IMAGE_PROMPTS[style] || '';
@@ -265,6 +292,7 @@ app.post('/api/generate-image', async (req, res) => {
 
     // Presentation suffix: how the output photo should look
     const presentationSuffix = boxKey === 'tote' ? TOTE_PROMPT_SUFFIX
+      : boxKey === 'mini' && count > 1 ? 'acrylic paint on small square canvases with clearly visible loose brushstrokes, photographed as a clean flat-lay on a light neutral surface, all canvases fully visible in the frame, very simple motifs a beginner can paint in under an hour, Studio Sorelle mini kit reference image'
       : boxKey === 'mini' ? MINI_PROMPT_SUFFIX
       : CANVAS_PROMPT_SUFFIX;
 
@@ -272,7 +300,17 @@ app.post('/api/generate-image', async (req, res) => {
 
     console.log('[generate-image] model: flux-dev | prompt:\n' + imagePrompt);
 
-    const aspectRatio = boxKey === 'tote' ? '2:3' : '1:1';
+    // Multi-panel canvases side-by-side need wider aspect ratio
+    var aspectRatio;
+    if (boxKey === 'tote') {
+      aspectRatio = '2:3';
+    } else if (boxKey === 'canvas' && count >= 3 && paintTogether !== false) {
+      aspectRatio = '16:9';   // 3+ polyptych panels are very wide
+    } else if ((boxKey === 'canvas' && count === 2) || (boxKey === 'mini' && count >= 2) || (boxKey === 'tote' && count >= 2)) {
+      aspectRatio = '4:3';    // 2 items or small group: slightly wider than square
+    } else {
+      aspectRatio = '1:1';
+    }
 
     const output = await replicate.run('black-forest-labs/flux-dev', {
       input: {

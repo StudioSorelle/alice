@@ -343,7 +343,14 @@
     fetch('/api/generate-image', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ idea: state.idea, style: state.answers[2], topic: state.answers[3], box: state.answers[1] })
+      body: JSON.stringify({
+        idea: state.idea,
+        style: state.answers[2],
+        topic: state.answers[3],
+        box: state.answers[1],
+        group: state.answers[0],
+        paintTogether: needsTogetherStep() ? state.paintTogether : null
+      })
     })
       .then(function (r) { return r.json(); })
       .then(function (data) {
