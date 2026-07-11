@@ -194,10 +194,15 @@ app.post('/api/spark', async (req, res) => {
 // Visual style prompts — describe HOW the painting looks (not what it depicts)
 var STYLE_IMAGE_PROMPTS = {
   'Abstract':         'abstract expressionist style, sweeping fluid colour fields with bold gestural brushstrokes, no recognisable objects, rich layered paint texture, expressive and vibrant',
-  'Simplistisch':     'minimalist simplistic style, flat colour areas with clean outlines, 1 to 3 clearly recognisable shapes, generous background space, simple and uncluttered',
-  'Speels':           'playful whimsical style, bright cheerful contrasting colours, fun loose shapes like drops or swirls or confetti, visible energetic brushstrokes, joyful and dynamic',
-  'Aesthetic':        'cute aesthetic sticker-art style, flat simplified shapes with thin dark outline around each element, pastel or muted colour palette (baby pink, lavender, mint green), solid pastel background, adorable and charming',
-  'Seizoensgebonden': 'seasonal style, seasonal colours and atmospheric mood, time of year captured in expressive paint, harmonious seasonal palette'
+  'Minimalist':       'minimalist style, clean composition with at most 2 or 3 shapes, generous empty space on the canvas, flat colour areas with crisp outlines, strong through simplicity',
+  'Realistic':        'realistic painting style, accurate proportions and lifelike rendering, clear light source casting soft shadows, multiple tones of each colour creating depth and volume',
+  'Impressionistic':  'impressionist painting style, loose visible dabs and strokes of colour, soft blended edges, capturing light and atmosphere rather than sharp detail, warm luminous palette',
+  'Surreal':          'surrealist style, dreamlike impossible scene combining recognisable objects in unexpected ways, painted with realism but depicting something that cannot exist in reality',
+  'Geometric':        'geometric style, subject built from flat geometric shapes like triangles, circles, and rectangles, strong colour blocks with sharp contrasts, stained-glass or Mondrian-inspired',
+  'Expressive':       'expressionist style, large energetic brushstrokes conveying strong emotion, bold saturated colour used for emotional impact rather than accuracy, visible layered gestural marks',
+  'Colorful':         'vibrant colorful style, maximum colour saturation and variety, complementary colour pairs placed side by side for visual vibration, joyful and exuberant composition',
+  'Monochromatic':    'monochromatic style, painted entirely in one colour family from nearly white to nearly black, depth created through value contrast alone, harmonious and refined',
+  'Soft and dreamy':  'soft dreamy style, pastel tones blending gently into each other with no hard edges, romantic and ethereal atmosphere, hazy luminous quality as if veiled in soft mist'
 };
 
 // Visual topic prompts — describe WHAT the painting depicts

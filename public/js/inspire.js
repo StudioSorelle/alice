@@ -7,11 +7,16 @@
     { key: 'inspire.group.5plus', val: '5+' }
   ];
   var STYLES = [
-    { key: 'style.abstract',         val: 'Abstract' },
-    { key: 'style.simplistisch',     val: 'Simplistisch' },
-    { key: 'style.speels',           val: 'Speels' },
-    { key: 'style.aesthetic',        val: 'Aesthetic' },
-    { key: 'style.seizoensgebonden', val: 'Seizoensgebonden' }
+    { key: 'style.abstract',        val: 'Abstract' },
+    { key: 'style.minimalist',      val: 'Minimalist' },
+    { key: 'style.realistic',       val: 'Realistic' },
+    { key: 'style.impressionistic', val: 'Impressionistic' },
+    { key: 'style.surreal',         val: 'Surreal' },
+    { key: 'style.geometric',       val: 'Geometric' },
+    { key: 'style.expressive',      val: 'Expressive' },
+    { key: 'style.colorful',        val: 'Colorful' },
+    { key: 'style.monochromatic',   val: 'Monochromatic' },
+    { key: 'style.softdreamy',      val: 'Soft and dreamy' }
   ];
   var TOPICS = [
     { key: 'topic.landschappen', val: 'Landschappen' },
@@ -331,8 +336,10 @@
   }
 
   function generateImage() {
-    var btn = document.getElementById('inspire-img-btn');
-    if (btn) { btn.disabled = true; btn.textContent = t('inspire.img.loading'); }
+    var wrap = document.getElementById('inspire-image-wrap');
+    if (wrap) {
+      wrap.innerHTML = '<div class="flow-loading inspire-img-loading"><div class="flow-spinner"></div><p class="flow-loading-text">' + t('inspire.img.loading') + '</p></div>';
+    }
     fetch('/api/generate-image', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -341,7 +348,10 @@
       .then(function (r) { return r.json(); })
       .then(function (data) {
         if (data.error) {
-          if (btn) { btn.disabled = false; btn.textContent = t('inspire.img.regenerate'); }
+          var w = document.getElementById('inspire-image-wrap');
+          if (w) w.innerHTML = '<button class="flow-next-btn inspire-img-btn" id="inspire-img-btn">' + t('inspire.img.regenerate') + '</button>';
+          var b = document.getElementById('inspire-img-btn');
+          if (b) b.addEventListener('click', generateImage);
           return;
         }
         state.imageCount++;
@@ -349,7 +359,10 @@
         renderResult(document.getElementById('inspire-flow'));
       })
       .catch(function () {
-        if (btn) { btn.disabled = false; btn.textContent = t('inspire.img.regenerate'); }
+        var w = document.getElementById('inspire-image-wrap');
+        if (w) w.innerHTML = '<button class="flow-next-btn inspire-img-btn" id="inspire-img-btn">' + t('inspire.img.regenerate') + '</button>';
+        var b = document.getElementById('inspire-img-btn');
+        if (b) b.addEventListener('click', generateImage);
       });
   }
 

@@ -143,7 +143,7 @@ body {
 .swatch-tile-spotify .tile-num { display: none; }
 .hero-panel {
   display: flex; flex-direction: column; justify-content: center;
-  padding: 4rem 3rem 4rem 2.5rem; border-left: 1px solid var(--beige);
+  padding: 4rem 2.5rem 4rem 3rem; border-right: 1px solid var(--beige);
 }
 .eyebrow {
   font-family: var(--ff-m); font-size: .87rem; letter-spacing: .1em;
@@ -267,6 +267,7 @@ body {
 .flow-other-input:focus { border-color: var(--terra); }
 .flow-hint { font-size: .8rem; color: var(--terra); margin: -.75rem 0 .75rem; }
 .topic-presets { margin-top: 0; }
+.inspire-img-loading { padding: 1.5rem 0; margin: 0; }
 
 .flow-nav { display: flex; align-items: center; gap: 1rem; }
 .flow-next-btn {
@@ -438,8 +439,8 @@ body {
 /* ── Responsive ── */
 @media (max-width: 900px) {
   .hero { grid-template-columns: 1fr; min-height: auto; }
-  .hero-swatches { grid-template-columns: repeat(4, 1fr); padding: 2rem; }
-  .hero-panel { border-left: none; border-top: 1px solid var(--beige); padding: 2.5rem 2rem; }
+  .hero-panel { border-right: none; padding: 2.5rem 2rem; }
+  .hero-swatches { grid-template-columns: repeat(4, 1fr); padding: 2rem; border-top: 1px solid var(--beige); }
   .tiles-grid { grid-template-columns: 1fr; }
   .tiles-wrap { padding: 2.5rem 2rem; }
   .view-header { padding: 2rem 2rem 1.5rem; }

@@ -66,19 +66,42 @@
       "nl": "Schilderstijl — Abstract: Gebruik vloeiende vormen en kleurvlakken — geen herkenbare objecten. Geschikt voor beginners, weinig precisie nodig.",
       "en": "Painting style — Abstract: Use flowing shapes and colour fields — no recognisable objects. Ideal for beginners, very little precision required."
     },
-    "Simplistisch": {
-      "nl": "Schilderstijl — Simplistisch: 1–3 duidelijk herkenbare vormen, platte kleuren zonder schaduw, weinig detail. Makkelijk na te schilderen in korte tijd.",
-      "en": "Painting style — Minimalistic: 1–3 clearly recognisable shapes, flat colours without shading, little detail. Easy to paint in a short time."
+    "Minimalist": {
+      "nl": "Schilderstijl — Minimalistisch: Werk met maximaal 1–3 vormen. Laat veel ruimte vrij op het doek — de leegte is onderdeel van het ontwerp. Platte kleuren, geen schaduw, schone contouren. Sterk door wat je weglaat, niet door wat je toevoegt.",
+      "en": "Painting style — Minimalist: Work with a maximum of 1–3 shapes. Leave generous empty space on the canvas — the emptiness is part of the design. Flat colours, no shading, clean outlines. Strong through what you leave out, not what you add."
     },
-    "Speels": {
-      "nl": "Schilderstijl — Speels: Gebruik vrolijke, niet-realistische vormen: druppels, confetti, ballonnen, swirls, dripping paint effecten. Felle, contrasterende kleuren toegestaan. Geen perfecte lijnen nodig — de 'fout' mag zichtbaar blijven.",
-      "en": "Painting style — Playful: Use cheerful, non-realistic shapes: drops, confetti, balloons, swirls, dripping paint effects. Bold, contrasting colours allowed. No perfect lines needed — the 'mistake' can stay visible."
+    "Realistic": {
+      "nl": "Schilderstijl — Realistisch: Schilder het onderwerp zo levensecht mogelijk. Aandacht voor juiste verhoudingen, licht en schaduw, en textuur. Gebruik minstens 3–4 tinten van dezelfde kleur voor diepte. Houd het onderwerp eenvoudig (bv. 1 object of klein tafereel) om realistisch haalbaar te blijven.",
+      "en": "Painting style — Realistic: Paint the subject as lifelike as possible. Focus on correct proportions, light and shadow, and texture. Use at least 3–4 shades of each colour for depth. Keep the subject simple (e.g. 1 object or small scene) to stay realistically achievable."
     },
-    "Aesthetic": {
-      "nl": "Schilderstijl — Aesthetic: Combineer 1 schattig hoofdobject met 1 onverwacht tweede element, volgens de formule: [HOOFDOBJECT] + [CONTRASTEREND/NOSTALGISCH ELEMENT]\n\nHoofdobjecten (kies er 1): eendje, kersen, aardbei, paddenstoel, maan, ster, wolk, hartje, vlinder.\nTweede elementen (kies er 1 — moet NIET logisch bij het hoofdobject horen, maar wél esthetisch samengaan): discobal, bloemetjes/madeliefjes, parels, een strikje, sterretjes, een klein zonnetje met zonnebril, regenboog, checkerboard/schaakbord patroon.\n\nRegels:\n— Kleurenpalet: pastel of gedempt (baby roze, lavendel, mintgroen, boterzacht geel) — nooit fel/neon, tenzij het element zelf feestelijk is.\n— Compositie: hoofdobject centraal en groot, tweede element klein en decoratief eromheen (2–4 keer herhaald).\n— Vlakke, simpele vormen met een dunne outline (zwart of donkere kleur) rond elk object, zoals bij sticker-art.\n— Achtergrond: egale pastelkleur of subtiele gradient, nooit een complexe scène.\n\nVoorbeelden: Eendje + bloemetjes | Kers + discobal | Paddenstoel + parelkrans | Maan + sterretjes en wolkjes | Aardbei + strikje.",
-      "en": "Painting style — Aesthetic: Combine 1 cute main object with 1 unexpected second element, using the formula: [MAIN OBJECT] + [CONTRASTING/NOSTALGIC ELEMENT]\n\nMain objects (choose 1): duck, cherries, strawberry, mushroom, moon, star, cloud, heart, butterfly.\nSecond elements (choose 1 — must NOT logically match the main object, but should look good aesthetically): disco ball, daisies, pearls, a bow, little stars, a sun with sunglasses, rainbow, checkerboard pattern.\n\nRules:\n— Colour palette: pastel or muted (baby pink, lavender, mint green, butter yellow) — never bold/neon, unless the element itself is festive.\n— Composition: main object central and large, second element small and decorative, repeated 2–4 times around it.\n— Flat, simple shapes with a thin outline (black or dark colour) around each object, like sticker art.\n— Background: solid pastel colour or subtle gradient, never a complex scene.\n\nExamples: Duck + daisies | Cherry + disco ball | Mushroom + pearl wreath | Moon + stars and clouds | Strawberry + bow."
+    "Impressionistic": {
+      "nl": "Schilderstijl — Impressionistisch: Gebruik losse, zichtbare penseelstreken die licht en sfeer vangen in plaats van detail. Kleur naast kleur — niet gemengd op het palet maar op het doek. De kijker ziet het geheel pas op afstand. Zachte, warme kleuren — licht en stemming zijn het echte onderwerp.",
+      "en": "Painting style — Impressionist: Use loose, visible brushstrokes that capture light and mood rather than detail. Place colour next to colour — blended on the canvas, not the palette. The viewer sees the whole from a distance. Soft, warm colours — light and atmosphere are the real subject."
     },
-    "Seizoensgebonden": null
+    "Surreal": {
+      "nl": "Schilderstijl — Surrealistisch: Combineer herkenbare objecten op een onverwachte, droomachtige manier die in de realiteit niet bestaat. Een vis die door de lucht zwemt, een klok die smelt, bloemen die groeien uit een boek. Realistisch geschilderd, onmogelijk van inhoud — het contrast is de kracht.",
+      "en": "Painting style — Surreal: Combine recognisable objects in an unexpected, dreamlike way that doesn't exist in reality. A fish swimming through the air, a melting clock, flowers growing from a book. Painted realistically, impossible in content — the contrast is the power."
+    },
+    "Geometric": {
+      "nl": "Schilderstijl — Geometrisch: Bouw het onderwerp op uit basisvormen — cirkels, driehoeken, rechthoeken, zeshoeken. Elk element is een geometrische vorm, geen vloeiende organische lijnen. Gebruik 3–5 sterke kleurvlakken met duidelijke contrasten. Denk aan mozaïek, glas-in-lood of Mondriaan.",
+      "en": "Painting style — Geometric: Build the subject from basic shapes — circles, triangles, rectangles, hexagons. Every element is a geometric form, no flowing organic lines. Use 3–5 strong colour blocks with clear contrasts. Think mosaic, stained glass, or Mondrian."
+    },
+    "Expressive": {
+      "nl": "Schilderstijl — Expressief: Grote, energieke penseelstreken — geen precisie, wel kracht. Gebruik kleur als emotie: felrood voor passie, diepblauw voor melancholie, geel voor vreugde. Het schilderij voelt eerder dan dat het toont. Lagen mogen zichtbaar blijven, verf mag druipen — de energie telt.",
+      "en": "Painting style — Expressive: Large, energetic brushstrokes — no precision, but power. Use colour as emotion: bright red for passion, deep blue for melancholy, yellow for joy. The painting feels before it shows. Layers may stay visible, paint may drip — the energy is what counts."
+    },
+    "Colorful": {
+      "nl": "Schilderstijl — Kleurrijk: Gebruik zo veel mogelijk verschillende kleuren — het palet zelf is het onderwerp. Geen kleur is 'te fel' of 'te veel'. Zet complementaire kleuren naast elkaar voor maximale vibratie (rood naast groen, blauw naast oranje). Vrolijk, uitbundig en zelfverzekerd.",
+      "en": "Painting style — Colorful: Use as many different colours as possible — the palette itself is the subject. No colour is 'too bright' or 'too much'. Place complementary colours side by side for maximum vibration (red next to green, blue next to orange). Joyful, exuberant, confident."
+    },
+    "Monochromatic": {
+      "nl": "Schilderstijl — Monochromatisch: Werk uitsluitend met één kleur in al zijn tinten en schakeringen — van bijna wit tot bijna zwart. Diepte en vorm ontstaan alleen door waardecontrast, niet door kleurverschil. Kies een kleur die bij je stemming past en verken alle variaties.",
+      "en": "Painting style — Monochromatic: Work exclusively with one colour in all its tints and shades — from nearly white to nearly black. Depth and form arise only from value contrast, not colour difference. Choose a colour that matches your mood and explore all its variations."
+    },
+    "Soft and dreamy": {
+      "nl": "Schilderstijl — Zacht en dromerig: Pastelkleuren, zachte overgangen, geen harde randen. Alles is licht gesluierd — gebruik natte-op-natte techniek voor vloeiende kleurovergangen. Romantisch, etherisch, rustig. Het schilderij fluistert eerder dan dat het schreeuwt.",
+      "en": "Painting style — Soft and dreamy: Pastel colours, soft transitions, no hard edges. Everything is lightly veiled — use wet-on-wet technique for fluid colour transitions. Romantic, ethereal, calm. The painting whispers rather than shouts."
+    }
   },
   "topics": {
     "Landschappen": {
