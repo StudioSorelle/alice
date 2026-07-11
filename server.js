@@ -232,17 +232,29 @@ app.post('/api/generate-image', async (req, res) => {
   try {
     const boxKey = getBoxKey(box || '');
 
-    // Use the exact idea text shown on the site as the base prompt.
-    // Fall back to the generic style prompt only when no idea text is available.
-    const basePrompt = idea
-      ? String(idea).trim()
-      : (STYLE_IMAGE_PROMPTS[style] || ('acrylic painting in the style of: ' + (style || 'impressionist')));
+    // Opening sentence: tell the model exactly what object to render
+    const productIntro = boxKey === 'tote'
+      ? 'Generate an image of a finished painting on a 20 by 20 centimetre white cotton tote bag. The design is painted with acrylic paint on textile.'
+      : boxKey === 'mini'
+        ? 'Generate an image of finished paintings on small 10 by 10 centimetre acrylic canvases.'
+        : 'Generate an image of a finished acrylic painting on a 30 by 30 centimetre canvas.';
 
-    const suffix = boxKey === 'tote' ? TOTE_PROMPT_SUFFIX
+    // Transition: connect the product to the style/idea
+    const transition = boxKey === 'tote'
+      ? 'The painted design on the tote bag is in the following style:'
+      : 'The painting on the canvas is in the following style:';
+
+    // Style/idea content: use the exact idea text shown on the site, fall back to style prompt
+    const styleContent = idea
+      ? String(idea).trim()
+      : (STYLE_IMAGE_PROMPTS[style] || ('acrylic painting in the style: ' + (style || 'impressionist')));
+
+    // Presentation suffix: how the output photo should look
+    const presentationSuffix = boxKey === 'tote' ? TOTE_PROMPT_SUFFIX
       : boxKey === 'mini' ? MINI_PROMPT_SUFFIX
       : CANVAS_PROMPT_SUFFIX;
 
-    const imagePrompt = basePrompt + '\n\n' + suffix;
+    const imagePrompt = productIntro + ' ' + transition + '\n\n' + styleContent + '\n\n' + presentationSuffix;
 
     console.log('[generate-image] model: flux-dev | prompt:\n' + imagePrompt);
 
