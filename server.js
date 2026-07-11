@@ -228,27 +228,23 @@ function trimIdea(text, maxLen) {
 
 app.post('/api/generate-image', async (req, res) => {
   if (!replicate) return res.status(503).json({ error: 'Image generation not configured. Set REPLICATE_API_TOKEN.' });
-  const { style, box } = req.body;
+  const { idea, style, box } = req.body;
   try {
     const boxKey = getBoxKey(box || '');
-    const surfaceLabel = boxKey === 'tote'
-      ? 'painted design on a fabric tote bag'
-      : boxKey === 'mini'
-        ? 'small painting on a 10 by 10 centimetre canvas'
-        : 'painting on a 30 by 30 centimetre canvas';
 
-    const stylePrompt = STYLE_IMAGE_PROMPTS[style] || ('painting on canvas in the style of: ' + (style || 'impressionist oil painting'));
-
-    // Replace generic "on canvas" in the style prompt with the correct surface
-    const adjustedStyle = stylePrompt.replace(/\bon canvas\b/g, 'on a ' + (boxKey === 'tote' ? 'fabric tote bag' : 'canvas'));
+    // Use the exact idea text shown on the site as the base prompt.
+    // Fall back to the generic style prompt only when no idea text is available.
+    const basePrompt = idea
+      ? String(idea).trim()
+      : (STYLE_IMAGE_PROMPTS[style] || ('acrylic painting in the style of: ' + (style || 'impressionist')));
 
     const suffix = boxKey === 'tote' ? TOTE_PROMPT_SUFFIX
       : boxKey === 'mini' ? MINI_PROMPT_SUFFIX
       : CANVAS_PROMPT_SUFFIX;
 
-    const imagePrompt = adjustedStyle + ', ' + suffix;
+    const imagePrompt = basePrompt + '\n\n' + suffix;
 
-    console.log('[generate-image] model: flux-dev | prompt:', imagePrompt);
+    console.log('[generate-image] model: flux-dev | prompt:\n' + imagePrompt);
 
     const aspectRatio = boxKey === 'tote' ? '2:3' : '1:1';
 
