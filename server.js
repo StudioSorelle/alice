@@ -208,7 +208,14 @@ var STYLE_IMAGE_PROMPTS = {
   'Seizoensgebonden': 'seasonal painting on canvas, seasonal colours and atmospheric mood, time of year captured in expressive paint, harmonious seasonal palette'
 };
 
-var NEGATIVE_PROMPT = 'text, words, letters, watermark, signature, photograph, realistic photo, 3d render, blurry, distorted, ugly, low quality, frame, border, unfinished sketch, people holding brushes, artist hands';
+var NEGATIVE_PROMPT = 'text, words, letters, watermark, signature, realistic photograph, 3d render, digital illustration, vector art, blurry, distorted, ugly, low quality, ornate frame, thick border, mat board, unfinished sketch, people, hands, easel, paint tubes, palette knife in frame';
+
+// Suffix tells the model exactly how the output should look and be presented
+var CANVAS_PROMPT_SUFFIX = 'acrylic paint on canvas with clearly visible loose brushstrokes, photographed as a clean flat-lay on a light neutral or white surface, soft warm overhead lighting that shows the paint texture and slight impasto relief, the artwork fills the entire frame edge to edge, simple and clear composition that a complete beginner can follow and reproduce step by step, Studio Sorelle painting kit reference image';
+
+var MINI_PROMPT_SUFFIX = 'acrylic paint on a small square canvas with clearly visible loose brushstrokes, photographed as a clean flat-lay on a light neutral surface, the small artwork fills the entire frame, very simple motif with at most two shapes, a beginner can paint this in under an hour, Studio Sorelle mini kit reference image';
+
+var TOTE_PROMPT_SUFFIX = 'acrylic paint on a white cotton tote bag with clearly visible brushstrokes, fabric texture visible beneath the paint, photographed flat lay on a clean light background, bold simple graphic design that works on textile, a beginner can paint this on a tote bag, Studio Sorelle tote kit reference image';
 
 function trimIdea(text, maxLen) {
   if (text.length <= maxLen) return text;
@@ -235,13 +242,15 @@ app.post('/api/generate-image', async (req, res) => {
     // Replace generic "on canvas" in the style prompt with the correct surface
     const adjustedStyle = stylePrompt.replace(/\bon canvas\b/g, 'on a ' + (boxKey === 'tote' ? 'fabric tote bag' : 'canvas'));
 
-    const imagePrompt = [
-      adjustedStyle,
-      'high quality fine art',
-      'painterly brushwork',
-      'beautiful composition',
-      'suitable as a painting reference for a beginner painter'
-    ].join(', ');
+    const suffix = boxKey === 'tote' ? TOTE_PROMPT_SUFFIX
+      : boxKey === 'mini' ? MINI_PROMPT_SUFFIX
+      : CANVAS_PROMPT_SUFFIX;
+
+    const imagePrompt = adjustedStyle + ', ' + suffix;
+
+    console.log('[generate-image] model: flux-dev | prompt:', imagePrompt);
+
+    const aspectRatio = boxKey === 'tote' ? '2:3' : '1:1';
 
     const output = await replicate.run('black-forest-labs/flux-dev', {
       input: {
@@ -250,6 +259,7 @@ app.post('/api/generate-image', async (req, res) => {
         num_outputs: 1,
         num_inference_steps: 28,
         guidance_scale: 3.5,
+        aspect_ratio: aspectRatio,
         output_format: 'webp',
         output_quality: 85
       }
