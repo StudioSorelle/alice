@@ -1,5 +1,5 @@
 (function () {
-  var VIEWS = ['home', 'mix', 'inspire', 'spark', 'moment'];
+  var VIEWS = ['home', 'mix', 'inspire', 'spark', 'moment', 'gallery'];
 
   // ── Auth ──
   function getAuth() {
@@ -89,6 +89,7 @@
     if (name === 'inspire' && typeof window.initInspire === 'function') setTimeout(window.initInspire, 60);
     if (name === 'spark' && typeof window.initSpark === 'function') setTimeout(window.initSpark, 60);
     if (name === 'moment' && typeof window.initMoment === 'function') setTimeout(window.initMoment, 60);
+    if (name === 'gallery' && typeof window.initGallery === 'function') setTimeout(window.initGallery, 60);
   }
 
   function init() {
@@ -111,6 +112,22 @@
     if (langBtnMobile) langBtnMobile.addEventListener('click', toggleLang);
 
     document.getElementById('backBtn').addEventListener('click', function () { showView('home'); });
+
+    // Feedback modal
+    fetch('/api/config').then(function (r) { return r.json(); }).then(function (cfg) {
+      var btn = document.getElementById('feedbackBtn');
+      var link = document.getElementById('feedbackLink');
+      if (cfg && cfg.feedbackUrl && btn) {
+        btn.style.display = '';
+        if (link) link.href = cfg.feedbackUrl;
+      }
+    }).catch(function () {});
+    var feedbackBtn = document.getElementById('feedbackBtn');
+    var feedbackOverlay = document.getElementById('feedbackOverlay');
+    var feedbackClose = document.getElementById('feedbackClose');
+    if (feedbackBtn) feedbackBtn.addEventListener('click', function () { if (feedbackOverlay) feedbackOverlay.style.display = ''; });
+    if (feedbackClose) feedbackClose.addEventListener('click', function () { if (feedbackOverlay) feedbackOverlay.style.display = 'none'; });
+    if (feedbackOverlay) feedbackOverlay.addEventListener('click', function (e) { if (e.target === feedbackOverlay) feedbackOverlay.style.display = 'none'; });
 
     document.addEventListener('click', function (e) {
       var target = e.target.closest('[data-view]');

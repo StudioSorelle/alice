@@ -3,7 +3,7 @@
     step: 0,
     products: [], occasions: [],
     product: null, file: null, previewUrl: null,
-    occasion: null, description: '', authorName: '', socialConsent: false
+    occasion: null, quote: '', description: '', authorName: '', socialConsent: false
   };
 
   function t(key, vars) { return window.t ? window.t(key, vars) : key; }
@@ -102,6 +102,9 @@
     });
     html += '</div>';
 
+    html += '<p class="share-field-label">' + t('share.quote.label') + '</p>';
+    html += '<textarea class="share-textarea" id="share-quote" placeholder="' + t('share.quote.ph') + '" rows="3">' + escHtml(state.quote) + '</textarea>';
+
     html += '<p class="share-field-label">' + t('share.desc.label') + '</p>';
     html += '<textarea class="share-textarea" id="share-desc" placeholder="' + t('share.desc.ph') + '" rows="4">' + escHtml(state.description) + '</textarea>';
 
@@ -119,6 +122,7 @@
     el.innerHTML = html;
 
     var occGrid = document.getElementById('occ-grid');
+    var quoteInput = document.getElementById('share-quote');
     var descInput = document.getElementById('share-desc');
     var nameInput = document.getElementById('share-name');
     var consentInput = document.getElementById('share-consent');
@@ -140,6 +144,7 @@
         }
       });
     }
+    if (quoteInput) quoteInput.addEventListener('input', function () { state.quote = quoteInput.value; });
     if (descInput) descInput.addEventListener('input', function () { state.description = descInput.value; });
     if (nameInput) nameInput.addEventListener('input', function () { state.authorName = nameInput.value; });
     if (consentInput) consentInput.addEventListener('change', function () { state.socialConsent = consentInput.checked; });
@@ -174,8 +179,8 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             product: state.product, occasion: state.occasion,
-            description: state.description, name: state.authorName,
-            imageKey: key, socialConsent: state.socialConsent
+            quote: state.quote, description: state.description,
+            name: state.authorName, imageKey: key, socialConsent: state.socialConsent
           })
         }).then(function (r) { return r.json(); });
       })
@@ -207,7 +212,7 @@
   window.initMoment = function () {
     state.step = 0;
     state.product = null; state.file = null; state.previewUrl = null;
-    state.occasion = null; state.description = ''; state.authorName = ''; state.socialConsent = false;
+    state.occasion = null; state.quote = ''; state.description = ''; state.authorName = ''; state.socialConsent = false;
 
     var el = document.getElementById('moment-flow');
     if (!el) return;

@@ -1,7 +1,7 @@
 (function () {
   var STEPS = 5;
   var TIMES = [
-    { key: 'time.45min', val: '45 minutes' },
+    { key: 'time.30min', val: '30 min' },
     { key: 'time.1h', val: '1 hour' },
     { key: 'time.2h', val: '2+ hours' }
   ];
@@ -10,7 +10,7 @@
     { key: 'spark.sorelle_talks', val: 'sorelle_talks' },
     { key: 'spark.mix', val: 'mix' }
   ];
-  var PEOPLE_OPTS = [1, 2, 3, 4];
+  var PEOPLE_OPTS = [2, 3, 4];
 
   var state = {
     step: 0, answers: [], products: [], occasions: [], otherText: ''

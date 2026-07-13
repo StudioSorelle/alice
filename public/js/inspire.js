@@ -27,7 +27,8 @@
     { key: 'topic.natuur',       val: 'Natuur' },
     { key: 'topic.mensen',       val: 'Mensen' },
     { key: 'topic.party',        val: 'Party' },
-    { key: 'topic.stad',         val: 'Stad' }
+    { key: 'topic.stad',         val: 'Stad' },
+    { key: 'topic.vlakken',      val: 'Vlakken' }
   ];
   var TIMES = [
     { key: 'time.30min', val: '30 minutes' },

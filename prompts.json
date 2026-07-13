@@ -139,6 +139,10 @@
     "Stad": {
       "nl": "Onderwerp — Stad: Skyline-silhouetten, straatlantaarns, regenachtige straten met reflecties, een specifieke herkenbare stad indien gewenst. Vaak nachtelijke sfeer met warme lichtpunten tegen een donkere achtergrond.",
       "en": "Subject — City: Skyline silhouettes, street lamps, rainy streets with reflections, a specific recognisable city if desired. Often a night-time atmosphere with warm light points against a dark background."
+    },
+    "Vlakken": {
+      "nl": "Onderwerp — Vlakken: Geen objecten of figuren — alleen zuivere vormen en kleurvlakken. Denk aan vierkanten, rechthoeken, cirkels en strepen in sterke kleuren. Inspiratie: Mondriaan, Malevich, De Stijl. Geometrisch, abstract, helder.",
+      "en": "Subject — Shapes: No objects or figures — only pure shapes and colour fields. Think squares, rectangles, circles, and stripes in bold colours. Inspiration: Mondrian, Malevich, De Stijl. Geometric, abstract, clean."
     }
   },
   "seasonal": [

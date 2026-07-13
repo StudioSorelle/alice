@@ -33,6 +33,7 @@
       <li><a href="#" data-view="inspire" data-i18n="nav.inspire">Find your moment</a></li>
       <li><a href="#" data-view="spark" data-i18n="nav.spark">Spark your moment</a></li>
       <li><a href="#" data-view="moment" data-i18n="nav.share">Share your moment</a></li>
+      <li><a href="#" data-view="gallery" data-i18n="nav.gallery">Gallery</a></li>
     </ul>
     <button class="lang-btn" id="langToggle">NL</button>
   </div>
@@ -47,7 +48,7 @@
         <button class="lang-btn lang-btn-hero" id="langToggleMobile">NL</button>
         <img src="/assets/logo.png" alt="Studio Sorelle" class="hero-logo" onerror="this.style.display='none'">
         <p class="eyebrow" data-i18n="hero.eyebrow">Your kit is open. Now what?</p>
-        <h1 class="hero-title">create<br>moments.</h1>
+        <h1 class="hero-title">create moments.</h1>
         <p class="hero-body" data-i18n="hero.body">Six colours, three ways to make something together. Mix, find your theme, or let chance decide.</p>
         <a href="https://open.spotify.com/user/31mgcv55qjxjlsvw3stg7me2ujkq" target="_blank" rel="noopener" class="cta-btn" data-i18n="hero.cta">Set the mood →</a>
       </div>
@@ -76,6 +77,12 @@
           <h2 class="tile-title" data-i18n="tile.share.title">Share your moment</h2>
           <p class="tile-desc" data-i18n="tile.share.desc">Upload a photo of your painting and capture the moment forever.</p>
         </button>
+        <button class="swatch-tile st-dark" style="background:#5c4b3a" data-view="gallery">
+          <p class="tile-num">05</p>
+          <div class="tile-visual"><div class="tile-vis-gallery"><span></span><span></span><span></span><span></span></div></div>
+          <h2 class="tile-title" data-i18n="tile.gallery.title">View the gallery</h2>
+          <p class="tile-desc" data-i18n="tile.gallery.desc">See what other Sorelle painters created.</p>
+        </button>
         <a href="https://open.spotify.com/user/31mgcv55qjxjlsvw3stg7me2ujkq" target="_blank" rel="noopener" class="swatch-tile swatch-tile-spotify" style="background:#d8c2a7">
           <div class="tile-visual"><span class="tile-vis-music">&#9835;</span></div>
           <h2 class="tile-title" data-i18n="tile.spotify.title">Set the mood</h2>
@@ -86,6 +93,7 @@
 
     <footer class="site-footer">
       <p class="footer-text" data-i18n="footer.text">Made with love by your Sorelle sisters Anouk &amp; Kristina &#9825; Belgium</p>
+      <button class="footer-feedback-btn" id="feedbackBtn" style="display:none" data-i18n="footer.feedback">Feedback</button>
     </footer>
   </section>
 
@@ -167,7 +175,27 @@
     <div id="moment-flow" class="flow-container"></div>
   </section>
 
+  <!-- ── GALLERY ── -->
+  <section id="view-gallery" class="view">
+    <div class="view-header">
+      <p class="eyebrow" data-i18n="view.gallery.eyebrow">Tool 05</p>
+      <h2 class="view-title" data-i18n="view.gallery.title">View the gallery</h2>
+      <p class="view-sub" data-i18n="view.gallery.sub">Every Sorelle evening is different. See what other painters created and find inspiration for your own moment.</p>
+    </div>
+    <div id="gallery-flow" class="gallery-container"></div>
+  </section>
+
 </main>
+
+<!-- ── Feedback modal ── -->
+<div class="feedback-overlay" id="feedbackOverlay" style="display:none" role="dialog" aria-modal="true">
+  <div class="feedback-modal">
+    <button class="feedback-close" id="feedbackClose" aria-label="Close">&times;</button>
+    <p class="feedback-modal-title" data-i18n="feedback.title">Share your thoughts</p>
+    <p class="feedback-modal-sub" data-i18n="feedback.sub">Leave a review or share what you loved about your evening.</p>
+    <a class="feedback-modal-cta" id="feedbackLink" href="#" target="_blank" rel="noopener" data-i18n="feedback.cta">Leave a review &#8594;</a>
+  </div>
+</div>
 
 <script src="/js/i18n.js"></script>
 <script src="/js/app.js"></script>
@@ -175,5 +203,6 @@
 <script src="/js/inspire.js"></script>
 <script src="/js/spark.js"></script>
 <script src="/js/moment.js"></script>
+<script src="/js/gallery.js"></script>
 </body>
 </html>

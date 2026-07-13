@@ -1,10 +1,11 @@
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
-const Anthropic = require('@anthropic-ai/sdk');
 const Replicate = require('replicate');
 const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
 const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
+const cron = require('node-cron');
+const { Resend } = require('resend');
 const db = require('./db');
 const migrate = require('./db/migrate');
 const PROMPTS = require('./prompts.json');
@@ -15,11 +16,6 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 migrate();
-
-let anthropic = null;
-if (process.env.ANTHROPIC_API_KEY) {
-  anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-}
 
 let replicate = null;
 if (process.env.REPLICATE_API_TOKEN) {
@@ -38,6 +34,11 @@ if (process.env.CLOUDFLARE_R2_ACCOUNT_ID && process.env.CLOUDFLARE_R2_ACCESS_KEY
   });
 }
 
+let resend = null;
+if (process.env.RESEND_API_KEY) {
+  resend = new Resend(process.env.RESEND_API_KEY);
+}
+
 // ── Admin auth ──
 function adminAuth(req, res, next) {
   const pw = req.headers['x-admin-password'];
@@ -45,6 +46,21 @@ function adminAuth(req, res, next) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
   next();
+}
+
+// ── User auth gate (for gallery) ──
+async function authGate(req, res, next) {
+  var code = (req.headers['x-access-code'] || '').trim().toUpperCase();
+  if (!code) return res.status(401).json({ error: 'Access code required' });
+  if (code === MASTER_CODE) return next();
+  try {
+    var result = await db.query('SELECT * FROM codes WHERE code = ?', [code]);
+    if (!result.rows.length) return res.status(401).json({ error: 'Invalid code' });
+    var row = result.rows[0];
+    var now = new Date().toISOString();
+    if (row.expires_at && row.expires_at < now) return res.status(401).json({ error: 'Code expired' });
+    next();
+  } catch (err) { res.status(500).json({ error: 'Auth error' }); }
 }
 
 // ── Code generation ──
@@ -147,7 +163,7 @@ app.post('/api/spark', async (req, res) => {
     return res.status(400).json({ error: 'Please answer the questions first.' });
   try {
     // answers[1] = player count ('1','2','3','4','5+')
-    // answers[2] = time ('45 minutes','1 hour','2+ hours')
+    // answers[2] = time ('30 min','1 hour','2+ hours')
     // answers[3] = occasion
     // answers[4] = activity type
     var playersRaw  = answers[1] ? answers[1].answer : '2';
@@ -156,33 +172,68 @@ app.post('/api/spark', async (req, res) => {
     var occasion    = answers[3] ? answers[3].answer : 'any';
     var actType     = answers[4] ? answers[4].answer : 'mix';
 
-    // Number of activities scales with available time (PDF spec)
-    var actCount = timeAnswer === '45 minutes' ? 3 : timeAnswer === '1 hour' ? 5 : 7;
+    // Number of activities scales with available time (document spec)
+    var actCount = timeAnswer === '30 min' ? 2 : timeAnswer === '1 hour' ? 3 : 5;
 
     // Exclude long-format activities (e.g. "every 15 minutes") for short sessions
-    var durationClause = timeAnswer === '45 minutes' ? " AND duration != 'long'" : '';
+    var durationClause = timeAnswer === '30 min' ? " AND duration != 'long'" : '';
 
-    var result;
+    function fisherYates(arr) {
+      for (var i = arr.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+      }
+      return arr;
+    }
+
+    var activities;
     if (actType === 'mix') {
-      result = await db.query(
-        "SELECT * FROM activities WHERE (occasion = 'any' OR occasion = ?) AND min_players <= ?" + durationClause,
+      var gamesRes = await db.query(
+        "SELECT * FROM activities WHERE type = 'studio_games' AND (occasion = 'any' OR occasion = ?) AND min_players <= ?" + durationClause,
         [occasion, playerCount]
       );
+      var talksRes = await db.query(
+        "SELECT * FROM activities WHERE type = 'sorelle_talks' AND (occasion = 'any' OR occasion = ?) AND min_players <= ?" + durationClause,
+        [occasion, playerCount]
+      );
+      var gamesPool = fisherYates(gamesRes.rows.slice());
+      var talksPool = fisherYates(talksRes.rows.slice());
+      var gi = 0, ti = 0;
+      var result = [];
+      // Start with a random type
+      var currentType = Math.random() < 0.5 ? 'games' : 'talks';
+      while (result.length < actCount && (gi < gamesPool.length || ti < talksPool.length)) {
+        var pool = currentType === 'games' ? gamesPool : talksPool;
+        var idx  = currentType === 'games' ? gi : ti;
+        if (idx >= pool.length) {
+          // Switch to the other pool if current is exhausted
+          currentType = currentType === 'games' ? 'talks' : 'games';
+          continue;
+        }
+        var runSize = Math.min(
+          Math.floor(Math.random() * 3) + 1,  // 1–3
+          actCount - result.length,             // don't exceed target
+          pool.length - idx                     // don't exceed remaining in pool
+        );
+        for (var k = 0; k < runSize; k++) {
+          var row = currentType === 'games' ? gamesPool[gi++] : talksPool[ti++];
+          result.push(row);
+        }
+        currentType = currentType === 'games' ? 'talks' : 'games';
+      }
+      activities = result.map(function (row) {
+        return { id: row.id, type: row.type, description: lang === 'nl' ? row.description_nl : row.description_en };
+      });
     } else {
-      result = await db.query(
+      var result = await db.query(
         "SELECT * FROM activities WHERE type = ? AND (occasion = 'any' OR occasion = ?) AND min_players <= ?" + durationClause,
         [actType, occasion, playerCount]
       );
+      var rows = fisherYates(result.rows.slice());
+      activities = rows.slice(0, actCount).map(function (row) {
+        return { id: row.id, type: row.type, description: lang === 'nl' ? row.description_nl : row.description_en };
+      });
     }
-    var rows = result.rows.slice();
-    // Fisher-Yates shuffle
-    for (var i = rows.length - 1; i > 0; i--) {
-      var j = Math.floor(Math.random() * (i + 1));
-      var tmp = rows[i]; rows[i] = rows[j]; rows[j] = tmp;
-    }
-    var activities = rows.slice(0, actCount).map(function (row) {
-      return { id: row.id, type: row.type, description: lang === 'nl' ? row.description_nl : row.description_en };
-    });
     res.json({ activities: activities });
   } catch (err) {
     console.error('Spark DB error:', err.message);
@@ -193,7 +244,7 @@ app.post('/api/spark', async (req, res) => {
 // ── Generate image ──
 // Visual style prompts — describe HOW the painting looks (not what it depicts)
 var STYLE_IMAGE_PROMPTS = {
-  'Abstract':         'abstract expressionist style, sweeping fluid colour fields with bold gestural brushstrokes, no recognisable objects, rich layered paint texture, expressive and vibrant',
+  'Abstract':         'abstract expressionist style, sweeping fluid colour fields with bold gestural brushstrokes, loosely abstracted forms that reference the subject through colour and gesture rather than literal depiction, rich layered paint texture, expressive and vibrant',
   'Minimalist':       'minimalist style, clean composition with at most 2 or 3 shapes, generous empty space on the canvas, flat colour areas with crisp outlines, strong through simplicity',
   'Realistic':        'realistic painting style, accurate proportions and lifelike rendering, clear light source casting soft shadows, multiple tones of each colour creating depth and volume',
   'Impressionistic':  'impressionist painting style, loose visible dabs and strokes of colour, soft blended edges, capturing light and atmosphere rather than sharp detail, warm luminous palette',
@@ -211,11 +262,12 @@ var TOPIC_IMAGE_PROMPTS = {
   'Stilleven':    'still life, everyday objects grouped on a table including fruit, warm directional light casting soft shadows, calm and composed',
   'Dranken':      'drinks and glassware such as a cocktail, wine glass, or coffee cup, condensation droplets, citrus slice or ice cube accent, atmospheric light',
   'Dieren':       'cute chibi-style animal, one adorable animal such as a fox or kitten or duckling, large round head and small body, two shiny oval eyes with white highlight, rosy cheek blush marks, thick dark outline like sticker art, solid soft pastel background',
-  'Fantasie':     'fantasy scene, dramatic deep-blue starry sky or swirling galaxy, unicorn or dragon silhouette or magical forest, deep blues and purples with gold and silver accents, glowing magical light source',
-  'Natuur':       'nature scene, botanical elements with flowers or trees or a flower field, clear horizon line or central composition axis, calm and meditative, soft greens and blues',
+  'Fantasie':     'fantasy scene, magical enchanted starry sky or swirling galaxy, unicorn or dragon silhouette or magical forest, deep blues and purples with gold and silver accents, glowing magical light source',
+  'Natuur':       'nature scene, botanical elements with flowers or trees or a flower field, close-up botanical composition, calm and meditative, soft greens and blues',
   'Mensen':       'human silhouettes or simplified figures without facial detail, such as a dancing couple or a figure watching a sunset, focus on posture and emotion, warm tones',
   'Party':        'celebration scene, confetti and streamers and champagne and dancing silhouettes and party lights, bold energetic colours in pink and gold and bright blue, dynamic composition',
-  'Stad':         'urban cityscape, skyline silhouette against a dark sky, glowing street lamps, rainy street reflections, night atmosphere with warm light points against dark background'
+  'Stad':         'urban cityscape, skyline silhouette against a dark sky, glowing street lamps, rainy street reflections, night atmosphere with warm light points against dark background',
+  'Vlakken':      'flat geometric shapes and pure colour fields, Mondrian or Malevich-inspired composition of squares, circles, rectangles and stripes, bold colour blocks with clean outlines, no representational figures'
 };
 
 var NEGATIVE_PROMPT = 'text, words, letters, watermark, signature, realistic photograph, 3d render, digital illustration, vector art, blurry, distorted, ugly, low quality, ornate frame, thick border, mat board, unfinished sketch, people, hands, easel, paint tubes, palette knife in frame';
@@ -267,8 +319,8 @@ app.post('/api/generate-image', async (req, res) => {
       if (count === 1) {
         productIntro = 'Studio Sorelle signature canvas painting kit. Generate a photorealistic image of a finished acrylic painting on a single square 30×30 cm canvas. The composition should be clear and simple enough that a first-time painter can feasibly recreate it. Show the canvas straight-on so its square format and composition are fully visible.';
       } else if (paintTogether === false) {
-        // Separate: each person has their own standalone 30×30 cm canvas
-        productIntro = 'Studio Sorelle signature canvas painting kit for ' + count + ' people painting separately. Generate a photorealistic flat-lay image showing exactly ' + count + ' separate square 30×30 cm canvases arranged together in one image. Every canvas must be clearly visible. Each canvas has a different but stylistically consistent standalone acrylic painting.';
+        // Separate: one idea generated per person — show a single canvas
+        productIntro = 'Generate a photorealistic flat-lay image of a single square 30×30 cm canvas with a standalone acrylic painting. Each painter receives their own separate idea.';
       } else {
         // Together: polyptych where canvases combine into one image
         var panelWord = count === 2 ? 'diptych (2 panels)' : count === 3 ? 'triptych (3 panels)' : (count + '-panel polyptych');
@@ -302,7 +354,9 @@ app.post('/api/generate-image', async (req, res) => {
 
     // Multi-panel canvases side-by-side need wider aspect ratio
     var aspectRatio;
-    if (boxKey === 'tote') {
+    if (paintTogether === false) {
+      aspectRatio = '1:1';  // separate painting: always show one square canvas
+    } else if (boxKey === 'tote') {
       aspectRatio = '2:3';
     } else if (boxKey === 'canvas' && count >= 3 && paintTogether !== false) {
       aspectRatio = '16:9';   // 3+ polyptych panels are very wide
@@ -352,14 +406,14 @@ app.post('/api/moments/upload-url', async (req, res) => {
 
 // ── Moments: save metadata ──
 app.post('/api/moments', async (req, res) => {
-  const { product, occasion, description, name, imageKey, socialConsent } = req.body;
+  const { product, occasion, quote, description, name, imageKey, socialConsent } = req.body;
   if (!product || !imageKey) return res.status(400).json({ error: 'product and imageKey required' });
   const base = (process.env.CLOUDFLARE_R2_PUBLIC_URL || '').replace(/\/$/, '');
   const imageUrl = base + '/' + imageKey;
   try {
     await db.query(
-      "INSERT INTO moments (product, occasion, description, name, image_url, social_consent) VALUES (?, ?, ?, ?, ?, ?)",
-      [product, occasion || null, description || null, name || null, imageUrl, socialConsent ? 1 : 0]
+      "INSERT INTO moments (product, occasion, quote, description, name, image_url, social_consent) VALUES (?, ?, ?, ?, ?, ?, ?)",
+      [product, occasion || null, quote || null, description || null, name || null, imageUrl, socialConsent ? 1 : 0]
     );
     res.json({ ok: true, imageUrl });
   } catch (err) {
@@ -550,23 +604,49 @@ function buildInspireIdea(answers, lang, paintTogether) {
   return parts.join('\n\n');
 }
 
-function buildSparkPrompt(answers, lang) {
-  const lines = answers.map(function (a) {
-    return (a.question ? a.question + '\n→ ' : '') + a.answer;
-  }).join('\n\n');
-  const parts = [
-    'You are a fun, energetic activity host for Studio Sorelle, a painting kit company.',
-    '', 'A group is about to start a painting session and answered these questions:', '', lines, '',
-    'Generate exactly 7 short painting session activities or mini-games.',
-    'Tailor the complexity and duration of activities to match the available time.',
-    'Each activity should be playful, creative, and fit the group\'s context.',
-    'Format: number each activity (1. 2. 3. etc.), one line each, max 2 sentences per activity.',
-    'Make them diverse — not all the same type. Be warm, energetic, and fun.',
-    'Under 300 words total.'
-  ];
-  if (lang === 'nl') parts.push('Respond entirely in Dutch.');
-  return parts.join('\n');
-}
+// ── Config ──
+app.get('/api/config', function (req, res) {
+  res.json({ feedbackUrl: process.env.FEEDBACK_URL || null });
+});
+
+// ── Gallery: public approved moments ──
+app.get('/api/moments/public', authGate, async (req, res) => {
+  try {
+    var clauses = ['approved = 1'];
+    var params = [];
+    if (req.query.occasion) { clauses.push('occasion = ?'); params.push(req.query.occasion); }
+    var sql = 'SELECT id, product, occasion, quote, name, image_url, created_at FROM moments WHERE ' + clauses.join(' AND ') + ' ORDER BY created_at DESC';
+    var result = await db.query(sql, params);
+    var rows = result.rows;
+    if (req.query.box) {
+      var boxFilter = req.query.box.toLowerCase();
+      rows = rows.filter(function (r) { return getBoxKey(r.product) === boxFilter; });
+    }
+    res.json(rows);
+  } catch (err) {
+    console.error('Public gallery error:', err.message);
+    res.status(500).json({ error: 'Could not load gallery.' });
+  }
+});
+
+// ── Admin: approve / reject moments ──
+app.patch('/api/admin/moments/:id/approve', adminAuth, async (req, res) => {
+  try {
+    await db.query('UPDATE moments SET approved = 1 WHERE id = ?', [req.params.id]);
+    res.json({ ok: true });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+app.patch('/api/admin/moments/:id/reject', adminAuth, async (req, res) => {
+  try {
+    await db.query('UPDATE moments SET approved = 0 WHERE id = ?', [req.params.id]);
+    res.json({ ok: true });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+// ── Admin: gallery UI ──
+app.get('/admin/gallery', function (req, res) {
+  res.send('<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin Gallery — Studio Sorelle</title><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:-apple-system,sans-serif;background:#f5f5f5;color:#222;padding:24px}h1{font-size:1.4rem;margin-bottom:4px}.sub{color:#666;font-size:.85rem;margin-bottom:24px}.section-title{font-size:1rem;font-weight:600;margin:24px 0 12px}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}.card{background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.1)}.card img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block}.card-body{padding:10px 12px 12px}.card-meta{font-size:.75rem;color:#888;margin-bottom:4px}.card-quote{font-size:.8rem;color:#444;font-style:italic;margin-bottom:8px;word-break:break-word}.card-actions{display:flex;gap:8px}.btn{padding:6px 12px;border-radius:6px;border:none;cursor:pointer;font-size:.8rem;font-weight:600}.btn-approve{background:#22c55e;color:#fff}.btn-reject{background:#ef4444;color:#fff}.btn-revoke{background:#f59e0b;color:#fff}.btn:disabled{opacity:.5;cursor:not-allowed}.empty{color:#999;font-size:.9rem;padding:16px 0}#pw-screen{max-width:320px;margin:60px auto;background:#fff;padding:32px;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.1)}#pw-screen input{width:100%;padding:10px;margin:12px 0;border:1px solid #ddd;border-radius:6px;font-size:1rem}#pw-screen button{width:100%;padding:10px;background:#222;color:#fff;border:none;border-radius:6px;font-size:1rem;cursor:pointer}</style></head><body><div id="pw-screen"><h2>Admin Login</h2><input type="password" id="pw-input" placeholder="Admin password" autocomplete="current-password"><button onclick="login()">Login</button><p id="pw-err" style="color:#ef4444;font-size:.85rem;margin-top:8px"></p></div><div id="main" style="display:none"><h1>Studio Sorelle — Admin Gallery</h1><p class="sub">Approve moments to make them visible in the public gallery.</p><p class="section-title">Pending approval</p><div class="grid" id="pending-grid"><p class="empty">Loading…</p></div><p class="section-title">Approved</p><div class="grid" id="approved-grid"><p class="empty">Loading…</p></div></div><script>var PW="";function h(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}function login(){PW=document.getElementById("pw-input").value;fetch("/api/admin/moments",{headers:{"x-admin-password":PW}}).then(function(r){if(r.status===401)throw new Error("wrong");return r.json();}).then(function(rows){document.getElementById("pw-screen").style.display="none";document.getElementById("main").style.display="";render(rows);}).catch(function(){document.getElementById("pw-err").textContent="Incorrect password.";});}document.getElementById("pw-input").addEventListener("keydown",function(e){if(e.key==="Enter")login();});function load(){fetch("/api/admin/moments",{headers:{"x-admin-password":PW}}).then(function(r){return r.json();}).then(render).catch(function(){});}function render(rows){var pending=rows.filter(function(r){return!r.approved;});var approved=rows.filter(function(r){return r.approved;});renderGrid("pending-grid",pending,false);renderGrid("approved-grid",approved,true);}function renderGrid(id,rows,isApproved){var el=document.getElementById(id);if(!rows.length){el.innerHTML="<p class=\\"empty\\">None.</p>";return;}el.innerHTML=rows.map(function(r){return"<div class=\\"card\\" id=\\"card-"+r.id+"\\"><img src=\\""+h(r.image_url)+"\\" alt=\\"\\" loading=\\"lazy\\"><div class=\\"card-body\\"><div class=\\"card-meta\\">"+h(r.product)+(r.occasion?" \xb7 "+h(r.occasion):"")+" \xb7 "+h((r.created_at||"").slice(0,10))+(r.name?" \xb7 "+h(r.name):"")+"</div>"+(r.quote?"<div class=\\"card-quote\\">\\u201c"+h(r.quote)+"\\u201d</div>":"")+"<div class=\\"card-actions\\">"+((!isApproved)?"<button class=\\"btn btn-approve\\" onclick=\\"approve("+r.id+")\\">Approve</button>":"")+(isApproved?"<button class=\\"btn btn-revoke\\" onclick=\\"reject("+r.id+")\\">Revoke</button>":"<button class=\\"btn btn-reject\\" onclick=\\"reject("+r.id+")\\">Reject</button>")+"</div></div></div>";}).join("");}function approve(id){act(id,"/approve");}function reject(id){act(id,"/reject");}function act(id,action){var btns=document.querySelectorAll("#card-"+id+" .btn");btns.forEach(function(b){b.disabled=true;});fetch("/api/admin/moments/"+id+action,{method:"PATCH",headers:{"x-admin-password":PW}}).then(function(r){return r.json();}).then(function(){load();}).catch(function(){btns.forEach(function(b){b.disabled=false;});});}</script></body></html>');
+});
 
 // ── SPA fallback ──
 app.get('*', function (req, res) {
@@ -575,4 +655,34 @@ app.get('*', function (req, res) {
 
 app.listen(PORT, function () {
   console.log('alice listening on port ' + PORT);
+});
+
+// ── Daily moderation email (07:00 server time) ──
+cron.schedule('0 7 * * *', async function () {
+  try {
+    var result = await db.query('SELECT id FROM moments WHERE approved = 0 AND email_sent = 0');
+    var pending = result.rows;
+    if (!pending.length) return;
+    if (!resend) { console.log('[cron] RESEND_API_KEY not set — skipping notification email'); return; }
+    var notifyEmail = process.env.NOTIFY_EMAIL || 'info@studiosorelle.be';
+    var appUrl = (process.env.APP_URL || '').replace(/\/$/, '');
+    var count = pending.length;
+    var subject = count === 1
+      ? "1 nieuwe foto wacht op goedkeuring — Studio Sorelle Creation Lab"
+      : count + " nieuwe foto’s wachten op goedkeuring — Studio Sorelle Creation Lab";
+    var bodyHtml = '<p>Er ' + (count === 1 ? 'staat' : 'staan') + ' <strong>' + count + '</strong> nieuwe foto' + (count === 1 ? '' : "'s") + ' klaar voor goedkeuring.</p>' +
+      '<p style="margin-top:12px"><a href="' + appUrl + '/admin/gallery">Bekijk en keur goed via de beheerpagina →</a></p>';
+    await resend.emails.send({
+      from: 'Studio Sorelle <noreply@studiosorelle.be>',
+      to: notifyEmail,
+      subject: subject,
+      html: bodyHtml
+    });
+    for (var i = 0; i < pending.length; i++) {
+      await db.query('UPDATE moments SET email_sent = 1 WHERE id = ?', [pending[i].id]);
+    }
+    console.log('[cron] Sent moderation email for ' + count + ' pending moment(s)');
+  } catch (err) {
+    console.error('[cron] Notification email error:', err.message);
+  }
 });
