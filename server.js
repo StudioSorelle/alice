@@ -684,17 +684,38 @@ app.post('/api/shopify/order', async function (req, res) {
   if (resend) {
     var appUrl = (process.env.APP_URL || 'https://creationlab.studiosorelle.be').replace(/\/$/, '');
     var greeting = customerName ? 'Hoi ' + customerName + ',' : 'Hoi,';
+    var months = ['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
+    var d = new Date(order.created_at || Date.now());
+    var dateStr = d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+    var emailHtml = '<style>body{margin:0;padding:0;background:#f4e9dd;font-size:15px;}*{box-sizing:border-box;}.wrapper{width:600px;max-width:100%;margin:0 auto;padding:3em 2.5em;font-family:"Noto Sans",Arial,sans-serif;font-weight:400;background:#f4e9dd;color:#2b1a17;}.header{display:flex;align-items:center;margin-bottom:1.5em;}.shop-title{flex:6;}.shop-logo{height:52px;width:auto;display:block;}.order-meta{flex:4;text-align:right;color:#6A1F2A;font-size:0.85em;line-height:1.6;}hr{height:2px;border:none;background:#6A1F2A;margin:0;}.body{padding:2em 0;line-height:1.7;}.body p{margin:0 0 1em;}.code-box{margin:1.5em 0;text-align:center;background:#fff;border:2px solid #6A1F2A;border-radius:6px;padding:1.2em 2em;}.code-label{font-size:0.78em;text-transform:uppercase;letter-spacing:0.08em;color:#6A1F2A;font-weight:bold;margin-bottom:0.5em;}.code-value{font-family:monospace;font-size:2.4em;font-weight:bold;letter-spacing:0.2em;color:#2b1a17;}.cta-link{color:#6A1F2A;font-weight:bold;}.note{font-size:0.88em;color:#5a3a33;line-height:1.6;}.footer{margin-top:2em;text-align:center;color:#2b1a17;line-height:1.6;}.footer p{margin:0 0 0.8em;}.footer-tagline{font-family:Georgia,"Times New Roman",serif;font-style:italic;color:#6A1F2A;font-size:1.1em;}</style>' +
+      '<div class="wrapper">' +
+        '<div class="header">' +
+          '<div class="shop-title"><img class="shop-logo" src="https://creationlab.studiosorelle.be/assets/logo.png" alt="Studio Sorelle"></div>' +
+          '<div class="order-meta"><div>#' + order.order_number + '</div><div>' + dateStr + '</div></div>' +
+        '</div>' +
+        '<hr>' +
+        '<div class="body">' +
+          '<p>' + greeting + '</p>' +
+          '<p>Bedankt voor je bestelling! Je hebt nu toegang tot de Studio Sorelle Creation Lab.</p>' +
+          '<p>De Studio Sorelle Creation Lab brengt jouw moment tot leven. Gebruik onze kleurengenerator om elke kleur te maken uit je verfkit, laat je inspireren, spark je avond met Studio Games (uitdagingen voor jouw specifieke box) en Sorelle Talks (gespreksstarters) en zet de sfeer met de perfecte playlists. Alles wat je nodig hebt om te creëren, verbinden en genieten.</p>' +
+          '<p>Je persoonlijke toegangscode:</p>' +
+          '<div class="code-box"><div class="code-label">Toegangscode</div><div class="code-value">' + code + '</div></div>' +
+          '<p>Ga naar <a class="cta-link" href="' + appUrl + '">' + appUrl + '</a> en voer de code in om te starten.</p>' +
+          '<p class="note">Je code is <strong>30 dagen geldig vanaf het moment dat je hem voor het eerst activeert</strong>. Iedereen aan tafel kan dezelfde code gebruiken.</p>' +
+        '</div>' +
+        '<hr>' +
+        '<div class="footer">' +
+          '<p class="footer-tagline">create moments</p>' +
+          '<p>Bedankt voor je aankoop!</p>' +
+          '<p><strong>Studio Sorelle</strong><br>info@studiosorelle.be<br>studiosorelle.be</p>' +
+        '</div>' +
+      '</div>';
     try {
       await resend.emails.send({
-        from: 'Studio Sorelle <noreply@studiosorelle.be>',
+        from: 'Studio Sorelle <info@studiosorelle.be>',
         to: customerEmail,
-        subject: 'Je toegangscode voor Creation Lab by Studio Sorelle',
-        html: '<p>' + greeting + '</p>' +
-          '<p>Bedankt voor je bestelling! Je kunt nu aan de slag met de Studio Sorelle Creation Lab.</p>' +
-          '<p style="margin:28px 0;font-size:2rem;font-weight:bold;letter-spacing:6px;text-align:center;font-family:monospace">' + code + '</p>' +
-          '<p>Ga naar <a href="' + appUrl + '">' + appUrl + '</a> en voer deze code in om te beginnen.</p>' +
-          '<p><strong>Je toegang is 30 dagen geldig vanaf de eerste keer dat je inlogt</strong> — de timer start pas als je de code voor het eerst gebruikt. Iedereen aan tafel kan dezelfde code gebruiken.</p>' +
-          '<p style="margin-top:24px">Veel plezier!<br>Anouk &amp; Kristina</p>'
+        subject: 'Je toegangscode voor de Studio Sorelle Creation Lab',
+        html: emailHtml
       });
     } catch (err) {
       console.error('[shopify] Email failed for order', order.order_number, ':', err.message);
