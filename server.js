@@ -1,4 +1,4 @@
-require('dotenv').config();
+﻿require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const Replicate = require('replicate');
@@ -649,7 +649,7 @@ app.patch('/api/admin/moments/:id/reject', adminAuth, async (req, res) => {
 
 // ── Admin: gallery UI ──
 app.get('/admin/gallery', function (req, res) {
-  res.send('<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin Gallery — Studio Sorelle</title><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:-apple-system,sans-serif;background:#f5f5f5;color:#222;padding:24px}h1{font-size:1.4rem;margin-bottom:4px}.sub{color:#666;font-size:.85rem;margin-bottom:24px}.section-title{font-size:1rem;font-weight:600;margin:24px 0 12px}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}.card{background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.1)}.card img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block}.card-body{padding:10px 12px 12px}.card-meta{font-size:.75rem;color:#888;margin-bottom:4px}.card-quote{font-size:.8rem;color:#444;font-style:italic;margin-bottom:8px;word-break:break-word}.card-actions{display:flex;gap:8px}.btn{padding:6px 12px;border-radius:6px;border:none;cursor:pointer;font-size:.8rem;font-weight:600}.btn-approve{background:#22c55e;color:#fff}.btn-reject{background:#ef4444;color:#fff}.btn-revoke{background:#f59e0b;color:#fff}.btn:disabled{opacity:.5;cursor:not-allowed}.empty{color:#999;font-size:.9rem;padding:16px 0}#pw-screen{max-width:320px;margin:60px auto;background:#fff;padding:32px;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.1)}#pw-screen input{width:100%;padding:10px;margin:12px 0;border:1px solid #ddd;border-radius:6px;font-size:1rem}#pw-screen button{width:100%;padding:10px;background:#222;color:#fff;border:none;border-radius:6px;font-size:1rem;cursor:pointer}</style></head><body><div id="pw-screen"><h2>Admin Login</h2><input type="password" id="pw-input" placeholder="Admin password" autocomplete="current-password"><button onclick="login()">Login</button><p id="pw-err" style="color:#ef4444;font-size:.85rem;margin-top:8px"></p></div><div id="main" style="display:none"><h1>Studio Sorelle — Admin Gallery</h1><p class="sub">Approve moments to make them visible in the public gallery.</p><button class="btn" style="background:#6366f1;color:#fff;margin-bottom:20px" onclick="sendDigest()">Send digest email now</button><span id="digest-msg" style="margin-left:12px;font-size:.85rem;color:#555"></span><p class="section-title">Pending approval</p><div class="grid" id="pending-grid"><p class="empty">Loading…</p></div><p class="section-title">Approved</p><div class="grid" id="approved-grid"><p class="empty">Loading…</p></div></div><script>var PW="";function h(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}function login(){PW=document.getElementById("pw-input").value;fetch("/api/admin/moments",{headers:{"x-admin-password":PW}}).then(function(r){if(r.status===401)throw new Error("wrong");return r.json();}).then(function(rows){document.getElementById("pw-screen").style.display="none";document.getElementById("main").style.display="";render(rows);}).catch(function(){document.getElementById("pw-err").textContent="Incorrect password.";});}document.getElementById("pw-input").addEventListener("keydown",function(e){if(e.key==="Enter")login();});function load(){fetch("/api/admin/moments",{headers:{"x-admin-password":PW}}).then(function(r){return r.json();}).then(render).catch(function(){});}function render(rows){var pending=rows.filter(function(r){return!r.approved;});var approved=rows.filter(function(r){return r.approved;});renderGrid("pending-grid",pending,false);renderGrid("approved-grid",approved,true);}function renderGrid(id,rows,isApproved){var el=document.getElementById(id);if(!rows.length){el.innerHTML="<p class=\\"empty\\">None.</p>";return;}el.innerHTML=rows.map(function(r){return"<div class=\\"card\\" id=\\"card-"+r.id+"\\"><img src=\\""+h(r.image_url)+"\\" alt=\\"\\" loading=\\"lazy\\"><div class=\\"card-body\\"><div class=\\"card-meta\\">"+h(r.product)+(r.occasion?" \xb7 "+h(r.occasion):"")+" \xb7 "+h((r.created_at||"").slice(0,10))+(r.name?" \xb7 "+h(r.name):"")+"</div>"+(r.quote?"<div class=\\"card-quote\\">\\u201c"+h(r.quote)+"\\u201d</div>":"")+"<div class=\\"card-actions\\">"+((!isApproved)?"<button class=\\"btn btn-approve\\" onclick=\\"approve("+r.id+")\\">Approve</button>":"")+(isApproved?"<button class=\\"btn btn-revoke\\" onclick=\\"reject("+r.id+")\\">Revoke</button>":"<button class=\\"btn btn-reject\\" onclick=\\"reject("+r.id+")\\">Reject</button>")+"</div></div></div>";}).join("");}function sendDigest(){var msg=document.getElementById("digest-msg");msg.textContent="Sending…";fetch("/api/admin/send-digest",{method:"POST",headers:{"x-admin-password":PW}}).then(function(r){return r.json();}).then(function(d){msg.textContent=d.ok?"✓ Sent to "+d.count+" pending moment(s).":d.message;}).catch(function(){msg.textContent="Error — check Render logs.";});}function approve(id){act(id,"/approve");}function reject(id){act(id,"/reject");}function act(id,action){var btns=document.querySelectorAll("#card-"+id+" .btn");btns.forEach(function(b){b.disabled=true;});fetch("/api/admin/moments/"+id+action,{method:"PATCH",headers:{"x-admin-password":PW}}).then(function(r){return r.json();}).then(function(){load();}).catch(function(){btns.forEach(function(b){b.disabled=false;});});}</script></body></html>');
+  res.send('<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin Gallery — Studio Sorelle</title><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:-apple-system,sans-serif;background:#f5f5f5;color:#222;padding:24px}h1{font-size:1.4rem;margin-bottom:4px}.sub{color:#666;font-size:.85rem;margin-bottom:24px}.section-title{font-size:1rem;font-weight:600;margin:24px 0 12px}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}.card{background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.1)}.card img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block}.card-body{padding:10px 12px 12px}.card-meta{font-size:.75rem;color:#888;margin-bottom:4px}.card-quote{font-size:.8rem;color:#444;font-style:italic;margin-bottom:8px;word-break:break-word}.card-actions{display:flex;gap:8px}.btn{padding:6px 12px;border-radius:6px;border:none;cursor:pointer;font-size:.8rem;font-weight:600}.btn-approve{background:#22c55e;color:#fff}.btn-reject{background:#ef4444;color:#fff}.btn-revoke{background:#f59e0b;color:#fff}.btn:disabled{opacity:.5;cursor:not-allowed}.empty{color:#999;font-size:.9rem;padding:16px 0}#pw-screen{max-width:320px;margin:60px auto;background:#fff;padding:32px;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.1)}#pw-screen input{width:100%;padding:10px;margin:12px 0;border:1px solid #ddd;border-radius:6px;font-size:1rem}#pw-screen button{width:100%;padding:10px;background:#222;color:#fff;border:none;border-radius:6px;font-size:1rem;cursor:pointer}</style></head><body><div id="pw-screen"><h2>Admin Login</h2><input type="password" id="pw-input" placeholder="Admin password" autocomplete="current-password"><button onclick="login()">Login</button><p id="pw-err" style="color:#ef4444;font-size:.85rem;margin-top:8px"></p></div><div id="main" style="display:none"><h1>Studio Sorelle — Admin Gallery</h1><p class="sub">Approve moments to make them visible in the public gallery.</p><button class="btn" style="background:#6366f1;color:#fff;margin-bottom:20px" onclick="sendDigest()">Send digest email now</button><span id="digest-msg" style="margin-left:12px;font-size:.85rem;color:#555"></span><p class="section-title">Pending approval</p><div class="grid" id="pending-grid"><p class="empty">Loading…</p></div><p class="section-title">Approved</p><div class="grid" id="approved-grid"><p class="empty">Loading…</p></div></div><script>var PW="";function h(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}function login(){PW=document.getElementById("pw-input").value;fetch("/api/admin/moments",{headers:{"x-admin-password":PW}}).then(function(r){if(r.status===401)throw new Error("wrong");return r.json();}).then(function(rows){document.getElementById("pw-screen").style.display="none";document.getElementById("main").style.display="";render(rows);}).catch(function(){document.getElementById("pw-err").textContent="Incorrect password.";});}document.getElementById("pw-input").addEventListener("keydown",function(e){if(e.key==="Enter")login();});function load(){fetch("/api/admin/moments",{headers:{"x-admin-password":PW}}).then(function(r){return r.json();}).then(render).catch(function(){});}function render(rows){var pending=rows.filter(function(r){return!r.approved;});var approved=rows.filter(function(r){return r.approved;});renderGrid("pending-grid",pending,false);renderGrid("approved-grid",approved,true);}function renderGrid(id,rows,isApproved){var el=document.getElementById(id);if(!rows.length){el.innerHTML="<p class=\\"empty\\">None.</p>";return;}el.innerHTML=rows.map(function(r){return"<div class=\\"card\\" id=\\"card-"+r.id+"\\"><img src=\\""+h(r.image_url)+"\\" alt=\\"\\" loading=\\"lazy\\"><div class=\\"card-body\\"><div class=\\"card-meta\\">"+h(r.product)+(r.occasion?" \xb7 "+h(r.occasion):"")+" \xb7 "+h((r.created_at||"").slice(0,10))+(r.name?" \xb7 "+h(r.name):"")+"</div>"+(r.quote?"<div class=\\"card-quote\\">\\u201c"+h(r.quote)+"\\u201d</div>":"")+"<div class=\\"card-actions\\">"+((!isApproved)?"<button class=\\"btn btn-approve\\" onclick=\\"approve("+r.id+")\\">Approve</button>":"")+(isApproved?"<button class=\\"btn btn-revoke\\" onclick=\\"reject("+r.id+")\\">Revoke</button>":"<button class=\\"btn btn-reject\\" onclick=\\"reject("+r.id+")\\">Reject</button>")+"</div></div></div>";}).join("");}function sendDigest(){var msg=document.getElementById("digest-msg");msg.textContent="Sending...";fetch("/api/admin/send-digest",{method:"POST",headers:{"x-admin-password":PW}}).then(function(r){return r.json();}).then(function(d){msg.textContent=d.ok?"Sent to "+d.count+" pending moment(s).":d.message;}).catch(function(){msg.textContent="Error - check Render logs.";});}function approve(id){act(id,"/approve");}function reject(id){act(id,"/reject");}function act(id,action){var btns=document.querySelectorAll("#card-"+id+" .btn");btns.forEach(function(b){b.disabled=true;});fetch("/api/admin/moments/"+id+action,{method:"PATCH",headers:{"x-admin-password":PW}}).then(function(r){return r.json();}).then(function(){load();}).catch(function(){btns.forEach(function(b){b.disabled=false;});});}</script></body></html>');
 });
 
 // ── SPA fallback ──
@@ -663,51 +663,51 @@ app.listen(PORT, function () {
 
 // ── Moderation digest email ──
 async function sendModerationDigest() {
-  var result = await db.query(‘SELECT id FROM moments WHERE approved = 0 AND email_sent = 0’);
+  var result = await db.query('SELECT id FROM moments WHERE approved = 0 AND email_sent = 0');
   var pending = result.rows;
-  if (!pending.length) return { sent: false, reason: ‘no_pending’ };
-  if (!resend) return { sent: false, reason: ‘no_resend_key’ };
-  var notifyEmail = process.env.NOTIFY_EMAIL || ‘info@studiosorelle.be’;
-  var appUrl = (process.env.APP_URL || ‘’).replace(/\/$/, ‘’);
+  if (!pending.length) return { sent: false, reason: 'no_pending' };
+  if (!resend) return { sent: false, reason: 'no_resend_key' };
+  var notifyEmail = process.env.NOTIFY_EMAIL || 'info@studiosorelle.be';
+  var appUrl = (process.env.APP_URL || '').replace(/\/$/, '');
   var count = pending.length;
   var subject = count === 1
     ? "1 nieuwe foto wacht op goedkeuring — Studio Sorelle Creation Lab"
-    : count + " nieuwe foto’s wachten op goedkeuring — Studio Sorelle Creation Lab";
-  var bodyHtml = ‘<p>Er ‘ + (count === 1 ? ‘staat’ : ‘staan’) + ‘ <strong>’ + count + ‘</strong> nieuwe foto’ + (count === 1 ? ‘’ : "’s") + ‘ klaar voor goedkeuring.</p>’ +
-    ‘<p style="margin-top:12px"><a href="’ + appUrl + ‘/admin/gallery">Bekijk en keur goed via de beheerpagina →</a></p>’;
+    : count + " nieuwe foto's wachten op goedkeuring — Studio Sorelle Creation Lab";
+  var bodyHtml = '<p>Er ' + (count === 1 ? 'staat' : 'staan') + ' <strong>' + count + '</strong> nieuwe foto' + (count === 1 ? '' : "'s") + ' klaar voor goedkeuring.</p>' +
+    '<p style="margin-top:12px"><a href="' + appUrl + '/admin/gallery">Bekijk en keur goed via de beheerpagina →</a></p>';
   await resend.emails.send({
-    from: ‘Studio Sorelle <noreply@studiosorelle.be>’,
+    from: 'Studio Sorelle <noreply@studiosorelle.be>',
     to: notifyEmail,
     subject: subject,
     html: bodyHtml
   });
   for (var i = 0; i < pending.length; i++) {
-    await db.query(‘UPDATE moments SET email_sent = 1 WHERE id = ?’, [pending[i].id]);
+    await db.query('UPDATE moments SET email_sent = 1 WHERE id = ?', [pending[i].id]);
   }
   return { sent: true, count: count };
 }
 
 // ── Admin: manually trigger digest ──
-app.post(‘/api/admin/send-digest’, adminAuth, async (req, res) => {
+app.post('/api/admin/send-digest', adminAuth, async (req, res) => {
   try {
     var result = await sendModerationDigest();
-    if (result.reason === ‘no_pending’) return res.json({ ok: false, message: ‘No pending moments without email.’ });
-    if (result.reason === ‘no_resend_key’) return res.json({ ok: false, message: ‘RESEND_API_KEY not configured.’ });
-    console.log(‘[admin] Manual digest sent for ‘ + result.count + ‘ moment(s)’);
+    if (result.reason === 'no_pending') return res.json({ ok: false, message: 'No pending moments without email.' });
+    if (result.reason === 'no_resend_key') return res.json({ ok: false, message: 'RESEND_API_KEY not configured.' });
+    console.log('[admin] Manual digest sent for ' + result.count + ' moment(s)');
     res.json({ ok: true, count: result.count });
   } catch (err) {
-    console.error(‘[admin] send-digest error:’, err.message);
+    console.error('[admin] send-digest error:', err.message);
     res.status(500).json({ ok: false, message: err.message });
   }
 });
 
 // ── Daily moderation email (07:00 server time) ──
-cron.schedule(‘0 7 * * *’, async function () {
+cron.schedule('0 7 * * *', async function () {
   try {
     var r = await sendModerationDigest();
-    if (r.sent) console.log(‘[cron] Sent moderation email for ‘ + r.count + ‘ pending moment(s)’);
-    else console.log(‘[cron] Digest skipped: ‘ + r.reason);
+    if (r.sent) console.log('[cron] Sent moderation email for ' + r.count + ' pending moment(s)');
+    else console.log('[cron] Digest skipped: ' + r.reason);
   } catch (err) {
-    console.error(‘[cron] Notification email error:’, err.message);
+    console.error('[cron] Notification email error:', err.message);
   }
 });
