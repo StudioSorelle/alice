@@ -101,7 +101,7 @@ body {
   min-height: calc(100vh - 57px);
 }
 .hero-swatches {
-  display: grid; grid-template-columns: 1fr 1fr;
+  display: grid; grid-template-columns: repeat(3, 1fr);
 }
 /* ── Swatch navigation tiles ── */
 .swatch-tile {
@@ -134,16 +134,9 @@ body {
 .swatch-tile.st-dark .tile-title { color: #fff; }
 .swatch-tile.st-dark .tile-desc  { color: rgba(255,255,255,.7); }
 .swatch-tile.st-dark .tile-vis-q { color: rgba(255,255,255,.5); }
-/* Spotify / Set the mood — spans both columns */
-.swatch-tile-spotify {
-  grid-column: 1 / -1; aspect-ratio: auto; min-height: 130px;
-  flex-direction: row; align-items: center; gap: 2rem;
-}
-.swatch-tile-spotify .tile-visual { flex: 0 0 auto; margin: 0; }
-.swatch-tile-spotify .tile-num { display: none; }
 .hero-panel {
   display: flex; flex-direction: column; justify-content: center;
-  padding: 4rem 2.5rem 4rem 3rem; border-right: 1px solid var(--beige);
+  padding: 2rem 2rem 2rem 2.5rem; border-right: 1px solid var(--beige);
 }
 .eyebrow {
   font-family: var(--ff-m); font-size: .87rem; letter-spacing: .1em;
@@ -151,9 +144,9 @@ body {
 }
 .hero-title {
   font-family: var(--ff-d); font-size: clamp(2.2rem, 4vw, 3.8rem);
-  line-height: 1.0; font-style: italic; margin-bottom: 1.5rem;
+  line-height: 1.0; font-style: italic; margin-bottom: .75rem;
 }
-.hero-body { font-size: 1rem; line-height: 1.7; color: var(--mid); margin-bottom: 2.5rem; }
+.hero-body { font-size: 1rem; line-height: 1.7; color: var(--mid); margin-bottom: 1rem; }
 .cta-btn {
   display: inline-block; background: var(--accent); color: #fff; border: none;
   font-family: var(--ff-m); font-size: .8rem; letter-spacing: .06em; text-transform: uppercase;
@@ -440,7 +433,7 @@ body {
 @media (max-width: 900px) {
   .hero { grid-template-columns: 1fr; min-height: auto; }
   .hero-panel { border-right: none; padding: 2.5rem 2rem; }
-  .hero-swatches { grid-template-columns: repeat(4, 1fr); padding: 2rem; border-top: 1px solid var(--beige); }
+  .hero-swatches { grid-template-columns: repeat(3, 1fr); padding: 2rem; border-top: 1px solid var(--beige); }
   .tiles-grid { grid-template-columns: 1fr; }
   .tiles-wrap { padding: 2.5rem 2rem; }
   .view-header { padding: 2rem 2rem 1.5rem; }
