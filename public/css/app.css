@@ -101,8 +101,10 @@ body {
   min-height: calc(100vh - 57px);
 }
 .hero-swatches {
-  display: grid; grid-template-columns: repeat(3, 1fr);
+  display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr);
+  gap: 0; height: 100%;
 }
+.hero-swatches .swatch-tile { aspect-ratio: auto; }
 /* ── Swatch navigation tiles ── */
 .swatch-tile {
   aspect-ratio: 1;
@@ -449,7 +451,8 @@ body {
   .nav-right { width: 100%; flex-wrap: wrap; gap: .3rem; }
   .nav-links { display: grid; grid-template-columns: 1fr 1fr; gap: .2rem .4rem; width: 100%; }
   .nav-links a { font-size: .68rem; letter-spacing: .02em; line-height: 1.3; text-align: center; padding: .3rem .2rem; opacity: .75; }
-  .hero-swatches { grid-template-columns: 1fr 1fr; padding: 0; }
+  .hero-swatches { grid-template-columns: 1fr 1fr; grid-template-rows: auto; height: auto; padding: 0; }
+  .hero-swatches .swatch-tile { aspect-ratio: 1; }
   .swatch-tile { padding: 0.85rem 0.75rem; }
   .swatch-tile .tile-visual { flex: 0 0 auto; height: 72px; }
   .swatch-tile .tile-title { font-size: .88rem; }
