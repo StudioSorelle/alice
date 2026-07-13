@@ -387,11 +387,13 @@ app.post('/api/generate-image', async (req, res) => {
 });
 
 // ── Moments: upload image via backend proxy (avoids browser CORS to R2) ──
-app.post('/api/moments/upload', express.raw({ type: 'image/*', limit: '20mb' }), async (req, res) => {
+app.post('/api/moments/upload', express.raw({ type: () => true, limit: '20mb' }), async (req, res) => {
   if (!s3) return res.status(503).json({ error: 'Image storage not configured. Add Cloudflare R2 env vars.' });
-  const contentType = req.headers['content-type'] || 'application/octet-stream';
-  const ext = (contentType.split('/')[1] || 'jpg').replace(/[^a-z0-9]/g, '');
-  const key = 'moments/' + Date.now() + '-' + Math.random().toString(36).slice(2) + '.' + (ext || 'jpg');
+  if (!req.body || !Buffer.isBuffer(req.body) || req.body.length === 0)
+    return res.status(400).json({ error: 'No image data received. Please try again.' });
+  const contentType = (req.headers['content-type'] || 'image/jpeg').split(';')[0].trim();
+  const ext = (contentType.split('/')[1] || 'jpg').replace(/[^a-z0-9]/g, '') || 'jpg';
+  const key = 'moments/' + Date.now() + '-' + Math.random().toString(36).slice(2) + '.' + ext;
   try {
     await s3.send(new PutObjectCommand({
       Bucket: process.env.CLOUDFLARE_R2_BUCKET,

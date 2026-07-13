@@ -159,7 +159,7 @@
 
     fetch('/api/moments/upload', {
       method: 'POST',
-      headers: { 'Content-Type': state.file.type },
+      headers: { 'Content-Type': state.file.type || 'application/octet-stream' },
       body: state.file
     })
       .then(function (r) { return r.json(); })
