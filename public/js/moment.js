@@ -152,35 +152,26 @@
     if (backBtn) backBtn.addEventListener('click', function () { state.step = 1; render(); });
   }
 
-  // ── Submit: presign → upload → save ──
+  // ── Submit: upload via backend → save metadata ──
   function submitMoment() {
     var el = document.getElementById('moment-flow');
     el.innerHTML = '<div class="flow-loading"><div class="flow-spinner"></div><p class="flow-loading-text">' + t('share.uploading') + '</p></div>';
 
-    fetch('/api/moments/upload-url', {
+    fetch('/api/moments/upload', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ filename: state.file.name, contentType: state.file.type })
+      headers: { 'Content-Type': state.file.type },
+      body: state.file
     })
       .then(function (r) { return r.json(); })
       .then(function (data) {
         if (data.error) throw new Error(data.error);
-        return fetch(data.url, {
-          method: 'PUT', body: state.file,
-          headers: { 'Content-Type': state.file.type }
-        }).then(function (r) {
-          if (!r.ok) throw new Error('Upload to storage failed (' + r.status + ')');
-          return data.key;
-        });
-      })
-      .then(function (key) {
         return fetch('/api/moments', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             product: state.product, occasion: state.occasion,
             quote: state.quote, description: state.description,
-            name: state.authorName, imageKey: key, socialConsent: state.socialConsent
+            name: state.authorName, imageKey: data.key, socialConsent: state.socialConsent
           })
         }).then(function (r) { return r.json(); });
       })

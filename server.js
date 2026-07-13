@@ -3,7 +3,6 @@ const express = require('express');
 const path = require('path');
 const Replicate = require('replicate');
 const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
-const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
 const cron = require('node-cron');
 const { Resend } = require('resend');
 const db = require('./db');
@@ -387,20 +386,23 @@ app.post('/api/generate-image', async (req, res) => {
   }
 });
 
-// ── Moments: presigned upload URL ──
-app.post('/api/moments/upload-url', async (req, res) => {
+// ── Moments: upload image via backend proxy (avoids browser CORS to R2) ──
+app.post('/api/moments/upload', express.raw({ type: 'image/*', limit: '20mb' }), async (req, res) => {
   if (!s3) return res.status(503).json({ error: 'Image storage not configured. Add Cloudflare R2 env vars.' });
-  const { filename, contentType } = req.body;
-  if (!filename || !contentType) return res.status(400).json({ error: 'filename and contentType required' });
-  const ext = (filename.split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g, '');
+  const contentType = req.headers['content-type'] || 'application/octet-stream';
+  const ext = (contentType.split('/')[1] || 'jpg').replace(/[^a-z0-9]/g, '');
   const key = 'moments/' + Date.now() + '-' + Math.random().toString(36).slice(2) + '.' + (ext || 'jpg');
   try {
-    const cmd = new PutObjectCommand({ Bucket: process.env.CLOUDFLARE_R2_BUCKET, Key: key, ContentType: contentType });
-    const url = await getSignedUrl(s3, cmd, { expiresIn: 300 });
-    res.json({ url, key });
+    await s3.send(new PutObjectCommand({
+      Bucket: process.env.CLOUDFLARE_R2_BUCKET,
+      Key: key,
+      Body: req.body,
+      ContentType: contentType
+    }));
+    res.json({ key });
   } catch (err) {
-    console.error('R2 presign error:', err.message);
-    res.status(500).json({ error: 'Could not prepare upload. Please try again.' });
+    console.error('R2 upload error:', err.message);
+    res.status(500).json({ error: 'Could not upload image. Please try again.' });
   }
 });
 
