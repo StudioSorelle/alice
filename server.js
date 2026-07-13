@@ -684,14 +684,11 @@ app.post('/api/shopify/order', async function (req, res) {
   if (resend) {
     var appUrl = (process.env.APP_URL || 'https://creationlab.studiosorelle.be').replace(/\/$/, '');
     var greeting = customerName ? 'Hoi ' + customerName + ',' : 'Hoi,';
-    var months = ['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'];
-    var d = new Date(order.created_at || Date.now());
-    var dateStr = d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
-    var emailHtml = '<style>body{margin:0;padding:0;background:#f4e9dd;font-size:15px;}*{box-sizing:border-box;}.wrapper{width:600px;max-width:100%;margin:0 auto;padding:3em 2.5em;font-family:"Noto Sans",Arial,sans-serif;font-weight:400;background:#f4e9dd;color:#2b1a17;}.header{display:flex;align-items:center;margin-bottom:1.5em;}.shop-title{flex:6;}.shop-logo{height:52px;width:auto;display:block;}.order-meta{flex:4;text-align:right;color:#6A1F2A;font-size:0.85em;line-height:1.6;}hr{height:2px;border:none;background:#6A1F2A;margin:0;}.body{padding:2em 0;line-height:1.7;}.body p{margin:0 0 1em;}.code-box{margin:1.5em 0;text-align:center;background:#fff;border:2px solid #6A1F2A;border-radius:6px;padding:1.2em 2em;}.code-label{font-size:0.78em;text-transform:uppercase;letter-spacing:0.08em;color:#6A1F2A;font-weight:bold;margin-bottom:0.5em;}.code-value{font-family:monospace;font-size:2.4em;font-weight:bold;letter-spacing:0.2em;color:#2b1a17;}.cta-link{color:#6A1F2A;font-weight:bold;}.note{font-size:0.88em;color:#5a3a33;line-height:1.6;}.footer{margin-top:2em;text-align:center;color:#2b1a17;line-height:1.6;}.footer p{margin:0 0 0.8em;}.footer-tagline{font-family:Georgia,"Times New Roman",serif;font-style:italic;color:#6A1F2A;font-size:1.1em;}</style>' +
+    var emailHtml = '<style>body{margin:0;padding:0;background:#f4e9dd;font-size:15px;}*{box-sizing:border-box;}.wrapper{width:600px;max-width:100%;margin:0 auto;padding:3em 2.5em;font-family:"Noto Sans",Arial,sans-serif;font-weight:400;background:#f4e9dd;color:#2b1a17;}.header{display:flex;align-items:center;margin-bottom:1.5em;}.shop-logo{height:80px;width:auto;display:block;}.brand-name{font-family:Georgia,"Times New Roman",serif;font-style:italic;font-size:1.7em;color:#6A1F2A;margin-left:0.75em;}hr{height:2px;border:none;background:#6A1F2A;margin:0;}.body{padding:2em 0;line-height:1.7;}.body p{margin:0 0 1em;}.code-box{margin:1.5em 0;text-align:center;background:#fff;border:2px solid #6A1F2A;border-radius:6px;padding:1.2em 2em;}.code-label{font-size:0.78em;text-transform:uppercase;letter-spacing:0.08em;color:#6A1F2A;font-weight:bold;margin-bottom:0.5em;}.code-value{font-family:monospace;font-size:2.4em;font-weight:bold;letter-spacing:0.2em;color:#2b1a17;}.cta-link{color:#6A1F2A;font-weight:bold;}.note{font-size:0.88em;color:#5a3a33;line-height:1.6;}.footer{margin-top:2em;text-align:center;color:#2b1a17;line-height:1.6;}.footer p{margin:0 0 0.8em;}.footer-logo{height:56px;width:auto;display:block;margin:1.4em auto 0.6em;}.footer-tagline{font-family:Georgia,"Times New Roman",serif;font-style:italic;color:#6A1F2A;font-size:1.1em;}</style>' +
       '<div class="wrapper">' +
         '<div class="header">' +
-          '<div class="shop-title"><img class="shop-logo" src="https://creationlab.studiosorelle.be/assets/logo.png" alt="Studio Sorelle"></div>' +
-          '<div class="order-meta"><div>#' + order.order_number + '</div><div>' + dateStr + '</div></div>' +
+          '<img class="shop-logo" src="https://creationlab.studiosorelle.be/assets/logo.png" alt="Studio Sorelle">' +
+          '<span class="brand-name">Studio Sorelle</span>' +
         '</div>' +
         '<hr>' +
         '<div class="body">' +
@@ -705,6 +702,7 @@ app.post('/api/shopify/order', async function (req, res) {
         '</div>' +
         '<hr>' +
         '<div class="footer">' +
+          '<img class="footer-logo" src="https://creationlab.studiosorelle.be/assets/logo.png" alt="Studio Sorelle">' +
           '<p class="footer-tagline">create moments</p>' +
           '<p>Bedankt voor je aankoop!</p>' +
           '<p><strong>Studio Sorelle</strong><br>info@studiosorelle.be<br>studiosorelle.be</p>' +
