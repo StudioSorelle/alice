@@ -11,7 +11,7 @@ const PROMPTS = require('./prompts.json');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-app.use(express.json());
+app.use(express.json({ verify: function (req, res, buf) { req.rawBody = buf; } }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 migrate();
@@ -653,15 +653,14 @@ app.get('/admin/gallery', function (req, res) {
 });
 
 // ── Shopify order webhook — generate and email access code ──
-app.post('/api/shopify/order', express.raw({ type: 'application/json' }), async function (req, res) {
+app.post('/api/shopify/order', async function (req, res) {
   var secret = process.env.SHOPIFY_WEBHOOK_SECRET;
   if (!secret) { console.error('[shopify] SHOPIFY_WEBHOOK_SECRET not set'); return res.status(500).send('Webhook secret not configured'); }
 
-  var hmac = require('crypto').createHmac('sha256', secret).update(req.body).digest('base64');
+  var hmac = require('crypto').createHmac('sha256', secret).update(req.rawBody).digest('base64');
   if (hmac !== req.headers['x-shopify-hmac-sha256']) return res.status(401).send('Invalid signature');
 
-  var order;
-  try { order = JSON.parse(req.body); } catch (e) { return res.status(400).send('Bad JSON'); }
+  var order = req.body; // already parsed by express.json()
 
   var customerEmail = order.email;
   var customerName  = (order.customer && order.customer.first_name) || '';
