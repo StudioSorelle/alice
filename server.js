@@ -657,8 +657,10 @@ app.post('/api/shopify/order', async function (req, res) {
   var secret = process.env.SHOPIFY_WEBHOOK_SECRET;
   if (!secret) { console.error('[shopify] SHOPIFY_WEBHOOK_SECRET not set'); return res.status(500).send('Webhook secret not configured'); }
 
-  var hmac = require('crypto').createHmac('sha256', secret).update(req.rawBody).digest('base64');
-  if (hmac !== req.headers['x-shopify-hmac-sha256']) return res.status(401).send('Invalid signature');
+  var crypto = require('crypto');
+  var hmac = crypto.createHmac('sha256', secret).update(req.rawBody).digest('base64');
+  var sig  = req.headers['x-shopify-hmac-sha256'] || '';
+  if (!crypto.timingSafeEqual(Buffer.from(hmac), Buffer.from(sig))) return res.status(401).send('Invalid signature');
 
   var order = req.body; // already parsed by express.json()
 
