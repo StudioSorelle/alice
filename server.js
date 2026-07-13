@@ -652,6 +652,62 @@ app.get('/admin/gallery', function (req, res) {
   res.send('<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin Gallery — Studio Sorelle</title><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:-apple-system,sans-serif;background:#f5f5f5;color:#222;padding:24px}h1{font-size:1.4rem;margin-bottom:4px}.sub{color:#666;font-size:.85rem;margin-bottom:24px}.section-title{font-size:1rem;font-weight:600;margin:24px 0 12px}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}.card{background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.1)}.card img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block}.card-body{padding:10px 12px 12px}.card-meta{font-size:.75rem;color:#888;margin-bottom:4px}.card-quote{font-size:.8rem;color:#444;font-style:italic;margin-bottom:8px;word-break:break-word}.card-actions{display:flex;gap:8px}.btn{padding:6px 12px;border-radius:6px;border:none;cursor:pointer;font-size:.8rem;font-weight:600}.btn-approve{background:#22c55e;color:#fff}.btn-reject{background:#ef4444;color:#fff}.btn-revoke{background:#f59e0b;color:#fff}.btn:disabled{opacity:.5;cursor:not-allowed}.empty{color:#999;font-size:.9rem;padding:16px 0}#pw-screen{max-width:320px;margin:60px auto;background:#fff;padding:32px;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.1)}#pw-screen input{width:100%;padding:10px;margin:12px 0;border:1px solid #ddd;border-radius:6px;font-size:1rem}#pw-screen button{width:100%;padding:10px;background:#222;color:#fff;border:none;border-radius:6px;font-size:1rem;cursor:pointer}</style></head><body><div id="pw-screen"><h2>Admin Login</h2><input type="password" id="pw-input" placeholder="Admin password" autocomplete="current-password"><button onclick="login()">Login</button><p id="pw-err" style="color:#ef4444;font-size:.85rem;margin-top:8px"></p></div><div id="main" style="display:none"><h1>Studio Sorelle — Admin Gallery</h1><p class="sub">Approve moments to make them visible in the public gallery.</p><button class="btn" style="background:#6366f1;color:#fff;margin-bottom:20px" onclick="sendDigest()">Send digest email now</button><span id="digest-msg" style="margin-left:12px;font-size:.85rem;color:#555"></span><p class="section-title">Pending approval</p><div class="grid" id="pending-grid"><p class="empty">Loading…</p></div><p class="section-title">Approved</p><div class="grid" id="approved-grid"><p class="empty">Loading…</p></div></div><script>var PW="";function h(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}function login(){PW=document.getElementById("pw-input").value;fetch("/api/admin/moments",{headers:{"x-admin-password":PW}}).then(function(r){if(r.status===401)throw new Error("wrong");return r.json();}).then(function(rows){document.getElementById("pw-screen").style.display="none";document.getElementById("main").style.display="";render(rows);}).catch(function(){document.getElementById("pw-err").textContent="Incorrect password.";});}document.getElementById("pw-input").addEventListener("keydown",function(e){if(e.key==="Enter")login();});function load(){fetch("/api/admin/moments",{headers:{"x-admin-password":PW}}).then(function(r){return r.json();}).then(render).catch(function(){});}function render(rows){var pending=rows.filter(function(r){return!r.approved;});var approved=rows.filter(function(r){return r.approved;});renderGrid("pending-grid",pending,false);renderGrid("approved-grid",approved,true);}function renderGrid(id,rows,isApproved){var el=document.getElementById(id);if(!rows.length){el.innerHTML="<p class=\\"empty\\">None.</p>";return;}el.innerHTML=rows.map(function(r){return"<div class=\\"card\\" id=\\"card-"+r.id+"\\"><img src=\\""+h(r.image_url)+"\\" alt=\\"\\" loading=\\"lazy\\"><div class=\\"card-body\\"><div class=\\"card-meta\\">"+h(r.product)+(r.occasion?" \xb7 "+h(r.occasion):"")+" \xb7 "+h((r.created_at||"").slice(0,10))+(r.name?" \xb7 "+h(r.name):"")+"</div>"+(r.quote?"<div class=\\"card-quote\\">\\u201c"+h(r.quote)+"\\u201d</div>":"")+"<div class=\\"card-actions\\">"+((!isApproved)?"<button class=\\"btn btn-approve\\" onclick=\\"approve("+r.id+")\\">Approve</button>":"")+(isApproved?"<button class=\\"btn btn-revoke\\" onclick=\\"reject("+r.id+")\\">Revoke</button>":"<button class=\\"btn btn-reject\\" onclick=\\"reject("+r.id+")\\">Reject</button>")+"</div></div></div>";}).join("");}function sendDigest(){var msg=document.getElementById("digest-msg");msg.textContent="Sending...";fetch("/api/admin/send-digest",{method:"POST",headers:{"x-admin-password":PW}}).then(function(r){return r.json();}).then(function(d){msg.textContent=d.ok?"Sent to "+d.count+" pending moment(s).":d.message;}).catch(function(){msg.textContent="Error - check Render logs.";});}function approve(id){act(id,"/approve");}function reject(id){act(id,"/reject");}function act(id,action){var btns=document.querySelectorAll("#card-"+id+" .btn");btns.forEach(function(b){b.disabled=true;});fetch("/api/admin/moments/"+id+action,{method:"PATCH",headers:{"x-admin-password":PW}}).then(function(r){return r.json();}).then(function(){load();}).catch(function(){btns.forEach(function(b){b.disabled=false;});});}</script></body></html>');
 });
 
+// ── Shopify order webhook — generate and email access code ──
+app.post('/api/shopify/order', express.raw({ type: 'application/json' }), async function (req, res) {
+  var secret = process.env.SHOPIFY_WEBHOOK_SECRET;
+  if (!secret) { console.error('[shopify] SHOPIFY_WEBHOOK_SECRET not set'); return res.status(500).send('Webhook secret not configured'); }
+
+  var hmac = require('crypto').createHmac('sha256', secret).update(req.body).digest('base64');
+  if (hmac !== req.headers['x-shopify-hmac-sha256']) return res.status(401).send('Invalid signature');
+
+  var order;
+  try { order = JSON.parse(req.body); } catch (e) { return res.status(400).send('Bad JSON'); }
+
+  var customerEmail = order.email;
+  var customerName  = (order.customer && order.customer.first_name) || '';
+
+  if (!customerEmail) {
+    console.log('[shopify] Order', order.order_number, '— no customer email, skipping');
+    return res.status(200).send('No email');
+  }
+
+  var code = null;
+  for (var i = 0; i < 10; i++) {
+    var candidate = generateCode();
+    try { await db.query('INSERT INTO codes (code) VALUES (?)', [candidate]); code = candidate; break; }
+    catch (e) {}
+  }
+  if (!code) {
+    console.error('[shopify] Could not generate unique code for order', order.order_number);
+    return res.status(500).send('Code generation failed');
+  }
+
+  if (resend) {
+    var appUrl = (process.env.APP_URL || 'https://creationlab.studiosorelle.be').replace(/\/$/, '');
+    var greeting = customerName ? 'Hoi ' + customerName + ',' : 'Hoi,';
+    try {
+      await resend.emails.send({
+        from: 'Studio Sorelle <noreply@studiosorelle.be>',
+        to: customerEmail,
+        subject: 'Je toegangscode voor Creation Lab by Studio Sorelle',
+        html: '<p>' + greeting + '</p>' +
+          '<p>Bedankt voor je bestelling! Je kunt nu aan de slag met de Studio Sorelle Creation Lab.</p>' +
+          '<p style="margin:28px 0;font-size:2rem;font-weight:bold;letter-spacing:6px;text-align:center;font-family:monospace">' + code + '</p>' +
+          '<p>Ga naar <a href="' + appUrl + '">' + appUrl + '</a> en voer deze code in om te beginnen.</p>' +
+          '<p><strong>Je toegang is 30 dagen geldig vanaf de eerste keer dat je inlogt</strong> — de timer start pas als je de code voor het eerst gebruikt. Iedereen aan tafel kan dezelfde code gebruiken.</p>' +
+          '<p style="margin-top:24px">Veel plezier!<br>Anouk &amp; Kristina</p>'
+      });
+    } catch (err) {
+      console.error('[shopify] Email failed for order', order.order_number, ':', err.message);
+    }
+  } else {
+    console.warn('[shopify] Resend not configured — code', code, 'generated but not emailed');
+  }
+
+  console.log('[shopify] Code', code, 'generated for order', order.order_number, '→', customerEmail);
+  res.status(200).send('OK');
+});
+
 // ── SPA fallback ──
 app.get('*', function (req, res) {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
