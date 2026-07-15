@@ -308,9 +308,6 @@
       html += '<img src="' + escAttr(state.currentImageUrl) + '" class="inspire-img inspire-img-full" alt="Generated painting idea">';
     }
 
-    html += '<p class="result-label">' + t('inspire.result.label') + '</p>';
-    html += '<div class="result-card"><p class="result-text">' + escHtml(state.idea).replace(/\n/g, '<br>') + '</p></div>';
-
     html += '<div class="inspire-image-wrap" id="inspire-image-wrap">';
     if (state.imageCount < 3) {
       var btnLabel = state.imageCount === 0 ? t('inspire.img.generate') : t('inspire.img.regenerate');
