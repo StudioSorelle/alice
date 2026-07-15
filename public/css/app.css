@@ -562,16 +562,17 @@ body {
 .footer-feedback-btn {
   display: inline-block;
   margin-top: .5rem;
-  padding: .35rem .9rem;
-  border: 1px solid var(--beige);
+  padding: .45rem 1.1rem;
+  border: none;
   border-radius: 100px;
-  background: transparent;
-  color: var(--mid);
-  font-size: .75rem; font-family: var(--ff-b);
+  background: var(--accent);
+  color: #fff;
+  font-size: .8rem; font-family: var(--ff-m);
+  letter-spacing: .06em; text-transform: uppercase;
   cursor: pointer;
-  transition: border-color .15s, color .15s;
+  transition: background .15s;
 }
-.footer-feedback-btn:hover { border-color: var(--terra); color: var(--text); }
+.footer-feedback-btn:hover { background: #8a2535; }
 
 /* ── Feedback modal ── */
 .feedback-overlay {

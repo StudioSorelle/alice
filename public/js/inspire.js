@@ -45,7 +45,7 @@
   // answers[0]=group, answers[1]=product, answers[2]=style, answers[3]=topic, answers[4]=time, answers[5]=level
   var state = {
     step: 0, answers: [], products: [],
-    idea: '', imageCount: 0, currentImageUrl: '',
+    idea: '', ideaEn: '', imageCount: 0, currentImageUrl: '',
     paintTogether: null   // true=together, false=separate, null=not asked
   };
 
@@ -292,7 +292,8 @@
       .then(function (r) { return r.json(); })
       .then(function (data) {
         if (data.error) { showError(data.error); return; }
-        state.idea = data.idea;
+        state.idea   = data.idea;
+        state.ideaEn = data.ideaEn || data.idea;
         state.imageCount = 0;
         state.currentImageUrl = '';
         renderResult(document.getElementById('inspire-flow'));
@@ -346,7 +347,7 @@
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        idea: state.idea,
+        idea: state.ideaEn,
         style: state.answers[2],
         topic: state.answers[3],
         box: state.answers[1],
@@ -387,6 +388,7 @@
     state.step = 0;
     state.answers = [];
     state.idea = '';
+    state.ideaEn = '';
     state.imageCount = 0;
     state.currentImageUrl = '';
     state.paintTogether = null;

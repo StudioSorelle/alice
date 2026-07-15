@@ -152,7 +152,10 @@ app.post('/api/inspire', function (req, res) {
   var paintTogether = req.body.paintTogether; // true | false | null (not applicable)
   if (!answers || !Array.isArray(answers) || !answers.length)
     return res.status(400).json({ error: 'Please answer the questions first.' });
-  res.json({ idea: buildInspireIdea(answers, lang, paintTogether) });
+  res.json({
+    idea:   buildInspireIdea(answers, lang, paintTogether),
+    ideaEn: buildInspireIdea(answers, 'en',  paintTogether)
+  });
 });
 
 // ── Spark (DB-based randomizer, no AI) ──
