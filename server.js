@@ -592,9 +592,6 @@ function buildInspireIdea(answers, lang, paintTogether) {
       }
     }
 
-    // Seasonal overlay always applied on top (except when Seizoensgebonden is the style)
-    var seasonal = getActiveSeasonal(l);
-    if (seasonal) parts.push(seasonal);
   }
 
   // 4. Level
@@ -610,7 +607,7 @@ function buildInspireIdea(answers, lang, paintTogether) {
 
 // ── Config ──
 app.get('/api/config', function (req, res) {
-  res.json({ feedbackUrl: process.env.FEEDBACK_URL || null });
+  res.json({ feedbackUrl: process.env.FEEDBACK_URL || 'https://tally.so/r/Y5vrJq' });
 });
 
 // ── Gallery: public approved moments ──

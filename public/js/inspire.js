@@ -16,7 +16,8 @@
     { key: 'style.expressive',      val: 'Expressive' },
     { key: 'style.colorful',        val: 'Colorful' },
     { key: 'style.monochromatic',   val: 'Monochromatic' },
-    { key: 'style.softdreamy',      val: 'Soft and dreamy' }
+    { key: 'style.softdreamy',      val: 'Soft and dreamy' },
+    { key: 'style.seasonal',        val: 'Seizoensgebonden' }
   ];
   var TOPICS = [
     { key: 'topic.landschappen', val: 'Landschappen' },
