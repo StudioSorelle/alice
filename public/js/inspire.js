@@ -134,6 +134,7 @@
     } else if (step === topicStep()) {
       html += '<p class="flow-question">' + t('inspire.q.topic') + '</p>';
       html += '<input class="flow-other-input" id="topic-input" placeholder="' + escAttr(t('inspire.topic.ph')) + '" value="' + escAttr(state.answers[3] || '') + '" autocomplete="off">';
+      html += '<p class="flow-hint">' + t('inspire.topic.en_note') + '</p>';
       html += '<p class="flow-hint">' + t('inspire.topic.hint') + '</p>';
       html += '<div class="option-grid topic-presets" id="topic-grid">';
       TOPICS.forEach(function (tp) {

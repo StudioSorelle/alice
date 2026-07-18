@@ -62,24 +62,6 @@ async function authGate(req, res, next) {
   } catch (err) { res.status(500).json({ error: 'Auth error' }); }
 }
 
-// ── Topic translation (Dutch → English via Claude Haiku) ──
-async function translateToEnglish(text) {
-  var key = process.env.ANTHROPIC_API_KEY;
-  if (!key) return text;
-  try {
-    var Anthropic = require('@anthropic-ai/sdk');
-    var client = new Anthropic({ apiKey: key });
-    var msg = await client.messages.create({
-      model: 'claude-haiku-4-5-20251001',
-      max_tokens: 60,
-      messages: [{ role: 'user', content: 'Translate to English (short phrase only, no explanation, no quotes): ' + text }]
-    });
-    return (msg.content[0] && msg.content[0].text.trim()) || text;
-  } catch (e) {
-    return text;
-  }
-}
-
 // ── Code generation ──
 var CODE_CHARS = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
 function generateCode() {
@@ -163,30 +145,16 @@ app.get('/api/occasions', async (req, res) => {
   } catch (err) { res.json([]); }
 });
 
-// ── Inspire (template-based, with optional AI topic translation) ──
-app.post('/api/inspire', async function (req, res) {
+// ── Inspire (template-based, no AI) ──
+app.post('/api/inspire', function (req, res) {
   var answers = req.body.answers;
   var lang = req.body.lang;
   var paintTogether = req.body.paintTogether; // true | false | null (not applicable)
   if (!answers || !Array.isArray(answers) || !answers.length)
     return res.status(400).json({ error: 'Please answer the questions first.' });
-
-  // Translate free-text topics to English for the Replicate prompt
-  var topicEntry = answers[3];
-  var topicVal   = topicEntry ? topicEntry.answer : '';
-  var isCustom   = topicVal && topicVal !== '__any__' && !PROMPTS.topics[topicVal];
-
-  var answersEn = answers;
-  if (isCustom) {
-    var translatedTopic = await translateToEnglish(topicVal);
-    answersEn = answers.map(function(a, i) {
-      return i === 3 ? Object.assign({}, a, { answer: translatedTopic }) : a;
-    });
-  }
-
   res.json({
-    idea:   buildInspireIdea(answers,   lang, paintTogether),
-    ideaEn: buildInspireIdea(answersEn, 'en',  paintTogether)
+    idea:   buildInspireIdea(answers, lang, paintTogether),
+    ideaEn: buildInspireIdea(answers, 'en',  paintTogether)
   });
 });
 
