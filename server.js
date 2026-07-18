@@ -317,16 +317,16 @@ app.post('/api/generate-image', async (req, res) => {
         productIntro = 'Studio Sorelle tote bag painting kit for ' + count + ' people. Generate a photorealistic flat-lay image showing exactly ' + count + ' white cotton tote bags arranged together in one image. Every tote bag must be clearly visible. Each bag has a different but stylistically consistent acrylic design painted on it (approximately 20×20 cm surface). The designs must be bold and simple enough to work on fabric.';
       }
     } else {
-      // Canvas 30×30 cm
+      // Canvas 20×20 cm
       if (count === 1) {
-        productIntro = 'Studio Sorelle signature canvas painting kit. Generate a photorealistic image of a finished acrylic painting on a single square 30×30 cm canvas. The composition should be clear and simple enough that a first-time painter can feasibly recreate it. Show the canvas straight-on so its square format and composition are fully visible.';
+        productIntro = 'Studio Sorelle signature canvas painting kit. Generate a photorealistic image of a finished acrylic painting on a single square 20×20 cm canvas. The composition should be clear and simple enough that a first-time painter can feasibly recreate it. Show the canvas straight-on so its square format and composition are fully visible.';
       } else if (paintTogether === false) {
         // Separate: one idea generated per person — show a single canvas
-        productIntro = 'Generate a photorealistic flat-lay image of a single square 30×30 cm canvas with a standalone acrylic painting. Each painter receives their own separate idea.';
+        productIntro = 'Generate a photorealistic flat-lay image of a single square 20×20 cm canvas with a standalone acrylic painting. Each painter receives their own separate idea.';
       } else {
         // Together: polyptych where canvases combine into one image
         var panelWord = count === 2 ? 'diptych (2 panels)' : count === 3 ? 'triptych (3 panels)' : (count + '-panel polyptych');
-        productIntro = 'Studio Sorelle signature canvas painting kit for ' + count + ' people painting one connected image together. Generate a photorealistic image showing a ' + panelWord + ' — exactly ' + count + ' separate square 30×30 cm canvases arranged side by side to form ONE single connected painting. Every canvas panel must be clearly visible. The colours, shapes, and light must flow continuously across all ' + count + ' panels as one unified composition.';
+        productIntro = 'Studio Sorelle signature canvas painting kit for ' + count + ' people painting one connected image together. Generate a photorealistic image showing a ' + panelWord + ' — exactly ' + count + ' separate square 20×20 cm canvases arranged side by side to form ONE single connected painting. Every canvas panel must be clearly visible. The colours, shapes, and light must flow continuously across all ' + count + ' panels as one unified composition.';
       }
     }
 
@@ -546,7 +546,7 @@ function buildInspireIdea(answers, lang, paintTogether) {
     }
 
   } else {
-    // Canvas: 1 canvas per person (30×30 cm)
+    // Canvas: 1 canvas per person (20×20 cm)
     var boxFrag = PROMPTS.box.canvas;
     if (boxFrag && boxFrag[l]) parts.push(boxFrag[l]);
 

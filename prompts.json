@@ -1,8 +1,8 @@
 {
   "box": {
     "canvas": {
-      "nl": "Elke persoon schildert op een eigen canvas van ca. 30×30 cm.",
-      "en": "Each person paints on their own canvas, approx. 30×30 cm."
+      "nl": "Elke persoon schildert op een eigen canvas van ca. 20×20 cm.",
+      "en": "Each person paints on their own canvas, approx. 20×20 cm."
     },
     "mini": {
       "nl": "Elke persoon ontvangt 2 kleine canvasjes van ca. 10×10 cm — deze worden nooit gecombineerd.",
@@ -30,8 +30,8 @@
     "en": "You are painting with {count} people, each on their own tote bag of approx. 20×20 cm (textile surface). The bags are not combined — suggest {count} different ideas, numbered from 'Tote 1' to 'Tote {count}'. Keep the textile in mind: less porous than canvas — avoid very wet techniques."
   },
   "canvas_separate": {
-    "nl": "Jullie schilderen met {count} personen, elk op een eigen canvas van ca. 30×30 cm. De schilderijen worden niet gecombineerd — elk canvas is een volledig zelfstandig idee. Stel {count} verschillende variaties voor in de gekozen stijl, genummerd van 'Canvas 1' tot 'Canvas {count}'.",
-    "en": "You are painting with {count} people, each on their own canvas of approx. 30×30 cm. The paintings are not combined — each canvas is a fully standalone idea. Suggest {count} different variations in the chosen style, numbered from 'Canvas 1' to 'Canvas {count}'."
+    "nl": "Jullie schilderen met {count} personen, elk op een eigen canvas van ca. 20×20 cm. De schilderijen worden niet gecombineerd — elk canvas is een volledig zelfstandig idee. Stel {count} verschillende variaties voor in de gekozen stijl, genummerd van 'Canvas 1' tot 'Canvas {count}'.",
+    "en": "You are painting with {count} people, each on their own canvas of approx. 20×20 cm. The paintings are not combined — each canvas is a fully standalone idea. Suggest {count} different variations in the chosen style, numbered from 'Canvas 1' to 'Canvas {count}'."
   },
   "group": {
     "Alone": {
