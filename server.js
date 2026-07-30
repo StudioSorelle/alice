@@ -599,7 +599,19 @@ function buildInspireIdea(answers, lang, paintTogether) {
 
   // 4. Level
   var levelFrag = PROMPTS.level[level];
-  if (levelFrag && levelFrag[l]) parts.push(levelFrag[l]);
+  if (levelFrag && levelFrag[l]) {
+    if (l === 'en') {
+      var productLabel = boxKey === 'mini' ? 'mini canvas of 10×10 cm'
+        : boxKey === 'tote' ? 'tote bag of 20×20 cm'
+        : 'canvas of 20×20 cm';
+      var diffLabel = level === 'Relaxed' ? 'Very easy'
+        : level === 'Balanced' ? 'Easy'
+        : 'Medium';
+      parts.push('Difficulty to paint on a ' + productLabel + ' — ' + diffLabel + ': This idea must be paintable by an amateur. ' + levelFrag[l]);
+    } else {
+      parts.push(levelFrag[l]);
+    }
+  }
 
   // 5. Time
   var timeFrag = PROMPTS.time[time];
