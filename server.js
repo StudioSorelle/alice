@@ -375,7 +375,7 @@ app.post('/api/generate-image', async (req, res) => {
 
     const imagePrompt = productIntro + '\n\nThe painting shows: ' + styleContent + '\n\n' + presentationSuffix;
 
-    console.log('[generate-image] model: flux-dev | prompt:\n' + imagePrompt);
+    console.log('[generate-image] model: flux-schnell | prompt:\n' + imagePrompt);
 
     // Multi-panel canvases side-by-side need wider aspect ratio
     var aspectRatio;
@@ -395,13 +395,11 @@ app.post('/api/generate-image', async (req, res) => {
       aspectRatio = '1:1';
     }
 
-    const output = await replicate.run('black-forest-labs/flux-dev', {
+    const output = await replicate.run('black-forest-labs/flux-schnell', {
       input: {
         prompt: imagePrompt,
-        negative_prompt: NEGATIVE_PROMPT,
         num_outputs: 1,
-        num_inference_steps: 28,
-        guidance_scale: 3.5,
+        num_inference_steps: 4,
         aspect_ratio: aspectRatio,
         output_format: 'webp',
         output_quality: 85

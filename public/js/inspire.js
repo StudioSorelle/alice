@@ -305,6 +305,9 @@
   function renderResult(el) {
     var html = '<div class="inspire-result">';
 
+    html += '<p class="inspire-result-label">' + t('inspire.result.label') + '</p>';
+    html += '<div class="inspire-idea-text">' + escHtml(state.idea).replace(/\n\n/g, '</p><p>').replace(/^/, '<p>').replace(/$/, '</p>') + '</div>';
+
     if (state.currentImageUrl) {
       html += '<img src="' + escAttr(state.currentImageUrl) + '" class="inspire-img inspire-img-full" alt="Generated painting idea">';
     }
