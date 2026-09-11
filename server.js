@@ -14,7 +14,8 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json({ verify: function (req, res, buf) { req.rawBody = buf; } }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-migrate();
+// Migration runs before the server starts accepting requests
+var migrationReady = migrate();
 
 let replicate = null;
 if (process.env.REPLICATE_API_TOKEN) {
@@ -136,7 +137,13 @@ app.get('/api/products', async (req, res) => {
   try {
     const result = await db.query('SELECT id, name FROM products WHERE active = 1 ORDER BY sort_order, name');
     res.json(result.rows);
-  } catch (err) { res.json([]); }
+  } catch (err) {
+    // Fallback if active column not yet available
+    try {
+      const r2 = await db.query('SELECT id, name FROM products ORDER BY sort_order, name');
+      res.json(r2.rows);
+    } catch (e) { res.json([]); }
+  }
 });
 
 // ── Occasions ──
@@ -772,8 +779,15 @@ app.get('*', function (req, res) {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.listen(PORT, function () {
-  console.log('alice listening on port ' + PORT);
+migrationReady.then(function () {
+  app.listen(PORT, function () {
+    console.log('alice listening on port ' + PORT);
+  });
+}).catch(function (err) {
+  console.error('Migration failed, starting anyway:', err.message);
+  app.listen(PORT, function () {
+    console.log('alice listening on port ' + PORT);
+  });
 });
 
 // ── Moderation digest email ──
