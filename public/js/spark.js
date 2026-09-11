@@ -1,5 +1,4 @@
 (function () {
-  var STEPS = 5;
   var TIMES = [
     { key: 'time.30min', val: '30 min' },
     { key: 'time.1h', val: '1 hour' },
@@ -10,15 +9,39 @@
     { key: 'spark.sorelle_talks', val: 'sorelle_talks' },
     { key: 'spark.mix', val: 'mix' }
   ];
+  var HAIRPIN_OPTS = [
+    { key: 'spark.hairpin_small', val: 'small' },
+    { key: 'spark.hairpin_large', val: 'large' }
+  ];
   var PEOPLE_OPTS = [2, 3, 4];
 
+  function isHairclip(productName) {
+    var lower = (productName || '').toLowerCase();
+    return lower.indexOf('hairclip') >= 0 || lower.indexOf('dazzl') >= 0;
+  }
+
   var state = {
-    step: 0, answers: [], products: [], occasions: [], otherText: ''
+    step: 0, answers: [], products: [], occasions: [], otherText: '', hairpinSize: ''
   };
 
   function t(key, vars) { return window.t ? window.t(key, vars) : key; }
   function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
   function escAttr(s) { return String(s).replace(/"/g,'&quot;'); }
+
+  // Returns the logical slot for the current display step.
+  // Slots: 0=product, 1=people, 2=time, 3=occasion, 4=acttype, 'hairpin'=hairpin size
+  function getSlot(step) {
+    if (isHairclip(state.answers[0])) {
+      if (step === 0) return 0;
+      if (step === 1) return 'hairpin';
+      return step - 1;
+    }
+    return step;
+  }
+
+  function getTotalSteps() {
+    return isHairclip(state.answers[0]) ? 6 : 5;
+  }
 
   function render() {
     var el = document.getElementById('spark-flow');
@@ -28,9 +51,11 @@
 
   function renderStep(el) {
     var step = state.step;
-    var html = '<p class="flow-step-num">' + t('common.step', { n: step + 1, total: STEPS }) + '</p>';
+    var slot = getSlot(step);
+    var totalSteps = getTotalSteps();
+    var html = '<p class="flow-step-num">' + t('common.step', { n: step + 1, total: totalSteps }) + '</p>';
 
-    if (step === 0) {
+    if (slot === 0) {
       html += '<p class="flow-question">' + t('spark.q1') + '</p>';
       html += '<div class="option-grid" id="opt-grid">';
       state.products.forEach(function (p) {
@@ -38,7 +63,15 @@
         html += '<button class="option-btn' + sel + '" data-val="' + escAttr(p.name) + '">' + escHtml(p.name) + '</button>';
       });
       html += '</div>';
-    } else if (step === 1) {
+    } else if (slot === 'hairpin') {
+      html += '<p class="flow-question">' + t('spark.hairpin_q') + '</p>';
+      html += '<div class="option-grid" id="opt-grid">';
+      HAIRPIN_OPTS.forEach(function (o) {
+        var sel = state.hairpinSize === o.val ? ' active' : '';
+        html += '<button class="option-btn' + sel + '" data-val="' + o.val + '">' + t(o.key) + '</button>';
+      });
+      html += '</div>';
+    } else if (slot === 1) {
       html += '<p class="flow-question">' + t('spark.q2') + '</p>';
       html += '<div class="option-grid" id="opt-grid">';
       PEOPLE_OPTS.forEach(function (n) {
@@ -49,7 +82,7 @@
       var sel5 = state.answers[1] === '5+' ? ' active' : '';
       html += '<button class="option-btn' + sel5 + '" data-val="5+">' + t('people.5plus') + '</button>';
       html += '</div>';
-    } else if (step === 2) {
+    } else if (slot === 2) {
       html += '<p class="flow-question">' + t('spark.q3') + '</p>';
       html += '<div class="option-grid" id="opt-grid">';
       TIMES.forEach(function (ti) {
@@ -57,7 +90,7 @@
         html += '<button class="option-btn' + sel + '" data-val="' + ti.val + '">' + t(ti.key) + '</button>';
       });
       html += '</div>';
-    } else if (step === 3) {
+    } else if (slot === 3) {
       html += '<p class="flow-question">' + t('spark.q4') + '</p>';
       html += '<div class="option-grid" id="opt-grid">';
       state.occasions.forEach(function (o) {
@@ -65,7 +98,7 @@
         html += '<button class="option-btn' + sel + '" data-val="' + escAttr(o.name) + '">' + escHtml(o.name) + '</button>';
       });
       html += '</div>';
-    } else if (step === 4) {
+    } else if (slot === 4) {
       html += '<p class="flow-question">' + t('spark.q5') + '</p>';
       html += '<div class="option-grid" id="opt-grid">';
       ACTIVITY_TYPES.forEach(function (a) {
@@ -77,7 +110,7 @@
 
     html += '<div class="flow-nav">';
     if (step > 0) html += '<button class="flow-ghost-btn" id="flow-back">' + t('common.back') + '</button>';
-    html += '<button class="flow-next-btn" id="flow-next">' + (step === STEPS - 1 ? t('common.sparkcta') : t('common.next')) + '</button>';
+    html += '<button class="flow-next-btn" id="flow-next">' + (step === totalSteps - 1 ? t('common.sparkcta') : t('common.next')) + '</button>';
     html += '</div>';
 
     el.innerHTML = html;
@@ -88,10 +121,11 @@
     var grid = document.getElementById('opt-grid');
     var nextBtn = document.getElementById('flow-next');
     var backBtn = document.getElementById('flow-back');
+    var slot = getSlot(state.step);
 
     function updateNext() {
       if (!nextBtn) return;
-      var ans = state.answers[state.step];
+      var ans = slot === 'hairpin' ? state.hairpinSize : state.answers[slot];
       var ok = ans && !(ans === '__other__' && !(state.otherText && state.otherText.trim()));
       nextBtn.disabled = !ok;
     }
@@ -101,7 +135,11 @@
         var btn = e.target.closest('.option-btn');
         if (!btn) return;
         var val = btn.getAttribute('data-val');
-        state.answers[state.step] = val;
+        if (slot === 'hairpin') {
+          state.hairpinSize = val;
+        } else {
+          state.answers[slot] = val;
+        }
         grid.querySelectorAll('.option-btn').forEach(function (b) { b.classList.remove('active'); });
         btn.classList.add('active');
         if (val === '__other__') {
@@ -121,14 +159,14 @@
     if (nextBtn) {
       updateNext();
       nextBtn.addEventListener('click', function () {
-        var ans = state.answers[state.step];
+        var ans = slot === 'hairpin' ? state.hairpinSize : state.answers[slot];
         if (!ans) return;
         if (ans === '__other__') {
           var txt = state.otherText ? state.otherText.trim() : '';
           if (!txt) return;
           state.answers[0] = txt;
         }
-        if (state.step === STEPS - 1) {
+        if (state.step === getTotalSteps() - 1) {
           submitSpark();
         } else {
           state.step++;
@@ -146,11 +184,11 @@
     var el = document.getElementById('spark-flow');
     el.innerHTML = '<div class="flow-loading"><div class="flow-spinner"></div><p class="flow-loading-text">' + t('spark.loading') + '</p></div>';
     var qs = [t('spark.q1'), t('spark.q2'), t('spark.q3'), t('spark.q4'), t('spark.q5')];
-    var answers = state.answers.slice(0, STEPS).map(function (a, i) { return { question: qs[i], answer: a }; });
+    var answers = state.answers.slice(0, 5).map(function (a, i) { return { question: qs[i], answer: a }; });
     fetch('/api/spark', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ answers: answers, lang: window.currentLang || 'en' })
+      body: JSON.stringify({ answers: answers, lang: window.currentLang || 'en', hairpinSize: state.hairpinSize })
     })
       .then(function (r) { return r.json(); })
       .then(function (data) {
@@ -201,6 +239,7 @@
     state.step = 0;
     state.answers = [];
     state.otherText = '';
+    state.hairpinSize = '';
 
     var el = document.getElementById('spark-flow');
     if (!el) return;

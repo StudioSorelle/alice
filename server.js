@@ -169,19 +169,26 @@ app.post('/api/inspire', function (req, res) {
 
 // ── Spark (DB-based randomizer, no AI) ──
 app.post('/api/spark', async (req, res) => {
-  const { answers, lang } = req.body;
+  const { answers, lang, hairpinSize } = req.body;
   if (!answers || !Array.isArray(answers) || !answers.length)
     return res.status(400).json({ error: 'Please answer the questions first.' });
   try {
-    // answers[1] = player count ('1','2','3','4','5+')
-    // answers[2] = time ('30 min','1 hour','2+ hours')
-    // answers[3] = occasion
-    // answers[4] = activity type
+    // answers[0] = product, [1] = player count, [2] = time, [3] = occasion, [4] = activity type
+    var productName = answers[0] ? answers[0].answer : '';
+    var boxKey      = getBoxKey(productName);
     var playersRaw  = answers[1] ? answers[1].answer : '2';
     var playerCount = playersRaw === '5+' ? 5 : (parseInt(playersRaw, 10) || 2);
     var timeAnswer  = answers[2] ? answers[2].answer : '1 hour';
     var occasion    = answers[3] ? answers[3].answer : 'any';
     var actType     = answers[4] ? answers[4].answer : 'mix';
+
+    // For hairclip box, studio_games → bedazzle_games; filter by hairpin size tag
+    var gameType = boxKey === 'hairclip' ? 'bedazzle_games' : 'studio_games';
+    var hairpinClause = '';
+    if (boxKey === 'hairclip') {
+      if (hairpinSize === 'small') hairpinClause = " AND tags NOT LIKE '%niet_bedazzle_klein%'";
+      else if (hairpinSize === 'large') hairpinClause = " AND tags NOT LIKE '%niet_bedazzle_groot%'";
+    }
 
     // Number of activities scales with available time (document spec)
     var actCount = timeAnswer === '30 min' ? 2 : timeAnswer === '1 hour' ? 3 : 5;
@@ -200,8 +207,8 @@ app.post('/api/spark', async (req, res) => {
     var activities;
     if (actType === 'mix') {
       var gamesRes = await db.query(
-        "SELECT * FROM activities WHERE type = 'studio_games' AND active = 1 AND (occasion = 'any' OR occasion = ?) AND min_players <= ?" + durationClause,
-        [occasion, playerCount]
+        'SELECT * FROM activities WHERE type = ? AND active = 1 AND (occasion = \'any\' OR occasion = ?) AND min_players <= ?' + durationClause + hairpinClause,
+        [gameType, occasion, playerCount]
       );
       var talksRes = await db.query(
         "SELECT * FROM activities WHERE type = 'sorelle_talks' AND active = 1 AND (occasion = 'any' OR occasion = ?) AND min_players <= ?" + durationClause,
@@ -236,9 +243,10 @@ app.post('/api/spark', async (req, res) => {
         return { id: row.id, type: row.type, description: lang === 'nl' ? row.description_nl : row.description_en };
       });
     } else {
+      var queryType = (actType === 'studio_games') ? gameType : actType;
       var result = await db.query(
-        "SELECT * FROM activities WHERE type = ? AND active = 1 AND (occasion = 'any' OR occasion = ?) AND min_players <= ?" + durationClause,
-        [actType, occasion, playerCount]
+        'SELECT * FROM activities WHERE type = ? AND active = 1 AND (occasion = \'any\' OR occasion = ?) AND min_players <= ?' + durationClause + hairpinClause,
+        [queryType, occasion, playerCount]
       );
       var rows = fisherYates(result.rows.slice());
       activities = rows.slice(0, actCount).map(function (row) {

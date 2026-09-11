@@ -941,6 +941,52 @@ async function migrate() {
       console.log('v4 migration: added Hairclip (inactive) and Baby (active) products');
     }
 
+    // v5: new spark activities — BZ01–BZ13 (bedazzle_games, active=0) + BB01–BB08 (studio_games, active=1)
+    var v5 = await db.query("SELECT version FROM migration_versions WHERE version = 'v5_spark_activities'");
+    if (v5.rows.length === 0) {
+      var BZ = [
+        { nl: 'Kies om de 5 minuten een nieuw steentje/parel/bedeltje en verwerk het meteen in je speld.', en: 'Every 5 minutes, pick a new stone, pearl or charm and work it into your clip straight away.', min_players: 2, duration: 'long',  tags: 'herhaalbaar_lang' },
+        { nl: 'Maak één bewuste "fout" en verwerk die creatief.',                                          en: 'Make one deliberate mistake and incorporate it creatively.',                              min_players: 2, duration: 'round', tags: '' },
+        { nl: 'Geef je speld een naam voor hij af is.',                                                    en: 'Give your clip a name before it is finished.',                                           min_players: 2, duration: 'round', tags: '' },
+        { nl: 'Versier op het ritme van de muziek.',                                                       en: 'Decorate to the rhythm of the music.',                                                   min_players: 2, duration: 'round', tags: '' },
+        { nl: 'Combineer 2 kleuren die je normaal nooit zou combineren.',                                  en: 'Combine 2 colours you would never normally use together.',                               min_players: 2, duration: 'round', tags: '' },
+        { nl: 'Verstop een klein hartje tussen je steentjes.',                                             en: 'Hide a small heart somewhere among your stones.',                                        min_players: 2, duration: 'round', tags: '' },
+        { nl: 'Je buur kiest 3 steentjes die jij moet verwerken.',                                        en: 'Your neighbour picks 3 stones that you have to use.',                                    min_players: 2, duration: 'round', tags: 'mechanisme_paar' },
+        { nl: 'Geef je bakje steentjes door aan je buur om de 5 minuten.',                                en: 'Pass your tray of stones to your neighbour every 5 minutes.',                            min_players: 3, duration: 'long',  tags: 'mechanisme_groep;herhaalbaar_lang' },
+        { nl: 'Maak een symmetrisch patroon.',                                                             en: 'Make a symmetrical pattern.',                                                            min_players: 2, duration: 'round', tags: '' },
+        { nl: 'Verdeel je speld in 3 zones, elk een ander patroon.',                                      en: 'Divide your clip into 3 zones, each with a different pattern.',                          min_players: 2, duration: 'round', tags: 'niet_bedazzle_klein' },
+        { nl: 'Maak een gradient van licht naar donker.',                                                  en: 'Make a gradient from light to dark.',                                                    min_players: 2, duration: 'round', tags: 'niet_bedazzle_klein' },
+        { nl: 'Kies 1 hoofdmotief en versier daar rond.',                                                  en: 'Choose 1 main motif and decorate around it.',                                           min_players: 2, duration: 'round', tags: 'niet_bedazzle_groot' },
+        { nl: 'Ruil na 10 minuten van speld en werk samen verder.',                                        en: 'After 10 minutes, swap clips and continue together.',                                    min_players: 3, duration: 'long',  tags: 'mechanisme_groep' }
+      ];
+      for (var bi = 0; bi < BZ.length; bi++) {
+        await db.query(
+          'INSERT INTO activities (type, occasion, description_nl, description_en, duration, min_players, tags, active) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+          ['bedazzle_games', 'any', BZ[bi].nl, BZ[bi].en, BZ[bi].duration, BZ[bi].min_players, BZ[bi].tags, 0]
+        );
+      }
+
+      var BB = [
+        { nl: 'Verstop een hartje/sterretje in je patroontje voor de kleine.',               en: 'Hide a little heart or star somewhere in your design for the little one.',               min_players: 2, duration: 'round', tags: 'doos_babyshower' },
+        { nl: 'Schilder een diertje voor de babykamer.',                                       en: "Paint a little animal for the baby's room.",                                              min_players: 2, duration: 'round', tags: 'doos_babyshower' },
+        { nl: 'Gebruik enkel zachte pastelkleuren.',                                           en: 'Use only soft pastel colours.',                                                           min_players: 2, duration: 'round', tags: 'doos_babyshower' },
+        { nl: 'Voeg de (voorlopige) naam/initiaal van de baby toe.',                           en: 'Add the (working) name or initial of the baby.',                                          min_players: 2, duration: 'round', tags: 'doos_babyshower' },
+        { nl: 'Schilder een wolkje, sterretje of maantje.',                                    en: 'Paint a little cloud, star or moon.',                                                     min_players: 2, duration: 'round', tags: 'doos_babyshower' },
+        { nl: 'Schilder iets dat je de baby toewenst (bv. een regenboog).',                   en: 'Paint something you wish for the baby (e.g. a rainbow).',                               min_players: 2, duration: 'round', tags: 'doos_babyshower' },
+        { nl: 'Werk samen met je buur aan een setje in hetzelfde kleurenpalet.',               en: 'Work together with your neighbour on a matching set in the same colour palette.',       min_players: 3, duration: 'round', tags: 'doos_babyshower;mechanisme_groep' },
+        { nl: 'Voeg een figuurtje toe dat jij als kind leuk vond.',                            en: 'Add a little character that you loved as a child.',                                      min_players: 2, duration: 'round', tags: 'doos_babyshower' }
+      ];
+      for (var bb = 0; bb < BB.length; bb++) {
+        await db.query(
+          'INSERT INTO activities (type, occasion, description_nl, description_en, duration, min_players, tags, active) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+          ['studio_games', 'any', BB[bb].nl, BB[bb].en, BB[bb].duration, BB[bb].min_players, BB[bb].tags, 1]
+        );
+      }
+
+      await db.query("INSERT INTO migration_versions (version) VALUES ('v5_spark_activities')");
+      console.log('v5 migration: added 13 bedazzle_games (active=0) + 8 baby studio_games (active=1)');
+    }
+
     console.log('DB migration complete');
   } catch (err) {
     console.error('DB migration error:', err.message);
