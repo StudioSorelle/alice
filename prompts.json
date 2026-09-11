@@ -11,7 +11,19 @@
     "tote": {
       "nl": "Elke persoon schildert op een eigen totebag van ca. 20×20 cm (textieloppervlak).",
       "en": "Each person paints on their own tote bag, approx. 20×20 cm (textile surface)."
+    },
+    "baby": {
+      "nl": "Je beschildert een babybody van ca. 20×10 cm en een bijpassend slabbetje van ca. 10×8 cm. De twee items vormen een setje — elk krijgt een ander maar samenhangend motief. Houd rekening met het textiel: gebruik dekkende vormen en vermijd natte technieken.",
+      "en": "You are painting a baby bodysuit of approx. 20×10 cm and a matching baby bib of approx. 10×8 cm. The two items form a set — each gets a different but coordinating design. Keep the textile in mind: use bold, opaque shapes and avoid wet techniques."
+    },
+    "hairclip": {
+      "nl": "Je decoreert een eigen haarspeld (ca. 6–8 cm breed) met steentjes en glitters in een specifieke vorm naar keuze.",
+      "en": "You are decorating your own hair clip (approx. 6–8 cm wide) with rhinestones and dazzle gems arranged in a specific shape of your choice."
     }
+  },
+  "baby_group": {
+    "nl": "Jullie schilderen met {count} personen, elk op een eigen babybody (20×10 cm) en slabbetje (10×8 cm). Elk setje is volledig zelfstandig — geen combinatie. Stel {count} verschillende motieven voor, genummerd per persoon. Gebruik dekkende vormen — vermijd natte technieken.",
+    "en": "You are painting with {count} people, each on their own baby bodysuit (20×10 cm) and bib (10×8 cm). Each set is fully standalone — never combined. Suggest {count} different motifs, numbered per person. Use bold, opaque shapes — avoid wet techniques."
   },
   "mini_solo": {
     "nl": "Je schildert op 2 kleine canvasjes van ca. 10×10 cm. Elk canvasje krijgt een ander, volledig zelfstandig idee — ze worden nooit gecombineerd tot één geheel. Stel 2 verschillende, simpele motieven voor in de gekozen stijl: 'Canvasje 1: ...' en 'Canvasje 2: ...'. Houd rekening met het kleine formaat — max 1–2 basisvormen per canvasje, brede penseelstreken, geen fijn detail.",

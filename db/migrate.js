@@ -864,6 +864,8 @@ async function migrate() {
     try { await db.query('ALTER TABLE moments ADD COLUMN quote TEXT'); } catch (e) {}
     try { await db.query('ALTER TABLE moments ADD COLUMN email_sent INTEGER DEFAULT 0'); } catch (e) {}
     try { await db.query('ALTER TABLE activities ADD COLUMN tags TEXT'); } catch (e) {}
+    try { await db.query('ALTER TABLE products ADD COLUMN active INTEGER DEFAULT 1'); } catch (e) {}
+    try { await db.query('ALTER TABLE activities ADD COLUMN active INTEGER DEFAULT 1'); } catch (e) {}
 
     // Seed products if empty
     var prodCount = await db.query('SELECT COUNT(*) as c FROM products');
@@ -922,6 +924,21 @@ async function migrate() {
 
       await db.query("INSERT INTO migration_versions (version) VALUES ('v3_spark_overhaul')");
       console.log('v3 migration: replaced all activities — 44 Studio Games + 154 Sorelle Talks');
+    }
+
+    // v4: new products — Hairclip (inactive) + Baby (active)
+    var v4 = await db.query("SELECT version FROM migration_versions WHERE version = 'v4_new_products'");
+    if (v4.rows.length === 0) {
+      await db.query(
+        'INSERT INTO products (name, sort_order, active) VALUES (?, ?, ?)',
+        ['Our Dazzling Hairclip Moment', 3, 0]
+      );
+      await db.query(
+        'INSERT INTO products (name, sort_order, active) VALUES (?, ?, ?)',
+        ['Our Blissful Baby Moment', 4, 1]
+      );
+      await db.query("INSERT INTO migration_versions (version) VALUES ('v4_new_products')");
+      console.log('v4 migration: added Hairclip (inactive) and Baby (active) products');
     }
 
     console.log('DB migration complete');

@@ -83,6 +83,8 @@ function getBoxKey(productName) {
   var lower = (productName || '').toLowerCase();
   if (lower.indexOf('mini') >= 0) return 'mini';
   if (lower.indexOf('tote') >= 0) return 'tote';
+  if (lower.indexOf('hairclip') >= 0 || lower.indexOf('dazzl') >= 0) return 'hairclip';
+  if (lower.indexOf('baby') >= 0) return 'baby';
   return 'canvas';
 }
 
@@ -132,7 +134,7 @@ app.post('/api/auth/verify', async (req, res) => {
 // ── Products ──
 app.get('/api/products', async (req, res) => {
   try {
-    const result = await db.query('SELECT id, name FROM products ORDER BY sort_order, name');
+    const result = await db.query('SELECT id, name FROM products WHERE active = 1 ORDER BY sort_order, name');
     res.json(result.rows);
   } catch (err) { res.json([]); }
 });
@@ -191,11 +193,11 @@ app.post('/api/spark', async (req, res) => {
     var activities;
     if (actType === 'mix') {
       var gamesRes = await db.query(
-        "SELECT * FROM activities WHERE type = 'studio_games' AND (occasion = 'any' OR occasion = ?) AND min_players <= ?" + durationClause,
+        "SELECT * FROM activities WHERE type = 'studio_games' AND active = 1 AND (occasion = 'any' OR occasion = ?) AND min_players <= ?" + durationClause,
         [occasion, playerCount]
       );
       var talksRes = await db.query(
-        "SELECT * FROM activities WHERE type = 'sorelle_talks' AND (occasion = 'any' OR occasion = ?) AND min_players <= ?" + durationClause,
+        "SELECT * FROM activities WHERE type = 'sorelle_talks' AND active = 1 AND (occasion = 'any' OR occasion = ?) AND min_players <= ?" + durationClause,
         [occasion, playerCount]
       );
       var gamesPool = fisherYates(gamesRes.rows.slice());
@@ -228,7 +230,7 @@ app.post('/api/spark', async (req, res) => {
       });
     } else {
       var result = await db.query(
-        "SELECT * FROM activities WHERE type = ? AND (occasion = 'any' OR occasion = ?) AND min_players <= ?" + durationClause,
+        "SELECT * FROM activities WHERE type = ? AND active = 1 AND (occasion = 'any' OR occasion = ?) AND min_players <= ?" + durationClause,
         [actType, occasion, playerCount]
       );
       var rows = fisherYates(result.rows.slice());
@@ -316,6 +318,10 @@ app.post('/api/generate-image', async (req, res) => {
       } else {
         productIntro = 'Studio Sorelle tote bag painting kit for ' + count + ' people. Generate a photorealistic flat-lay image showing exactly ' + count + ' white cotton tote bags arranged together in one image. Every tote bag must be clearly visible. Each bag has a different but stylistically consistent acrylic design painted on it (approximately 20×20 cm surface). The designs must be bold and simple enough to work on fabric.';
       }
+    } else if (boxKey === 'hairclip') {
+      productIntro = 'Studio Sorelle hairclip dazzle kit. Generate a photorealistic image of a single decorative hair clip (approximately 6–8 cm wide) fully decorated with rhinestones and dazzle gems arranged in a specific shape — for example a heart, a cherry, a square, or a name spelled out. The rhinestones must form a clear, recognisable pattern. The clip should be photographed on a neutral light background.';
+    } else if (boxKey === 'baby') {
+      productIntro = 'Studio Sorelle baby painting kit. Generate a photorealistic flat-lay image showing exactly TWO items side by side on a neutral light background: (1) a white baby bodysuit (approximately 20×10 cm) with a hand-painted acrylic design visible on the front of the bodysuit, and (2) a white baby bib (approximately 10×8 cm) with a matching or complementary hand-painted acrylic design painted directly on the bib. The painting must appear ON the fabric of each item — not beside it or floating above it. Both items must be fully visible and recognisable as a bodysuit and a bib. Designs must be extremely simple — bold shapes, 1–2 colours — because the items are small and painted by hand.';
     } else {
       // Canvas 20×20 cm
       if (count === 1) {
@@ -348,6 +354,8 @@ app.post('/api/generate-image', async (req, res) => {
     const presentationSuffix = boxKey === 'tote' ? TOTE_PROMPT_SUFFIX
       : boxKey === 'mini' && count > 1 ? 'acrylic paint on small square canvases with clearly visible loose brushstrokes, photographed as a clean flat-lay on a light neutral surface, all canvases fully visible in the frame, very simple motifs a beginner can paint in under an hour, Studio Sorelle mini kit reference image'
       : boxKey === 'mini' ? MINI_PROMPT_SUFFIX
+      : boxKey === 'hairclip' ? 'photorealistic rhinestone hairclip on a clean neutral background, gems clearly in focus, Studio Sorelle dazzle kit reference image'
+      : boxKey === 'baby' ? 'photorealistic flat-lay showing a white baby bodysuit and a white baby bib with acrylic paint designs applied directly on the fabric, both items clearly recognisable, clean neutral background, bright and soft lighting, Studio Sorelle baby kit reference image'
       : CANVAS_PROMPT_SUFFIX;
 
     const imagePrompt = productIntro + '\n\nThe painting shows: ' + styleContent + '\n\n' + presentationSuffix;
@@ -364,6 +372,10 @@ app.post('/api/generate-image', async (req, res) => {
       aspectRatio = '16:9';   // 3+ polyptych panels are very wide
     } else if ((boxKey === 'canvas' && count === 2) || (boxKey === 'mini' && count >= 2) || (boxKey === 'tote' && count >= 2)) {
       aspectRatio = '4:3';    // 2 items or small group: slightly wider than square
+    } else if (boxKey === 'hairclip') {
+      aspectRatio = '1:1';
+    } else if (boxKey === 'baby') {
+      aspectRatio = '4:3';    // landscape: bodysuit + bib side by side
     } else {
       aspectRatio = '1:1';
     }
@@ -545,6 +557,19 @@ function buildInspireIdea(answers, lang, paintTogether) {
       }
     }
 
+  } else if (boxKey === 'baby') {
+    if (group === 'Alone') {
+      var f = PROMPTS.box.baby;
+      if (f && f[l]) parts.push(f[l]);
+    } else {
+      var f = PROMPTS.baby_group;
+      if (f && f[l]) parts.push(f[l].replace(/\{count\}/g, group));
+    }
+
+  } else if (boxKey === 'hairclip') {
+    var f = PROMPTS.box.hairclip;
+    if (f && f[l]) parts.push(f[l]);
+
   } else {
     // Canvas: 1 canvas per person (20×20 cm)
     var boxFrag = PROMPTS.box.canvas;
@@ -603,6 +628,8 @@ function buildInspireIdea(answers, lang, paintTogether) {
     if (l === 'en') {
       var productLabel = boxKey === 'mini' ? 'mini canvas of 10×10 cm'
         : boxKey === 'tote' ? 'tote bag of 20×20 cm'
+        : boxKey === 'hairclip' ? 'hairclip of approx. 6–8 cm'
+        : boxKey === 'baby' ? 'baby bodysuit (20×10 cm) and bib (10×8 cm)'
         : 'canvas of 20×20 cm';
       var diffLabel = level === 'Relaxed' ? 'Very easy'
         : level === 'Balanced' ? 'Easy'
